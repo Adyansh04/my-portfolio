@@ -1,0 +1,282 @@
+{
+  "abu-robocon": {
+    "project": "abu-robocon",
+    "total": 3,
+    "media": [
+      {
+        "type": "video",
+        "src": "/projects/abu-robocon/Robocon 1.mp4",
+        "alt": "Robocon 1",
+        "title": "Robocon 1",
+        "filename": "Robocon 1.mp4",
+        "size": 0
+      },
+      {
+        "type": "video",
+        "src": "/projects/abu-robocon/Robocon 2.mp4",
+        "alt": "Robocon 2",
+        "title": "Robocon 2",
+        "filename": "Robocon 2.mp4",
+        "size": 6750208
+      },
+      {
+        "type": "video",
+        "src": "/projects/abu-robocon/Robocon 3.mp4",
+        "alt": "Robocon 3",
+        "title": "Robocon 3",
+        "filename": "Robocon 3.mp4",
+        "size": 8519680
+      }
+    ]
+  },
+  "agrobot": {
+    "project": "agrobot",
+    "total": 5,
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/agrobot/AgroBot_back.png",
+        "alt": "AgroBot Back",
+        "title": "AgroBot Back",
+        "filename": "AgroBot_back.png",
+        "size": 2726077
+      },
+      {
+        "type": "image",
+        "src": "/projects/agrobot/AgroBot_front.png",
+        "alt": "AgroBot Front",
+        "title": "AgroBot Front",
+        "filename": "AgroBot_front.png",
+        "size": 2813428
+      },
+      {
+        "type": "video",
+        "src": "/projects/agrobot/demo_1.mp4",
+        "alt": "Demo 1",
+        "title": "Demo 1",
+        "filename": "demo_1.mp4",
+        "size": 45105220
+      },
+      {
+        "type": "video",
+        "src": "/projects/agrobot/demo_2.mp4",
+        "alt": "Demo 2",
+        "title": "Demo 2",
+        "filename": "demo_2.mp4",
+        "size": 48019964
+      },
+      {
+        "type": "video",
+        "src": "/projects/agrobot/demo_3.mp4",
+        "alt": "Demo 3",
+        "title": "Demo 3",
+        "filename": "demo_3.mp4",
+        "size": 69507898
+      }
+    ]
+  },
+  "ai-robotics": {
+    "project": "ai-robotics",
+    "total": 6,
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/ai-robotics/01-robot-task.jpg",
+        "alt": "Robot Task",
+        "title": "Robot Task",
+        "filename": "01-robot-task.jpg",
+        "size": 2951159
+      },
+      {
+        "type": "video",
+        "src": "/projects/ai-robotics/02-robot-setup.mp4",
+        "alt": "Robot Setup",
+        "title": "Robot Setup",
+        "filename": "02-robot-setup.mp4",
+        "size": 2793637
+      },
+      {
+        "type": "image",
+        "src": "/projects/ai-robotics/03-lab-workspace.jpg",
+        "alt": "Lab Workspace",
+        "title": "Lab Workspace",
+        "filename": "03-lab-workspace.jpg",
+        "size": 2341584
+      },
+      {
+        "type": "video",
+        "src": "/projects/ai-robotics/04-obstacle-avoidance.mp4",
+        "alt": "Obstacle Avoidance",
+        "title": "Obstacle Avoidance",
+        "filename": "04-obstacle-avoidance.mp4",
+        "size": 11277426
+      },
+      {
+        "type": "image",
+        "src": "/projects/ai-robotics/05-3d-visualization.png",
+        "alt": "3d Visualization",
+        "title": "3d Visualization",
+        "filename": "05-3d-visualization.png",
+        "size": 1822003
+      },
+      {
+        "type": "image",
+        "src": "/projects/ai-robotics/06-isaac-sim.png",
+        "alt": "Isaac Sim",
+        "title": "Isaac Sim",
+        "filename": "06-isaac-sim.png",
+        "size": 1347709
+      }
+    ]
+  },
+  "drone-systems": {
+    "project": "drone-systems",
+    "total": 5,
+    "media": [
+      {
+        "type": "video",
+        "src": "/projects/drone-systems/Aruco Warehouse.mkv",
+        "alt": "Aruco Warehouse",
+        "title": "Aruco Warehouse",
+        "filename": "Aruco Warehouse.mkv",
+        "size": 42860705
+      },
+      {
+        "type": "video",
+        "src": "/projects/drone-systems/Tello object detect flip.mkv",
+        "alt": "Tello Object Detect Flip",
+        "title": "Tello Object Detect Flip",
+        "filename": "Tello object detect flip.mkv",
+        "size": 93981277
+      },
+      {
+        "type": "image",
+        "src": "/projects/drone-systems/image.png",
+        "alt": "Image",
+        "title": "Image",
+        "filename": "image.png",
+        "size": 1412493
+      },
+      {
+        "type": "video",
+        "src": "/projects/drone-systems/tello swarm.mp4",
+        "alt": "Tello Swarm",
+        "title": "Tello Swarm",
+        "filename": "tello swarm.mp4",
+        "size": 9726632
+      },
+      {
+        "type": "image",
+        "src": "/projects/drone-systems/tello.svg",
+        "alt": "Tello",
+        "title": "Tello",
+        "filename": "tello.svg",
+        "size": 418199
+      }
+    ]
+  },
+  "kiwi-drive": {
+    "project": "kiwi-drive",
+    "total": 1,
+    "media": [
+      {
+        "type": "video",
+        "src": "/projects/kiwi-drive/3-wheel-omni.mp4",
+        "alt": "Wheel Omni",
+        "title": "Wheel Omni",
+        "filename": "3-wheel-omni.mp4",
+        "size": 70467479
+      }
+    ]
+  },
+  "sepsis-atlas": {
+    "project": "sepsis-atlas",
+    "total": 5,
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/sepsis-atlas/architecture1.png",
+        "alt": "Architecture1",
+        "title": "Architecture1",
+        "filename": "architecture1.png",
+        "size": 168710
+      },
+      {
+        "type": "image",
+        "src": "/projects/sepsis-atlas/architecture2.png",
+        "alt": "Architecture2",
+        "title": "Architecture2",
+        "filename": "architecture2.png",
+        "size": 234162
+      },
+      {
+        "type": "video",
+        "src": "/projects/sepsis-atlas/uc1.mp4",
+        "alt": "Uc1",
+        "title": "Uc1",
+        "filename": "uc1.mp4",
+        "size": 31628953
+      },
+      {
+        "type": "video",
+        "src": "/projects/sepsis-atlas/uc2.mp4",
+        "alt": "Uc2",
+        "title": "Uc2",
+        "filename": "uc2.mp4",
+        "size": 16389554
+      },
+      {
+        "type": "video",
+        "src": "/projects/sepsis-atlas/uc3.mp4",
+        "alt": "Uc3",
+        "title": "Uc3",
+        "filename": "uc3.mp4",
+        "size": 32517616
+      }
+    ]
+  },
+  "vanguard": {
+    "project": "vanguard",
+    "total": 1,
+    "media": [
+      {
+        "type": "video",
+        "src": "/projects/vanguard/1..mp4",
+        "alt": "1.",
+        "title": "1.",
+        "filename": "1..mp4",
+        "size": 24436003
+      }
+    ]
+  },
+  "whycode": {
+    "project": "whycode",
+    "total": 3,
+    "media": [
+      {
+        "type": "image",
+        "src": "/projects/whycode/architecture.png",
+        "alt": "Architecture",
+        "title": "Architecture",
+        "filename": "architecture.png",
+        "size": 298835
+      },
+      {
+        "type": "image",
+        "src": "/projects/whycode/demo1.gif",
+        "alt": "Demo1",
+        "title": "Demo1",
+        "filename": "demo1.gif",
+        "size": 87709370
+      },
+      {
+        "type": "image",
+        "src": "/projects/whycode/demo2.gif",
+        "alt": "Demo2",
+        "title": "Demo2",
+        "filename": "demo2.gif",
+        "size": 95482537
+      }
+    ]
+  }
+}
