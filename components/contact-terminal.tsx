@@ -264,7 +264,7 @@ function ResumeDownloadButton({ colors }: { colors: { primary: string; primaryRg
         </motion.div>
 
         <motion.a
-          href="/resume.pdf"
+          href="/my-portfolio/resume.pdf"
           download="Adyansh_Gupta_Resume.pdf"
           onClick={handleDownload}
           onMouseEnter={() => setIsHovered(true)}

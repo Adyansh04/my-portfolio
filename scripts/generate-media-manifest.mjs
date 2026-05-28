@@ -52,7 +52,7 @@ async function main() {
 
       mediaItems.push({
         type: mediaType,
-        src: `/projects/${project}/${filename}`,
+        src: `/my-portfolio/projects/${project}/${filename}`,
         alt: generateTitle(filename),
         title: generateTitle(filename),
         filename,
