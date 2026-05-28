@@ -43,7 +43,7 @@ export function MediaCollage({ projectFolder, primaryColor = '#00ffff' }: MediaC
 
     const fetchMedia = async () => {
       try {
-        const response = await fetch(`/projects/media-manifest.json`);
+        const response = await fetch(`/my-portfolio/projects/media-manifest.json`);
         if (response.ok) {
           const manifest = await response.json();
           const data = manifest[projectFolder];

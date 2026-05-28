@@ -29,7 +29,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
     const fetchMedia = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/projects/media-manifest.json`);
+        const response = await fetch(`/my-portfolio/projects/media-manifest.json`);
         if (!response.ok) throw new Error('Failed to fetch media');
         const manifest = await response.json();
         const data = manifest[project];
