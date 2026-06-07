@@ -5,7 +5,7 @@
     "media": [
       {
         "type": "video",
-        "src": "/projects/abu-robocon/Robocon 1.mp4",
+        "src": "/my-portfolio/projects/abu-robocon/Robocon 1.mp4",
         "alt": "Robocon 1",
         "title": "Robocon 1",
         "filename": "Robocon 1.mp4",
@@ -13,7 +13,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/abu-robocon/Robocon 2.mp4",
+        "src": "/my-portfolio/projects/abu-robocon/Robocon 2.mp4",
         "alt": "Robocon 2",
         "title": "Robocon 2",
         "filename": "Robocon 2.mp4",
@@ -21,7 +21,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/abu-robocon/Robocon 3.mp4",
+        "src": "/my-portfolio/projects/abu-robocon/Robocon 3.mp4",
         "alt": "Robocon 3",
         "title": "Robocon 3",
         "filename": "Robocon 3.mp4",
@@ -35,7 +35,7 @@
     "media": [
       {
         "type": "image",
-        "src": "/projects/agrobot/AgroBot_back.png",
+        "src": "/my-portfolio/projects/agrobot/AgroBot_back.png",
         "alt": "AgroBot Back",
         "title": "AgroBot Back",
         "filename": "AgroBot_back.png",
@@ -43,7 +43,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/agrobot/AgroBot_front.png",
+        "src": "/my-portfolio/projects/agrobot/AgroBot_front.png",
         "alt": "AgroBot Front",
         "title": "AgroBot Front",
         "filename": "AgroBot_front.png",
@@ -51,7 +51,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/agrobot/demo_1.mp4",
+        "src": "/my-portfolio/projects/agrobot/demo_1.mp4",
         "alt": "Demo 1",
         "title": "Demo 1",
         "filename": "demo_1.mp4",
@@ -59,7 +59,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/agrobot/demo_2.mp4",
+        "src": "/my-portfolio/projects/agrobot/demo_2.mp4",
         "alt": "Demo 2",
         "title": "Demo 2",
         "filename": "demo_2.mp4",
@@ -67,7 +67,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/agrobot/demo_3.mp4",
+        "src": "/my-portfolio/projects/agrobot/demo_3.mp4",
         "alt": "Demo 3",
         "title": "Demo 3",
         "filename": "demo_3.mp4",
@@ -81,7 +81,7 @@
     "media": [
       {
         "type": "image",
-        "src": "/projects/ai-robotics/01-robot-task.jpg",
+        "src": "/my-portfolio/projects/ai-robotics/01-robot-task.jpg",
         "alt": "Robot Task",
         "title": "Robot Task",
         "filename": "01-robot-task.jpg",
@@ -89,7 +89,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/ai-robotics/02-robot-setup.mp4",
+        "src": "/my-portfolio/projects/ai-robotics/02-robot-setup.mp4",
         "alt": "Robot Setup",
         "title": "Robot Setup",
         "filename": "02-robot-setup.mp4",
@@ -97,7 +97,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/ai-robotics/03-lab-workspace.jpg",
+        "src": "/my-portfolio/projects/ai-robotics/03-lab-workspace.jpg",
         "alt": "Lab Workspace",
         "title": "Lab Workspace",
         "filename": "03-lab-workspace.jpg",
@@ -105,7 +105,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/ai-robotics/04-obstacle-avoidance.mp4",
+        "src": "/my-portfolio/projects/ai-robotics/04-obstacle-avoidance.mp4",
         "alt": "Obstacle Avoidance",
         "title": "Obstacle Avoidance",
         "filename": "04-obstacle-avoidance.mp4",
@@ -113,7 +113,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/ai-robotics/05-3d-visualization.png",
+        "src": "/my-portfolio/projects/ai-robotics/05-3d-visualization.png",
         "alt": "3d Visualization",
         "title": "3d Visualization",
         "filename": "05-3d-visualization.png",
@@ -121,7 +121,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/ai-robotics/06-isaac-sim.png",
+        "src": "/my-portfolio/projects/ai-robotics/06-isaac-sim.png",
         "alt": "Isaac Sim",
         "title": "Isaac Sim",
         "filename": "06-isaac-sim.png",
@@ -135,7 +135,7 @@
     "media": [
       {
         "type": "video",
-        "src": "/projects/drone-systems/Aruco Warehouse.mkv",
+        "src": "/my-portfolio/projects/drone-systems/Aruco Warehouse.mkv",
         "alt": "Aruco Warehouse",
         "title": "Aruco Warehouse",
         "filename": "Aruco Warehouse.mkv",
@@ -143,7 +143,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/drone-systems/Tello object detect flip.mkv",
+        "src": "/my-portfolio/projects/drone-systems/Tello object detect flip.mkv",
         "alt": "Tello Object Detect Flip",
         "title": "Tello Object Detect Flip",
         "filename": "Tello object detect flip.mkv",
@@ -151,7 +151,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/drone-systems/image.png",
+        "src": "/my-portfolio/projects/drone-systems/image.png",
         "alt": "Image",
         "title": "Image",
         "filename": "image.png",
@@ -159,7 +159,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/drone-systems/tello swarm.mp4",
+        "src": "/my-portfolio/projects/drone-systems/tello swarm.mp4",
         "alt": "Tello Swarm",
         "title": "Tello Swarm",
         "filename": "tello swarm.mp4",
@@ -167,7 +167,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/drone-systems/tello.svg",
+        "src": "/my-portfolio/projects/drone-systems/tello.svg",
         "alt": "Tello",
         "title": "Tello",
         "filename": "tello.svg",
@@ -181,7 +181,7 @@
     "media": [
       {
         "type": "video",
-        "src": "/projects/kiwi-drive/3-wheel-omni.mp4",
+        "src": "/my-portfolio/projects/kiwi-drive/3-wheel-omni.mp4",
         "alt": "Wheel Omni",
         "title": "Wheel Omni",
         "filename": "3-wheel-omni.mp4",
@@ -195,7 +195,7 @@
     "media": [
       {
         "type": "image",
-        "src": "/projects/sepsis-atlas/architecture1.png",
+        "src": "/my-portfolio/projects/sepsis-atlas/architecture1.png",
         "alt": "Architecture1",
         "title": "Architecture1",
         "filename": "architecture1.png",
@@ -203,7 +203,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/sepsis-atlas/architecture2.png",
+        "src": "/my-portfolio/projects/sepsis-atlas/architecture2.png",
         "alt": "Architecture2",
         "title": "Architecture2",
         "filename": "architecture2.png",
@@ -211,7 +211,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/sepsis-atlas/uc1.mp4",
+        "src": "/my-portfolio/projects/sepsis-atlas/uc1.mp4",
         "alt": "Uc1",
         "title": "Uc1",
         "filename": "uc1.mp4",
@@ -219,7 +219,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/sepsis-atlas/uc2.mp4",
+        "src": "/my-portfolio/projects/sepsis-atlas/uc2.mp4",
         "alt": "Uc2",
         "title": "Uc2",
         "filename": "uc2.mp4",
@@ -227,7 +227,7 @@
       },
       {
         "type": "video",
-        "src": "/projects/sepsis-atlas/uc3.mp4",
+        "src": "/my-portfolio/projects/sepsis-atlas/uc3.mp4",
         "alt": "Uc3",
         "title": "Uc3",
         "filename": "uc3.mp4",
@@ -241,7 +241,7 @@
     "media": [
       {
         "type": "video",
-        "src": "/projects/vanguard/1..mp4",
+        "src": "/my-portfolio/projects/vanguard/1..mp4",
         "alt": "1.",
         "title": "1.",
         "filename": "1..mp4",
@@ -255,7 +255,7 @@
     "media": [
       {
         "type": "image",
-        "src": "/projects/whycode/architecture.png",
+        "src": "/my-portfolio/projects/whycode/architecture.png",
         "alt": "Architecture",
         "title": "Architecture",
         "filename": "architecture.png",
@@ -263,7 +263,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/whycode/demo1.gif",
+        "src": "/my-portfolio/projects/whycode/demo1.gif",
         "alt": "Demo1",
         "title": "Demo1",
         "filename": "demo1.gif",
@@ -271,7 +271,7 @@
       },
       {
         "type": "image",
-        "src": "/projects/whycode/demo2.gif",
+        "src": "/my-portfolio/projects/whycode/demo2.gif",
         "alt": "Demo2",
         "title": "Demo2",
         "filename": "demo2.gif",

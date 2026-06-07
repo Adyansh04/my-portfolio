@@ -60,40 +60,16 @@ function AIChatTerminal() {
     scrollToBottom()
   }, [messages, isLoading, scrollToBottom])
 
-  const SYSTEM_PROMPT = `You are the embedded AI assistant on Adyansh Gupta's portfolio. Adyansh is a Robotics Engineer pursuing an M.Sc. in Robotic Systems Engineering at RWTH Aachen (2025). He holds a BTech in Mechanical Engineering from VIIT (9.4 CGPA). 
-Key Experience: 
-- Addverb Technologies: Optimized C++ WhyCode/Whycon using AVX-512 SIMD, slashing CPU utilization from 190% to 15%. Worked on LIO and IMU correction.
-- Sakar Robotics: NVIDIA Jetson, Isaac ROS, AMR object detection.
-- Avignon University: ROS2 Drone inventory management (Scored 20/20).
-Projects: 
-- AI+Robotics Hackathon 2025 (Best Tech Implementation, Isaac Sim, MoveIt).
-- OLIVE (Multi-sensor fusion backend: IMU, Odom, LiDAR, VO).
-Tone: Professional, highly technical, concise. If asked about things not related to his resume or robotics, politely redirect to his engineering skills.`
-
   async function callGeminiWithBackoff(contents: { role: string; parts: { text: string }[] }[]): Promise<string> {
-    const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY
-    if (!API_KEY) {
-      return "⚠️ API key not configured. Please set NEXT_PUBLIC_GEMINI_API_KEY."
-    }
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`
-    const body = {
-      systemInstruction: {
-        parts: [{ text: SYSTEM_PROMPT }]
-      },
-      contents,
-      generationConfig: {
-        maxOutputTokens: 512,
-        temperature: 0.7,
-      }
-    }
+    const workerUrl = "https://portfolio-chat.gupta-adyansh.workers.dev/"
+    const body = { contents }
 
     const MAX_RETRIES = 3
     let delay = 1000
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
       try {
-        const res = await fetch(url, {
+        const res = await fetch(workerUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
@@ -105,7 +81,6 @@ Tone: Professional, highly technical, concise. If asked about things not related
           return text || "I received an empty response. Please try again."
         }
 
-        // Retry on rate-limit or server errors
         if ((res.status === 429 || res.status >= 500) && attempt < MAX_RETRIES) {
           const jitter = Math.random() * 500
           await new Promise(r => setTimeout(r, delay + jitter))
@@ -113,7 +88,7 @@ Tone: Professional, highly technical, concise. If asked about things not related
           continue
         }
 
-        return `⚠️ API error (${res.status}). Please try again in a moment.`
+        return `⚠️ Worker error (${res.status}). Please try again in a moment.`
       } catch (err) {
         if (attempt < MAX_RETRIES) {
           const jitter = Math.random() * 500
