@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { CSPostHogProvider } from './providers'
+import Script from 'next/script'
 import './globals.css'
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -44,8 +46,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-[#09090B]">
       <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        {children}
+        <CSPostHogProvider>
+          {children}
+        </CSPostHogProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
+        <Script 
+          defer 
+          src="https://cloud.umami.is/script.js" 
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+        />
       </body>
     </html>
   )
