@@ -175,6 +175,52 @@
       }
     ]
   },
+  "go2-inspection": {
+    "project": "go2-inspection",
+    "total": 5,
+    "media": [
+      {
+        "type": "video",
+        "src": "/my-portfolio/projects/go2-inspection/00-full-go2-demo.mp4",
+        "alt": "Full Go2 Demo",
+        "title": "Full Go2 Demo",
+        "filename": "00-full-go2-demo.mp4",
+        "size": 2384530
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/01-frontier-exploration.gif",
+        "alt": "Frontier Exploration",
+        "title": "Frontier Exploration",
+        "filename": "01-frontier-exploration.gif",
+        "size": 14292900
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/02-zone-segmentation.gif",
+        "alt": "Zone Segmentation",
+        "title": "Zone Segmentation",
+        "filename": "02-zone-segmentation.gif",
+        "size": 816763
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/03-zone-inspection.gif",
+        "alt": "Zone Inspection",
+        "title": "Zone Inspection",
+        "filename": "03-zone-inspection.gif",
+        "size": 4255954
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/04-zone-report.gif",
+        "alt": "Zone Report",
+        "title": "Zone Report",
+        "filename": "04-zone-report.gif",
+        "size": 3725419
+      }
+    ]
+  },
   "kiwi-drive": {
     "project": "kiwi-drive",
     "total": 1,

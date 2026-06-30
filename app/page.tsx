@@ -2,6 +2,7 @@ import HeroSection from "@/components/hero-section"
 import { BentoGrid } from "@/components/bento-grid"
 import { ExperienceTimeline } from "@/components/experience-timeline"
 import { ProjectsGrid } from "@/components/projects-grid"
+import { HackathonsSection } from "@/components/hackathons-section"
 import { CredentialsAccordion } from "@/components/credentials-accordion"
 import { ContactTerminal } from "@/components/contact-terminal"
 import { ColorThemeProvider } from "@/components/color-theme-provider"
@@ -17,6 +18,7 @@ export default function Page() {
           <BentoGrid />
           <ExperienceTimeline />
           <ProjectsGrid />
+          <HackathonsSection />
           <CredentialsAccordion />
           <ContactTerminal />
         </main>

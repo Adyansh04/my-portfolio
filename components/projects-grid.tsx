@@ -12,6 +12,27 @@ import { MediaCollage } from "./media-collage";
 const projects = [
   {
     id: 1,
+    title: "Go2 Autonomous Inspection (Unitree Go2)",
+    description:
+      "A simulation-first ROS2 stack that lets a Unitree Go2 quadruped autonomously inspect an unknown facility — driven end-to-end by plain-English commands. The robot maps the area on its own, splits it into rooms (\"zones\"), then walks each zone and reports what it sees using an open-vocabulary camera detector, all triggered through an MCP server bridged to Claude.",
+    venue: "Europe Embodied Hackathon",
+    year: "2026",
+    award: null,
+    tags: ["ROS2 Jazzy", "RTAB-Map SLAM", "Nav2", "YOLOE", "MCP / Claude"],
+    links: { github: "https://github.com/Adyansh04/go2-ros2-inspection", demo: "#" },
+    details: {
+      fullDescription: "Built on ROS2 Jazzy and Gazebo Harmonic, the stack runs the full mapping → segmentation → inspection → report pipeline with zero hard-coded waypoints. A C++ frontier_explorer selects goals by information gain (not nearest-frontier) with a blacklist/recovery state machine, while RTAB-Map fuses a 4D L1 LiDAR with odometry into a teleport-proof map→odom transform and a 2D grid. Saved maps are turned into labelled, navigable rooms by a watershed-based zone segmenter (obstacle-island fill + distance-transform room cores + door-aware separation). For each zone the robot samples safe interior viewpoints, drives there with Nav2, performs a slow in-place 360° spin while a YOLOE open-vocabulary detector runs continuously, projects every detection into the map frame via the depth camera, de-duplicates by class and world position, crops each unique object, and emits per-zone and facility-wide reports. A FastMCP server exposes the entire mission as 14 natural-language tools, so commands like \"explore the area\", \"what zones did you find?\", \"inspect zone 1\", and \"give me the report\" are translated by Claude into ROS service calls. Because every node mirrors the real-Go2 topic contract, the same code ports unchanged from simulation to hardware.",
+      techStack: ["ROS2 Jazzy & Gazebo Harmonic", "RTAB-Map LiDAR Graph-SLAM", "Nav2 & Frontier Exploration (C++)", "YOLOE Open-Vocabulary Vision", "FastMCP + Claude (MCP)", "CHAMP Quadruped Gait"],
+      challenges: [
+        "Natural-Language Mission Control via MCP: Translating ambiguous plain-English requests into safe, deterministic robot behavior. Solved by building a FastMCP server that maps 14 mission tools onto a thin ROS2 service layer, normalizes zone references (\"room 3\" / \"zone 3\" / \"3\" → zone_3), and runs heavy capabilities as isolated subprocesses so the bridge never fights rclpy threading.",
+        "Map-Grounded Open-Vocabulary Localization: Turning noisy 2D detections from a spinning camera into a clean object list. Addressed by projecting each YOLOE detection into the map frame through the depth camera, validating it against the occupancy grid to reject phantoms floating in mapped free space, and de-duplicating repeated sightings by class and world position within a tunable radius.",
+        "Hard-Coded-Pose-Free Autonomy: Operating in a never-before-seen facility with no manual waypoints. Solved by pairing information-gain frontier exploration (with stuck-detection, blacklisting, and TTL recovery) with a watershed zone segmenter that converts any saved map into labelled rooms, each carrying a guaranteed-open navigation point for the inspection sweep."
+      ],
+      mediaFolder: "go2-inspection",
+    },
+  },
+  {
+    id: 2,
     title: "AI+Robotics Hackathon 2025 (RWTH Aachen)",
     description:
       "Developed under intense hackathon constraints at RWTH Aachen, this project secured the Best Technical Implementation prize by bridging advanced spatial computer vision with real-time robotic manipulation. The core engineering objective was to enable a robotic manipulator to execute reliable pick-and-place tasks within a cluttered, unpredictable workspace without pre-mapping the environment.",
@@ -32,7 +53,7 @@ const projects = [
     },
   },
   {
-    id: 2,
+    id: 3,
     title: "OLIVE: Optimization of Lidar, Inertial, Vision & Encoders",
     description:
       "Developing a graph-based, loosely coupled multi-sensor fusion backend to robustly localize AMRs in challenging industrial zones. Integrates multi-rate asynchronous data streams—including IMU, wheel odometry, LiDAR odometry, visual odometry, and fiducial markers—into a unified estimation framework to mitigate long-term odometric drift.",
@@ -53,7 +74,7 @@ const projects = [
     },
   },
   {
-    id: 3,
+    id: 4,
     title: "WhyCode ROS2 Package (Addverb Technologies)",
     description:
       "Developed whycode_vision, a high-performance ROS2 package for 6-DOF WhyCon/WhyCode fiducial marker localization. Leveraged C++ and AVX-512 SIMD to slash CPU utilization from 180% to 10-15% while enabling multi-marker decoding, hysteresis-based ID stabilization, and hierarchical triangulation for AMRs.",
@@ -74,7 +95,7 @@ const projects = [
     },
   },
   {
-    id: 4,
+    id: 5,
     title: "Sepsis Atlas (Clinical AI Evidence Processing)",
     description:
       "Developed a local-first RAG intelligence platform to convert unstructured medical research into schema-validated clinical evidence tables. Integrated hierarchical parent-child chunking with ChromaDB, Pydantic schema-driven data extraction via Claude-3.5-Sonnet, and programmatic source-quote verification to ensure hallucination-free output.",
@@ -95,7 +116,7 @@ const projects = [
     },
   },
   {
-    id: 5,
+    id: 6,
     title: "R2 - ABU Robocon 2024",
     description:
       "Led the software and systems engineering for \"R2,\" a fully autonomous, four-wheel mecanum drive robot for the ABU Robocon 2024 competition. Engineered a comprehensive ROS2 and Micro-ROS workspace featuring YOLO object tracking, LSA08 line following, and TF-Luna LiDAR alignment.",
@@ -116,7 +137,7 @@ const projects = [
     },
   },
   {
-    id: 6,
+    id: 7,
     title: "Kiwi Drive Robot",
     description:
       "Engineered a custom, small-scale three-wheeled omnidirectional \"Kiwi Drive\" robot from the ground up. Bridged physical hardware (ESP32, N20 motors) with high-level ROS2/Nav2 architecture via Micro-ROS, featuring EKF sensor fusion and a CNN-based vision pipeline trained on the LVIS dataset.",
@@ -137,7 +158,7 @@ const projects = [
     },
   },
   {
-    id: 7,
+    id: 8,
     title: "Vanguard (eYRC 2023-24)",
     description:
       "Built for the eYRC 2023-24 \"GeoGuide\" theme, Vanguard is an autonomous ESP32-based robot guided by an overhead camera system (\"Watchtower\"). Integrated a custom CNN model to classify simulated war-zone events, enabling the robot to perform real-time A* pathfinding and QGIS geo-tracking to navigate priority targets while avoiding dynamic danger zones.",
@@ -158,7 +179,7 @@ const projects = [
     },
   },
   {
-    id: 8,
+    id: 9,
     title: "AgroBot (Omni-Directional Plucking Robot)",
     description:
       "Engineered a ROS2-based autonomous agricultural robot featuring an omni-directional X-drive base, dual ESP32 Micro-ROS firmware, and depth-camera vision. Developed end-to-end mission flows—from YOLO-driven cotton boll detection to Cartographer SLAM navigation and automated manipulator kinematics.",
@@ -179,7 +200,7 @@ const projects = [
     },
   },
   {
-    id: 9,
+    id: 10,
     title: "Development of Drone Systems",
     description:
       "Developed autonomous navigation systems using the Crazyflie drone with MultiRanger and Flow decks, enabling precise indoor navigation via ROS2, Nav2, and SLAM Toolbox. Worked on Tello EDU drone for various computer vision tasks.",

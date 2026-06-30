@@ -1,11 +1,25 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Briefcase, Cpu, Rocket, Code, GraduationCap } from "lucide-react"
+import { Briefcase, Cpu, Rocket, Code, GraduationCap, Bot } from "lucide-react"
 import { useColorTheme } from "./color-theme-provider"
 import { GlitchText, TextRevealOnScroll, AnimatedGridBackground, FloatingGridDots, ParallaxLayer } from "@/components/animations"
 
 const experiences = [
+  {
+    id: 6,
+    title: "Robotics Software Developer",
+    company: "Robotics Collective",
+    location: "Aachen, Germany",
+    period: "May 2026 - Present",
+    icon: Bot,
+    highlights: [
+      { metric: "Unitree R1", label: "Humanoid" },
+      { metric: "Vision", label: "Guided Arm" },
+    ],
+    badges: ["Robotic Arm", "RGB Vision", "Teleoperation", "Speech Recognition"],
+    description: "Developing an automated cable insertion pipeline using a robotic arm and RGB cameras for precise, vision-guided manipulation. Integrated teleoperation and speech-recognition on a Unitree R1 humanoid to enable real-time human-robot interaction for live demonstrations.",
+  },
   {
     id: 1,
     title: "Mobile Robotics Intern",

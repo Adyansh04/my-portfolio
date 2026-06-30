@@ -429,7 +429,7 @@ function ResumeDownloadButton({ colors }: { colors: { primary: string; primaryRg
           transition={{ delay: 8 }}
           className="font-mono text-xs text-white/30 text-center"
         >
-          PDF format • Updated May 2026
+          PDF format • Updated June 2026
         </motion.p>
       </div>
     </motion.div>
