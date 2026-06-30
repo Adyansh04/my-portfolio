@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { ArrowRight, Github, Linkedin, Mail, Send, Bot, User } from "lucide-react"
 import { SplineScene } from "@/components/ui/spline-scene"
 import { Spotlight } from "@/components/ui/spotlight"
+import { PerceptionHud } from "@/components/perception-hud"
 import { useColorTheme } from "./color-theme-provider"
 import { 
   GlitchText, 
@@ -40,7 +41,7 @@ function StatusBadge() {
   )
 }
 
-function AIChatTerminal() {
+function AIChatTerminal({ onThinkingChange, onReply }: { onThinkingChange?: (v: boolean) => void; onReply?: () => void }) {
   const { colors } = useColorTheme();
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([
     {
@@ -59,6 +60,10 @@ function AIChatTerminal() {
   useEffect(() => {
     scrollToBottom()
   }, [messages, isLoading, scrollToBottom])
+
+  useEffect(() => {
+    onThinkingChange?.(isLoading)
+  }, [isLoading, onThinkingChange])
 
   async function callGeminiWithBackoff(contents: { role: string; parts: { text: string }[] }[]): Promise<string> {
     const workerUrl = "https://portfolio-chat.gupta-adyansh.workers.dev/"
@@ -125,6 +130,7 @@ function AIChatTerminal() {
     const response = await callGeminiWithBackoff(contents)
     setMessages(prev => [...prev, { role: "assistant", content: response }])
     setIsLoading(false)
+    onReply?.()
   }
 
   return (
@@ -280,6 +286,8 @@ function GhostButton({
 export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null)
   const { colors } = useColorTheme();
+  const [chatThinking, setChatThinking] = useState(false)
+  const [replyNonce, setReplyNonce] = useState(0)
 
   return (
     <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-[#09090B]">
@@ -369,7 +377,10 @@ export default function HeroSection() {
 
             {/* AI Chat Terminal */}
             <div className="mt-4 w-full">
-              <AIChatTerminal />
+              <AIChatTerminal
+                onThinkingChange={setChatThinking}
+                onReply={() => setReplyNonce((n) => n + 1)}
+              />
             </div>
           </div>
 
@@ -391,7 +402,11 @@ export default function HeroSection() {
               scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
               className="w-full h-full"
               trackingAreaRef={heroRef}
+              attention={chatThinking ? "chat" : "none"}
+              replyNonce={replyNonce}
             />
+
+            <PerceptionHud thinking={chatThinking} replyNonce={replyNonce} />
           </ParallaxLayer>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { Trophy, ExternalLink, Github, MapPin, Calendar, Expand, X, Play, ImageI
 import { useColorTheme } from "./color-theme-provider";
 import { GlitchText, TextRevealOnScroll, ScrambleText, AnimatedGridBackground, ParallaxScale } from "@/components/animations";
 import { MediaCarousel } from "./media-carousel";
-import { MediaCollage } from "./media-collage";
+import { ProjectGlyph } from "@/components/glyphs";
 
 const projects = [
   {
@@ -459,112 +459,7 @@ function ProjectDetailsModal({
 
 function ProjectMedia({ project, isEven }: { project: typeof projects[0]; isEven: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { colors } = useColorTheme();
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    
-    const width = canvas.width;
-    const height = canvas.height;
-
-    let animationId: number;
-    let scanLineY = 0;
-    const particles: Array<{x: number; y: number; vx: number; vy: number; size: number}> = [];
-
-    for (let i = 0; i < 20; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1,
-      });
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      ctx.strokeStyle = `${colors.primary}14`;
-      ctx.lineWidth = 1;
-
-      const gridSize = 20;
-      for (let x = 0; x <= width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-      for (let y = 0; y <= height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      const gradient = ctx.createLinearGradient(0, scanLineY - 30, 0, scanLineY + 30);
-      gradient.addColorStop(0, `${colors.primary}00`);
-      gradient.addColorStop(0.5, `${colors.primary}66`);
-      gradient.addColorStop(1, `${colors.primary}00`);
-
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, scanLineY - 30, width, 60);
-
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-
-        const distToScan = Math.abs(p.y - scanLineY);
-        const brightness = distToScan < 50 ? 1 - distToScan / 50 : 0.2;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        const rgb = colors.primaryRgb;
-        ctx.fillStyle = `rgba(${rgb}, ${brightness * 0.8})`;
-        ctx.fill();
-
-        if (brightness > 0.5) {
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = colors.primary;
-        } else {
-          ctx.shadowBlur = 0;
-        }
-      });
-
-      ctx.strokeStyle = `${colors.primary}1a`;
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 80) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      scanLineY += 1.5;
-      if (scanLineY > height + 30) scanLineY = -30;
-
-      animationId = requestAnimationFrame(draw);
-    };
-
-    draw();
-
-    return () => cancelAnimationFrame(animationId);
-  }, [colors]);
 
   return (
     <motion.div
@@ -577,19 +472,8 @@ function ProjectMedia({ project, isEven }: { project: typeof projects[0]; isEven
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="absolute inset-0 overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl">
-        {/* Media Collage Background - blurred and dark */}
-        {project.details.mediaFolder && (
-          <div className="absolute inset-0 z-0">
-            <MediaCollage projectFolder={project.details.mediaFolder} primaryColor={colors.primary} />
-          </div>
-        )}
-
-        <canvas
-          ref={canvasRef}
-          width={400}
-          height={300}
-          className="absolute inset-0 h-full w-full z-10"
-        />
+        {/* Per-project animated glyph (SVG line-art) */}
+        <ProjectGlyph folder={project.details.mediaFolder} className="z-10" />
 
         <div 
           className="absolute inset-0 z-20" 
@@ -599,20 +483,6 @@ function ProjectMedia({ project, isEven }: { project: typeof projects[0]; isEven
         />
 
         <CornerBrackets isHovered={isHovered} />
-
-        <div className="absolute inset-0 flex items-center justify-center z-30">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="relative h-24 w-24"
-          >
-            <div className="absolute inset-0 rounded-full border" style={{ borderColor: `${colors.primary}33` }} />
-            <div className="absolute inset-2 rounded-full border border-dashed" style={{ borderColor: `${colors.primary}4d` }} />
-            <div className="absolute inset-4 rounded-full border" style={{ borderColor: `${colors.primary}66` }} />
-          </motion.div>
-          <div className="absolute h-16 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${colors.primary}80, transparent)` }} />
-          <div className="absolute h-px w-16" style={{ background: `linear-gradient(to right, transparent, ${colors.primary}80, transparent)` }} />
-        </div>
 
         <div className="absolute left-4 top-4 flex items-center gap-2">
           <div 
@@ -639,17 +509,6 @@ function ProjectMedia({ project, isEven }: { project: typeof projects[0]; isEven
             />
           </span>
           <span className="font-mono text-xs" style={{ color: `${colors.primary}b3` }}>ACTIVE</span>
-        </div>
-
-        <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-2">
-          {project.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded border border-white/10 bg-black/40 px-2 py-0.5 font-mono text-[10px] text-white/50"
-            >
-              {tag}
-            </span>
-          ))}
         </div>
       </div>
 
