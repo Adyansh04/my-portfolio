@@ -88,7 +88,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
     <div className="space-y-4">
       {/* Media Display Container */}
       <div className="relative group">
-        <div className="aspect-video rounded-xl overflow-hidden bg-gradient-to-br from-black/50 to-black/30 border border-white/10">
+        <div className="flex items-center justify-center rounded-xl overflow-hidden bg-gradient-to-br from-black/50 to-black/30 border border-white/10">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
@@ -96,19 +96,21 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className="w-full h-full"
+              className="flex w-full items-center justify-center"
             >
               {!isVideo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={currentItem.src}
                   alt={currentItem.alt}
-                  className="w-full h-full object-cover"
+                  className="max-w-full w-auto h-auto object-contain"
+                  style={{ maxHeight: '65vh' }}
                 />
               ) : (
                 <video
                   src={currentItem.src}
-                  className="w-full h-full object-cover"
+                  className="max-w-full w-auto h-auto object-contain"
+                  style={{ maxHeight: '65vh' }}
                   controls
                   muted={isMuted}
                   autoPlay

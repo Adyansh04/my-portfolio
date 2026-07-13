@@ -56,19 +56,19 @@ const projects = [
     id: 3,
     title: "OLIVE: Optimization of Lidar, Inertial, Vision & Encoders",
     description:
-      "Developing a graph-based, loosely coupled multi-sensor fusion backend to robustly localize AMRs in challenging industrial zones. Integrates multi-rate asynchronous data streams—including IMU, wheel odometry, LiDAR odometry, visual odometry, and fiducial markers—into a unified estimation framework to mitigate long-term odometric drift.",
+      "A graph-based multi-sensor fusion backend that fuses LiDAR, tightly-coupled IMU, wheel encoders, WhyCode fiducial markers, and monocular visual odometry into one iSAM2 factor graph for drift-free AMR localization. Publishes two synchronized odometry outputs — a globally-accurate map-frame pose and a smooth, jump-free local stream a Nav2 controller can drive on directly — validated to 2.0 cm RMSE over three 56 m loops.",
     venue: "Personal Project",
-    year: "WIP",
+    year: "2026",
     award: null,
-    tags: ["ROS2 Humble", "C++", "Sensor Fusion", "LiDAR Odometry"],
-    links: { github: "https://github.com/Adyansh04/olive/tree/lidar-odom", demo: "#" },
+    tags: ["ROS2 Jazzy", "GTSAM / iSAM2", "LiDAR-Inertial Odometry", "Sensor Fusion", "Nav2"],
+    links: { github: "https://github.com/Adyansh04/olive", demo: "#" },
     details: {
-      fullDescription: "OLIVE (Optimization of Lidar, Inertial, Vision & Encoders) is engineered to solve the critical problem of localization degradation and drift faced by Autonomous Mobile Robots (AMRs) in structurally repetitive or GPS-denied environments. By transforming the state estimation problem into a graph-based optimization framework, the backend handles irregular, asynchronous sensor update rates without encountering the scaling issues or filter divergence typical of traditional extended filtering methods over long trajectories.",
-      techStack: ["ROS2 Humble / Jazzy", "C++ (Modern 17/20)", "Sensor Fusion Architectures", "LiDAR Odometry Subsystems"],
+      fullDescription: "Built on ROS2 Jazzy with a GTSAM iSAM2 factor-graph backend, OLIVE runs a single incremental keyframe graph that fuses five modalities as runtime-togglable factors: a LiDAR-inertial frontend (curvature-feature scan-to-map matching, gyro-seeded), tightly-coupled IMU preintegration with online gyro/accel bias estimation, wheel odometry as a metric-scale anchor, WhyCode fiducial markers treated as TagSLAM-style landmark variables, and a wheel-scaled monocular visual-odometry front-end — with ICP loop closure and a soft planar prior on top. The backend publishes two REP-105-compliant outputs from that same graph: `/olive/odometry` (map-frame, globally accurate, allowed to jump when a marker or loop closure corrects drift) and `/olive/odometry_local` (odom-frame, ~50 Hz, continuous) — so every global correction lands in the `map→odom` transform while the stream a Nav2 controller actually drives on never teleports, making OLIVE a drop-in AMCL replacement.",
+      techStack: ["ROS2 Jazzy & GTSAM (iSAM2)", "LiDAR-Inertial Odometry (C++20)", "Tightly-Coupled IMU Preintegration", "WhyCode Fiducial Landmarks", "Monocular Visual Odometry"],
       challenges: [
-        "Asynchronous Clock & Multi-Rate Synchronization: Managing the massive frequency disparity between high-rate IMUs and lower-rate LiDAR/Camera feeds. Addressed by designing a time-buffered sensor queue to align factor graph nodes precisely.",
-        "Degenerate Geometric Scene Handling: Preventing scan-matching failure inside long, featureless corridors where LiDAR geometry collapses. Solved by placing higher weight constraints on wheel encoders and IMU priors during optimization steps.",
-        "Outlier Rejection in Dynamic Environments: Filtering out moving machinery, human traffic, or passing forklifts from the raw scan data to prevent map corruption."
+        "Keeping Global Corrections Out of the Controller's Path (REP-105 Split): AMR controllers need continuous odometry, but global corrections — loop closures, marker anchors — must not appear as teleports. Solved by publishing two synchronized outputs from the same graph: a map-frame pose that is allowed to jump, and a ~50 Hz odom-frame stream where the correction lands entirely in `map→odom` — verified to a 2.4 cm max step across three 56 m loops.",
+        "Fusing a Weak, Drifting Modality Without Hurting Accuracy: Monocular VO's translation scale is unobservable on a planar robot and its heading drifts uncorrected, so naively fusing it risks pulling the whole estimate off course. Solved by scaling VO translation from wheel odometry and entering it as a loose, robust factor — an A/B test showed tight sigmas blow the world-frame estimate out to 29 m, while loose sigmas keep steady-state accuracy at ~2 cm versus 3.6 cm with VO fully disabled, turning a weak modality into free robustness during LiDAR dropouts.",
+        "Recovering from Total Sensor Dropout via Landmarks: Long GPS-denied corridors and sensor blackouts cause conventional filters to diverge outright. Solved by treating WhyCode markers as TagSLAM-style landmark variables in the same graph — a surveyed marker resolves an 8.5 m spawn-frame offset to centimeters on first sighting, and in fault-injection testing a 25 s LiDAR blackout recovers to 1.1 cm final error with markers versus 4.9 m of unrecoverable drift with markers disabled."
       ],
       mediaFolder: "olive",
     },

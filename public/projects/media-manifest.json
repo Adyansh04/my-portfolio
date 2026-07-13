@@ -235,6 +235,76 @@
       }
     ]
   },
+  "olive": {
+    "project": "olive",
+    "total": 8,
+    "media": [
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/00-maze-loop-demo.gif",
+        "alt": "Maze Loop Demo",
+        "title": "Maze Loop Demo",
+        "filename": "00-maze-loop-demo.gif",
+        "size": 64961819
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/01-trajectory-vs-ground-truth.png",
+        "alt": "Trajectory Vs Ground Truth",
+        "title": "Trajectory Vs Ground Truth",
+        "filename": "01-trajectory-vs-ground-truth.png",
+        "size": 53691
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/02-local-vs-wheel-odometry.png",
+        "alt": "Local Vs Wheel Odometry",
+        "title": "Local Vs Wheel Odometry",
+        "filename": "02-local-vs-wheel-odometry.png",
+        "size": 87566
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/03-accuracy-over-time.png",
+        "alt": "Accuracy Over Time",
+        "title": "Accuracy Over Time",
+        "filename": "03-accuracy-over-time.png",
+        "size": 70193
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/04-odometry-continuity.png",
+        "alt": "Odometry Continuity",
+        "title": "Odometry Continuity",
+        "filename": "04-odometry-continuity.png",
+        "size": 84254
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/05-bias-estimation.png",
+        "alt": "Bias Estimation",
+        "title": "Bias Estimation",
+        "filename": "05-bias-estimation.png",
+        "size": 127331
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/06-visual-odometry-features.png",
+        "alt": "Visual Odometry Features",
+        "title": "Visual Odometry Features",
+        "filename": "06-visual-odometry-features.png",
+        "size": 534797
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/07-visual-odometry-trajectory.png",
+        "alt": "Visual Odometry Trajectory",
+        "title": "Visual Odometry Trajectory",
+        "filename": "07-visual-odometry-trajectory.png",
+        "size": 76300
+      }
+    ]
+  },
   "sepsis-atlas": {
     "project": "sepsis-atlas",
     "total": 5,
