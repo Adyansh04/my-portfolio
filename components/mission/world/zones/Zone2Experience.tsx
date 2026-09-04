@@ -8,17 +8,18 @@ import { experiences } from '@/content/experience'
 import { mission } from '@/lib/mission/store'
 import { asset } from '@/lib/base-path'
 
-/** company → logo file base name in public/logos (png or svg) */
+/** company → logo file in public/logos. The extension is part of the entry: probing png-then-svg
+ *  worked, but filled the console with 404s that hid real errors. */
 const LOGO_SLUG: Record<string, string> = {
-  'Robotics Collective': 'robotics-collective',
-  'Addverb Technologies': 'addverb',
-  'Sakar Robotics': 'sakar-robotics',
-  'Avignon University': 'avignon-university',
-  'Dassault Systems': 'dassault-systemes',
-  'VIIT Robotics (College Club)': 'viit',
+  'Robotics Collective': 'robotics-collective.svg',
+  'Addverb Technologies': 'addverb.png',
+  'Sakar Robotics': 'sakar-robotics.png',
+  'Avignon University': 'avignon-university.svg',
+  'Dassault Systems': 'dassault-systemes.svg',
+  'VIIT Robotics (College Club)': 'viit.png',
 }
 /** marks drawn white-on-transparent get a dark plate instead of the default light one */
-const DARK_PLATE = new Set(['robotics-collective'])
+const DARK_PLATE = new Set(['robotics-collective.svg'])
 const W = 1024
 const H = 512
 
@@ -123,17 +124,11 @@ function Placard({ index }: { index: number }) {
     const slug = LOGO_SLUG[e.company]
     if (!slug) return
     const img = new Image()
-    let tried = 0
-    const exts = ['png', 'svg']
     img.onload = () => {
       drawPlacard(ctx, index, img)
       texture.needsUpdate = true
     }
-    img.onerror = () => {
-      tried++
-      if (tried < exts.length) img.src = asset(`/logos/${slug}.${exts[tried]}`)
-    }
-    img.src = asset(`/logos/${slug}.${exts[0]}`)
+    img.src = asset(`/logos/${slug}`)
   }, [canvas, texture, index, e.company])
 
   useFrame((_, dt) => {
