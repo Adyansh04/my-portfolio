@@ -6,6 +6,7 @@ uniform vec3 uDrift;
 varying vec2 vUv;
 varying float vSeen;
 varying float vRoom;
+varying vec3 vWorld;
 #include <fog_pars_vertex>
 void main() {
   vUv = uv;
@@ -13,6 +14,7 @@ void main() {
   vRoom = aRoom;
   vec4 worldPosition = modelMatrix * instanceMatrix * vec4(position, 1.0);
   worldPosition.xyz += uDrift;
+  vWorld = worldPosition.xyz;
   vec4 mvPosition = viewMatrix * worldPosition;
   gl_Position = projectionMatrix * mvPosition;
   #include <fog_vertex>
@@ -24,15 +26,37 @@ uniform float uT;
 uniform vec3 uAccent;
 uniform vec3 uCell;
 uniform vec3 uGrid;
+uniform vec3 uFill;
+uniform vec3 uSheen;
 varying vec2 vUv;
 varying float vSeen;
 varying float vRoom;
+varying vec3 vWorld;
 #include <fog_pars_fragment>
+
+float hash21(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+
 void main() {
   if (vRoom < 0.5 || vSeen > uT) discard;
   float e = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
   float line = smoothstep(0.0, 0.09, e);
   vec3 col = mix(uGrid, uCell, line);
+  // per-tile shade variation so the floor is a laid surface, not one flat sheet
+  col *= 0.9 + 0.2 * hash21(floor(vWorld.xz * 2.0));
+
+  // the floor is a plain shader, so it gets its light analytically: the fill light rides the camera,
+  // which means the view and light vectors are the same and one dot product covers both lobes.
+  vec3 V = cameraPosition - vWorld;
+  float dist = length(V);
+  V /= max(dist, 0.001);
+  float att = 1.0 / (1.0 + dist * dist * 0.032);
+  float lambert = max(V.y, 0.0);
+  float spec = pow(lambert, 26.0);
+  col *= 0.6 + 1.45 * lambert * att;
+  col += uFill * (spec * att * 0.55 + lambert * att * 0.1);
+  // grazing sheen so distant floor still reads as a plane instead of dissolving into the fog
+  col += uSheen * pow(1.0 - lambert, 5.0) * 0.05;
+
   // cells scanned a moment ago glow in the accent, then settle (the spawn room starts settled)
   float fresh = (1.0 - smoothstep(0.0, 0.025, uT - vSeen)) * step(0.004, vSeen);
   col += uAccent * fresh * 0.4;
