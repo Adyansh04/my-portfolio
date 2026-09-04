@@ -43,14 +43,15 @@ const mat = (color: string, opts?: RobotMaterialOptions) => {
 }
 
 /* ---------- real-world palettes ---------- */
-const SILVER = () => mat('#c6cbd1', { metalness: 0.55, roughness: 0.38 })
+// satin paint, not chrome: at 0.55 metalness the shell mirrored the environment map and clipped to white
+const SILVER = () => mat('#c6cbd1', { metalness: 0.26, roughness: 0.52 })
 const GRAPHITE = () => mat('#1a1d21', { metalness: 0.5, roughness: 0.45 })
 const ADDVERB_ORANGE = () => mat('#f2531f', { metalness: 0.25, roughness: 0.45 })
-const UNITREE_GREY = () => mat('#b9bec6', { metalness: 0.4, roughness: 0.45 })
+const UNITREE_GREY = () => mat('#b9bec6', { metalness: 0.24, roughness: 0.52 })
 const UNITREE_DARK = () => mat('#2a2e34', { metalness: 0.5, roughness: 0.45 })
 const R1_WHITE = () => mat('#e3e7ec', { metalness: 0.12, roughness: 0.55, rimStrength: 0.08 })
 const R1_FRAME = () => mat('#2c3550', { metalness: 0.35, roughness: 0.5 })
-const UR_GREY = () => mat('#b4b9bf', { metalness: 0.4, roughness: 0.42 })
+const UR_GREY = () => mat('#b4b9bf', { metalness: 0.25, roughness: 0.5 })
 const UR_BLUE = () => mat('#3d7fc4', { metalness: 0.3, roughness: 0.45 })
 
 /** Addverb Trakr: silver body, black hip motors, orange thigh covers, silver shanks, black feet (from the product photo). */
