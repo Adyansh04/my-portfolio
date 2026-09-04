@@ -1,0 +1,79 @@
+[
+ {
+  "link": "base",
+  "faces": 4838,
+  "bytes": 213904,
+  "extents": [
+   0.151,
+   0.151,
+   0.099
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "shoulder",
+  "faces": 23290,
+  "bytes": 1057908,
+  "extents": [
+   0.12,
+   0.135,
+   0.135
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "upperarm",
+  "faces": 40120,
+  "bytes": 1828368,
+  "extents": [
+   0.12,
+   0.15,
+   0.545
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "forearm",
+  "faces": 15056,
+  "bytes": 679104,
+  "extents": [
+   0.116,
+   0.11,
+   0.489
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "wrist1",
+  "faces": 17288,
+  "bytes": 776660,
+  "extents": [
+   0.079,
+   0.112,
+   0.11
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "wrist2",
+  "faces": 20280,
+  "bytes": 915108,
+  "extents": [
+   0.079,
+   0.11,
+   0.085
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "wrist3",
+  "faces": 911,
+  "bytes": 38360,
+  "extents": [
+   0.075,
+   0.046,
+   0.082
+  ],
+  "scale": 1.0
+ }
+]
