@@ -22,6 +22,7 @@ import { PosterCapture, capturing } from './PosterCapture'
 import { DebugHook } from './DebugHook'
 import { PointCloud } from './PointCloud'
 import { LidarSweep } from './LidarSweep'
+import { AmbientLife } from './ambient'
 
 export function WorldScene() {
   return (
@@ -53,6 +54,7 @@ export function WorldScene() {
       <Zone6Dock />
       <PointCloud />
       <LidarSweep />
+      <AmbientLife />
       <Suspense fallback={<RobotProxy />}>
         <TrakrRobot />
       </Suspense>
