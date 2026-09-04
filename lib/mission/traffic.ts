@@ -181,8 +181,8 @@ export const AMR_ROUTES: RouteDef[] = [
     speed: 0.85,
     phase: 3,
     stops: [
-      { p: [9.6, 5.4], dwell: 2.4, action: 'pick' },
-      { p: [18.4, 5.4], dwell: 2.4, action: 'drop' },
+      { p: [10.6, 6.3], dwell: 2.4, action: 'pick' },
+      { p: [16.4, 6.3], dwell: 2.4, action: 'drop' },
     ],
   },
   {
@@ -222,8 +222,8 @@ export const STATIONS: { p: XZ; kind: 'in' | 'out' }[] = [
   { p: [14.5, 33.2], kind: 'in' },
   { p: [7.5, 44.6], kind: 'out' },
   { p: [20.5, 44.6], kind: 'in' },
-  { p: [9.6, 3.9], kind: 'in' },
-  { p: [18.4, 3.9], kind: 'out' },
+  { p: [10.6, 7.35], kind: 'in' },
+  { p: [16.4, 7.35], kind: 'out' },
   { p: [-6.6, 2.9], kind: 'out' },
   { p: [-1.6, 2.9], kind: 'in' },
 ]
@@ -274,13 +274,13 @@ export const DRONE_PATHS: DronePath[] = [
     // aisle escort: flies the length of the hall right over the hero robot, clear of the holograms
     id: 'UAV-02',
     pts: [
-      [4, 2.55, 38],
-      [12, 2.7, 38.35],
-      [20, 2.55, 37.7],
-      [30, 2.7, 38.2],
-      [32.6, 2.6, 38],
-      [20, 2.8, 38.3],
-      [10, 2.6, 37.8],
+      [4, 3.78, 38],
+      [12, 3.9, 38.35],
+      [20, 3.78, 37.7],
+      [30, 3.9, 38.2],
+      [32.6, 3.8, 38],
+      [20, 3.95, 38.3],
+      [10, 3.8, 37.8],
     ],
     speed: 2.1,
     scan: true,

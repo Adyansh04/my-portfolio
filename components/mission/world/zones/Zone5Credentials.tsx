@@ -39,7 +39,9 @@ function Rack({ index }: { index: number }) {
     const on = mission.zone === 5 && mission.beat === Math.floor(index / 2) ? 1 : 0.12
     if (label.current) label.current.emissiveIntensity += (on - label.current.emissiveIntensity) * Math.min(1, dt * 4)
   })
-  const yaw = r.side === 1 ? -Math.PI / 2 : Math.PI / 2
+  // the bay is 2.5 m long along its local Z, so yaw only picks which way the open face looks:
+  // the east row (side 1) faces -X into the corridor, the west row faces +X
+  const yaw = r.side === 1 ? Math.PI : 0
   return (
     <group position={[r.x - r.side * 0.25, 0, r.z]} rotation={[0, yaw, 0]}>
       {/* uprights + shelves */}
