@@ -16,6 +16,15 @@ export function CameraRig() {
 
   useFrame((_, dt) => {
     const d = Math.min(0.05, dt || 0.016)
+    // dev: window.__freecam = [x, y, z, lookX, lookY, lookZ] parks the camera for inspecting the world
+    if (process.env.NODE_ENV !== 'production') {
+      const f = (window as unknown as { __freecam?: number[] }).__freecam
+      if (f) {
+        camera.position.set(f[0], f[1], f[2])
+        camera.lookAt(f[3], f[4], f[5])
+        return
+      }
+    }
     const { pos, look } = shotAt(mission.zone, mission.zoneT, mission.robot, mission.beat)
     const c = cur.current
     if (!c.init) {
