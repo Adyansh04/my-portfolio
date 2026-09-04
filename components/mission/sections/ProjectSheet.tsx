@@ -14,7 +14,7 @@ const code = (id: number) => `PRJ-${String(id).padStart(3, '0')}`
 /** Engineering-drawing title block (borrowed from Direction B). Every field is real project data. */
 function TitleBlock({ p }: { p: Project }) {
   const sheetNo = projects.findIndex((x) => x.id === p.id) + 1
-  const cell = 'border-grid px-3 py-2 font-mono text-[11px] leading-4 tracking-[0.08em]'
+  const cell = 'border-grid px-3 py-2 font-mono text-[0.6875rem] leading-4 tracking-[0.08em]'
   return (
     <div className="grid grid-cols-2 border border-grid sm:grid-cols-4" aria-label="Title block">
       <div className={`${cell} border-b border-r`}>
@@ -50,13 +50,13 @@ function TitleBlock({ p }: { p: Project }) {
 export function ProjectSheet({ project, onClose }: { project: Project | null; onClose: () => void }) {
   return (
     <Dialog open={project !== null} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[92vh] w-[min(1100px,96vw)] max-w-[min(1100px,96vw)] overflow-y-auto border-grid bg-ground p-0 text-text sm:max-w-[min(1100px,96vw)] sm:rounded-lg">
+      <DialogContent className="max-h-[92vh] w-[min(68.75rem,96vw)] max-w-[min(68.75rem,96vw)] overflow-y-auto border-grid bg-ground p-0 text-text sm:max-w-[min(68.75rem,96vw)] sm:rounded-lg">
         {project && (
           <div className="p-6 sm:p-10">
             <DialogTitle className="sr-only">{project.title}</DialogTitle>
             <DialogDescription className="sr-only">Project sheet with media, overview, tech stack and challenges.</DialogDescription>
 
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
               <div className="space-y-6">
                 <TitleBlock p={project} />
                 <div className="flex flex-wrap gap-1.5">
@@ -87,7 +87,7 @@ export function ProjectSheet({ project, onClose }: { project: Project | null; on
                 <h3 className="eyebrow mb-3">Tech stack</h3>
                 <ul className="space-y-1.5">
                   {project.details.techStack.map((t) => (
-                    <li key={t} className="flex items-start gap-2 border-b border-grid/70 py-2 font-mono text-[13px] text-text">
+                    <li key={t} className="flex items-start gap-2 border-b border-grid/70 py-2 font-mono text-[0.8125rem] text-text">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                       {t}
                     </li>
@@ -98,7 +98,7 @@ export function ProjectSheet({ project, onClose }: { project: Project | null; on
                 <h3 className="eyebrow mb-3">Key challenges</h3>
                 <ol className="space-y-3">
                   {project.details.challenges.map((c, i) => (
-                    <li key={c} className="grid grid-cols-[2rem_1fr] gap-2 text-[14px] leading-relaxed text-muted">
+                    <li key={c} className="grid grid-cols-[2rem_1fr] gap-2 text-[0.875rem] leading-relaxed text-muted">
                       <span className="font-mono text-accent">{String(i + 1).padStart(2, '0')}</span>
                       <span>{c}</span>
                     </li>

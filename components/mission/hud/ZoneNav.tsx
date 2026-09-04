@@ -18,7 +18,7 @@ export function ZoneNav() {
             onClick={() => document.getElementById(z.id)?.scrollIntoView({ behavior: 'smooth' })}
             className="group flex items-center justify-end gap-3 py-1"
           >
-            <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[10px] tracking-[0.14em] text-muted opacity-0 transition-all duration-300 group-hover:max-w-40 group-hover:opacity-100 group-focus-visible:max-w-40 group-focus-visible:opacity-100">
+            <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[0.625rem] tracking-[0.14em] text-muted opacity-0 transition-all duration-300 group-hover:max-w-40 group-hover:opacity-100 group-focus-visible:max-w-40 group-focus-visible:opacity-100">
               {z.label} · {z.title.toUpperCase()}
             </span>
             <span

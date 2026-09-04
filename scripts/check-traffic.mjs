@@ -3,9 +3,11 @@
  * clear of walls, pedestals, podiums and racks, and drones must stay inside the bounds.
  * Run: npm run check:traffic
  */
-import { BOUNDS, PEDESTALS, PODIUMS, RACKS, roomAt, wallPieces } from '../lib/mission/facility.ts'
+import { BOUNDS, PEDESTALS, PODIUMS, RACKS, ROOMS, roomAt, wallPieces } from '../lib/mission/facility.ts'
 import { AMR_ROUTES, DRONE_PATHS, HALL_RACKS, RACK_BAY, STATIONS, buildTimeline, samplePose, CATCH, fleet } from '../lib/mission/traffic.ts'
-import { ROUTE, routePose } from '../lib/mission/path.ts'
+import { ROUTE, routePose, ENTRY_T } from '../lib/mission/path.ts'
+import { ZONES } from '../lib/mission/zones.ts'
+import { shotAt } from '../lib/mission/camera.ts'
 
 const AMR_HALF = 0.48 // widest half-extent of a unit
 const PED_R = 0.72 // hologram volume radius
@@ -99,6 +101,23 @@ for (let zone = 0; zone < ROUTE.length; zone++)
       for (const [name, p] of [['catch A', CATCH.a], ['catch B', CATCH.b]]) if (Math.hypot(x - p[0], z - p[1]) < HERO_HALF + 0.45) errors.push(`hero route zone ${zone} beat ${beat} walks into ${name}`)
     }
 
+// A zone's copy is held back until ENTRY_T (see lib/mission/path.ts). By then the shot must
+// actually be framing that room, or the copy still arrives before the viewer does.
+const pad = (x, z, zone, p) => {
+  const r = ROOMS[zone]
+  return x >= r.x0 - p && x <= r.x1 + p && z >= r.z0 - p && z <= r.z1 + p
+}
+for (let zone = 1; zone < ZONES.length; zone++) {
+  const beats = ZONES[zone].beats
+  const zt = ENTRY_T[zone]
+  const beat = Math.min(beats - 1, Math.floor(zt * beats))
+  const p = routePose(zone, beat, zt * beats - beat)
+  const shot = shotAt(zone, zt, { x: p.x, y: 0, z: p.z, yaw: 0, speed: 0 }, beat)
+  if (!pad(p.x, p.z, zone, 0.6)) errors.push(`zone ${zone} copy appears at zoneT ${zt.toFixed(3)} but the robot is still outside the room at ${p.x.toFixed(1)},${p.z.toFixed(1)}`)
+  if (!pad(shot.look[0], shot.look[2], zone, 0.6)) errors.push(`zone ${zone} copy appears at zoneT ${zt.toFixed(3)} but the shot is still aimed outside the room at ${shot.look[0].toFixed(1)},${shot.look[2].toFixed(1)}`)
+  if (!pad(shot.pos[0], shot.pos[2], zone, 4)) errors.push(`zone ${zone} copy appears at zoneT ${zt.toFixed(3)} but the camera is ${'far'} outside the room at ${shot.pos[0].toFixed(1)},${shot.pos[2].toFixed(1)}`)
+}
+
 const lanes = fleet().length
 if (errors.length) {
   console.error(errors.slice(0, 20).join('\n'))
@@ -106,3 +125,4 @@ if (errors.length) {
   process.exit(1)
 }
 console.log(`traffic OK — ${lanes} AMR units on ${AMR_ROUTES.length} routes, ${DRONE_PATHS.length} drone loops, ${STATIONS.length} stations, all clear of walls and props`)
+console.log(`zone copy waits for arrival at zoneT ${ENTRY_T.map((v) => v.toFixed(3)).join(', ')}`)

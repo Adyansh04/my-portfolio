@@ -10,7 +10,8 @@
   --panel-2: #1b222c;
   --grid: #2a3340;
   --text: #e9eef3;
-  --muted: #8a94a6;
+  --muted: #a3aec1;
+  --muted-dim: #8a94a6;
   --accent: #ff7a1a;
   --accent-rgb: 255, 122, 26;
   --accent-soft: rgba(255, 122, 26, 0.18);
@@ -51,6 +52,7 @@
   --color-grid: var(--grid);
   --color-text: var(--text);
   --color-muted: var(--muted);
+  --color-muted-dim: var(--muted-dim);
   --color-accent: var(--accent);
   --color-good: var(--good);
   --color-warn: var(--warn);
@@ -88,6 +90,11 @@
     background: var(--ground);
     color-scheme: dark;
     scroll-behavior: smooth;
+    /* The overlay is sized in rem throughout, so one clamp scales the whole interface with the
+       viewport: the familiar 16px up to ~1280, growing to 21px on a large desktop where fixed
+       11px mono labels were unreadable. Never smaller than 16px. The vh term keeps a wide but
+       short display (2560x1080, say) from scaling type until the cards no longer fit. */
+    font-size: clamp(16px, min(0.6vw + 8.5px, 2.05vh), 21px);
   }
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -122,6 +129,15 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+/* headings and zone labels sit on the bare world with nothing behind them */
+[data-zone] h1,
+[data-zone] h2,
+[data-zone] .eyebrow {
+  text-shadow: 0 1px 2px rgba(4, 7, 11, 0.8), 0 0 24px rgba(4, 7, 11, 0.55);
+}
+@utility over-world {
+  text-shadow: 0 1px 2px rgba(4, 7, 11, 0.8), 0 0 24px rgba(4, 7, 11, 0.55);
 }
 @utility tabular {
   font-variant-numeric: tabular-nums;
@@ -171,14 +187,16 @@
   transition: color 0.4s;
 }
 /* sections that are fully past or future fade their frame so the world reads through */
-[data-zone][data-state='past'] > div,
-[data-zone][data-state='future'] > div {
+[data-zone] > div {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
+/* the active zone's copy is driven by --enter (written by MissionPage): it arrives when the robot
+   does, not when the scroll crosses the zone boundary, and reverses out the same way */
 [data-zone][data-state='active'] > div {
-  opacity: 1;
-  transition: opacity 0.35s ease;
+  opacity: var(--enter, 1);
+  transform: translateY(calc((1 - var(--enter, 1)) * 14px));
+  transition: none;
 }
 
 /* ---------- hero ---------- */
@@ -232,6 +250,11 @@ body:has([role='dialog'][data-state='open']) .hud {
 /* ---------- static mode: no world, normal document flow, every beat visible ---------- */
 html[data-static='true'] [data-zone] {
   height: auto !important;
+}
+/* no world to arrive in: every zone's copy is simply present */
+html[data-static='true'] [data-zone] > div {
+  opacity: 1 !important;
+  transform: none !important;
 }
 html[data-static='true'] [data-zone] > div {
   position: static !important;

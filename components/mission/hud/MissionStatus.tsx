@@ -32,14 +32,14 @@ export function MissionStatus() {
 
   const z = ZONES[zone]
   return (
-    <div className="absolute left-8 top-7 hidden select-none font-mono text-[11px] leading-5 tracking-[0.12em] text-muted sm:block">
+    <div className="absolute left-8 top-7 hidden select-none font-mono text-[0.6875rem] leading-5 tracking-[0.12em] text-muted sm:block">
       <div className="text-accent">{MODE_LABEL[mode]}</div>
       <div>
         <span className="text-text">{z.label}</span> · {z.title.toUpperCase()}
       </div>
       <div className="tabular">
         mapped <span ref={mappedRef} className="text-text"> 0%</span> · <span ref={clockRef}>T+00:00</span>
-        <span className="ml-2 rounded-sm border border-grid px-1 text-[9px] text-muted" title="Telemetry is simulated from scroll position">
+        <span className="ml-2 rounded-sm border border-grid px-1 text-[0.5625rem] text-muted" title="Telemetry is simulated from scroll position">
           SIM
         </span>
       </div>

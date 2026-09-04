@@ -36,6 +36,14 @@ export const ROUTE: Leg[][] = [
   [{ to: [-4.6, 6.4], via: [[-5, 9.6]] }, { to: [-4, 4] }, { to: [-4, 4] }],
 ]
 
+/**
+ * zoneT at which a zone's DOM content may appear: the point where the robot finishes travelling
+ * into the room and settles on the zone's first content beat. Before this the shot is still moving
+ * through a doorway, and showing the room's copy over it reads as content arriving early.
+ * Zone 0 is the landing hero, so it is there from the start.
+ */
+export const ENTRY_T: number[] = ZONES.map((z, i) => (i === 0 ? 0 : MOVE / z.beats))
+
 const smooth = (u: number) => {
   const c = Math.min(1, Math.max(0, u))
   return c * c * (3 - 2 * c)

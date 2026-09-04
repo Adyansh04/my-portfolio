@@ -13,12 +13,12 @@ export function ConsoleButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="pointer-events-auto absolute right-8 top-7 hidden items-center gap-2 rounded-sm border border-grid bg-ground/70 px-3 py-1.5 font-mono text-[11px] tracking-[0.12em] text-muted backdrop-blur-sm transition hover:border-accent hover:text-text sm:inline-flex"
+        className="pointer-events-auto absolute right-8 top-7 hidden items-center gap-2 rounded-sm border border-grid bg-ground/88 px-3 py-1.5 font-mono text-[0.6875rem] tracking-[0.12em] text-muted backdrop-blur-sm transition hover:border-accent hover:text-text sm:inline-flex"
       >
         <Bot className="h-3.5 w-3.5 text-accent" /> CONSOLE
       </button>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="w-[min(480px,92vw)] border-grid bg-ground p-4 text-text sm:max-w-none">
+        <SheetContent side="right" className="w-[min(30rem,92vw)] border-grid bg-ground p-4 text-text sm:max-w-none">
           <SheetTitle className="eyebrow mb-3">Mission control · AI assistant</SheetTitle>
           <SheetDescription className="sr-only">Chat with the assistant about Adyansh's experience, skills, and projects.</SheetDescription>
           <ChatConsole className="[&_.h-56]:h-[60vh]" />

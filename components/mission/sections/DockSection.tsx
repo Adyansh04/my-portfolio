@@ -14,10 +14,10 @@ export function DockSection() {
         <div className="beat-acc" style={{ '--i': 0 } as React.CSSProperties}>
           <Eyebrow>ZONE 06 · {site.sections.contact.eyebrow}</Eyebrow>
           <h2 className="font-display mt-3 text-5xl font-bold uppercase tracking-wide text-text sm:text-6xl">{site.sections.contact.title}</h2>
-          <div className="mt-4 font-mono text-[11px] tracking-[0.14em] text-accent">LOOP CLOSED · MISSION COMPLETE · 100% MAPPED</div>
+          <div className="mt-4 font-mono text-[0.6875rem] tracking-[0.14em] text-accent">LOOP CLOSED · MISSION COMPLETE · 100% MAPPED</div>
         </div>
 
-        <Panel className="beat-acc font-mono text-[13px] leading-6" style={{ '--i': 1 } as React.CSSProperties}>
+        <Panel className="beat-acc font-mono text-[0.8125rem] leading-6" style={{ '--i': 1 } as React.CSSProperties}>
           <div className="mb-3 text-muted">{site.sections.contact.welcome}</div>
           <ol className="space-y-3">
             {contactCommands.map((c) => (
@@ -41,7 +41,7 @@ export function DockSection() {
             <Download className="h-4 w-4 text-accent" />
             <span>
               <span className="block text-sm">{resume.fileLabel}</span>
-              <span className="block text-[11px] tracking-[0.1em] text-muted">{resume.label.toUpperCase()} · {resume.hint}</span>
+              <span className="block text-[0.6875rem] tracking-[0.1em] text-muted">{resume.label.toUpperCase()} · {resume.hint}</span>
             </span>
           </a>
         </Panel>
@@ -49,7 +49,7 @@ export function DockSection() {
 
       <div className="beat-acc" style={{ '--i': 2 } as React.CSSProperties}>
         <ChatConsole />
-        <footer className="mt-4 font-mono text-[11px] tracking-[0.12em] text-muted">
+        <footer className="mt-4 font-mono text-[0.6875rem] tracking-[0.12em] text-muted">
           © {new Date().getFullYear()} {site.name} · {site.role}
         </footer>
       </div>

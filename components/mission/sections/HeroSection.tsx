@@ -8,7 +8,7 @@ export function HeroSection() {
   return (
     <div className="hero-frame mx-auto flex h-full max-w-7xl flex-col justify-center px-6 pb-24 pt-20 sm:px-10 lg:justify-start lg:pb-56 lg:pt-28">
       {/* boot log: runs once on load, not scroll-driven */}
-      <ol className="boot-log mb-8 hidden font-mono text-[11px] leading-5 tracking-[0.12em] text-muted sm:block" aria-hidden>
+      <ol className="boot-log mb-8 hidden font-mono text-[0.6875rem] leading-5 tracking-[0.12em] text-muted sm:block" aria-hidden>
         {BOOT_LINES.map((l, i) => (
           <li key={l} style={{ animationDelay: `${0.15 + i * 0.22}s` }}>
             <span className="text-accent">▸</span> {l}
@@ -16,7 +16,7 @@ export function HeroSection() {
         ))}
       </ol>
 
-      <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+      <div className="flex items-center gap-3 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-accent">
         <span className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
@@ -62,7 +62,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="scroll-hint absolute bottom-12 left-1/2 flex -translate-x-1/2 items-center gap-3 font-mono text-[11px] tracking-[0.14em] text-muted">
+      <div className="scroll-hint absolute bottom-12 left-1/2 flex -translate-x-1/2 items-center gap-3 font-mono text-[0.6875rem] tracking-[0.14em] text-muted">
         <span className="block h-px w-10 bg-grid" />
         scroll to explore
       </div>

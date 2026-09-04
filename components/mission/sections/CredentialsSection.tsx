@@ -18,7 +18,7 @@ export function CredentialsSection() {
               <span className="rail-dot absolute -left-[5px] top-4 h-2.5 w-2.5 rounded-full border border-grid bg-ground" />
               <div className="rail-label flex items-center gap-2 text-sm text-muted">
                 <IconByName name={g.icon} className="h-4 w-4" /> {g.title}
-                <span className="font-mono text-[11px]">· {g.items.length}</span>
+                <span className="font-mono text-[0.6875rem]">· {g.items.length}</span>
               </div>
             </li>
           ))}
@@ -32,24 +32,24 @@ export function CredentialsSection() {
                 <IconByName name={g.icon} className="h-4 w-4 text-accent" />
                 <h3 className="text-lg font-semibold text-text">{g.title}</h3>
               </div>
-              <span className="font-mono text-[11px] tracking-[0.12em] text-muted">{g.id.toUpperCase()}_REGISTRY · {g.items.length} ITEMS</span>
+              <span className="font-mono text-[0.6875rem] tracking-[0.12em] text-muted">{g.id.toUpperCase()}_REGISTRY · {g.items.length} ITEMS</span>
             </div>
             <ul className="divide-y divide-grid/70">
               {g.items.map((item) => (
                 <li key={item.title} className="py-3 first:pt-0 last:pb-0">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <h4 className="max-w-[52ch] font-medium leading-snug text-text">{item.title}</h4>
-                    <span className="font-mono text-[11px] tracking-[0.1em] text-accent">{item.status}</span>
+                    <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-accent">{item.status}</span>
                   </div>
-                  <div className="mt-1 font-mono text-[11px] tracking-[0.1em] text-muted">
+                  <div className="mt-1 font-mono text-[0.6875rem] tracking-[0.1em] text-muted">
                     {item.id} · {item.year}
                   </div>
-                  <p className="mt-1.5 max-w-[64ch] text-[13.5px] leading-relaxed text-muted">{item.description}</p>
+                  <p className="mt-1.5 max-w-[64ch] text-[0.8438rem] leading-relaxed text-muted">{item.description}</p>
                   <div className="mt-2 flex flex-wrap items-center gap-1.5">
                     {item.highlights.map((h) => (
                       <Chip key={h}>{h}</Chip>
                     ))}
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] tracking-[0.1em] text-accent hover:underline">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex items-center gap-1 font-mono text-[0.6875rem] tracking-[0.1em] text-accent hover:underline">
                       OPEN <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>

@@ -27,9 +27,18 @@ export function Minimap() {
     const ctx = c.getContext('2d')
     if (!ctx) return
     const dpr = Math.min(2, window.devicePixelRatio || 1)
-    c.width = W * dpr
-    c.height = H * dpr
-    ctx.scale(dpr, dpr)
+    // the canvas is laid out in rem so it grows with the interface; keep the backing buffer in step
+    // and draw in fixed W x H units so all the map maths below stays unchanged
+    let px = 0
+    const fit = () => {
+      const k = (c.clientWidth / W) * dpr
+      if (Math.abs(k - px) < 0.001) return
+      px = k
+      c.width = Math.round(W * k)
+      c.height = Math.round(H * k)
+      ctx.setTransform(k, 0, 0, k, 0, 0)
+    }
+    fit()
     const data = computeReveal()
     const walls = wallPieces()
     // room index per cell for per-zone mapped fractions
@@ -46,6 +55,7 @@ export function Minimap() {
       raf = requestAnimationFrame(draw)
       if (now - last < 50) return
       last = now
+      fit()
       const t = missionT(mission.zone, mission.beat, mission.beatT)
       ctx.clearRect(0, 0, W, H)
       const roomSeen = new Array(ROOMS.length).fill(0)
@@ -95,8 +105,9 @@ export function Minimap() {
 
   const onClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
-    const x = (e.clientX - rect.left - ox) / s + BOUNDS.minX
-    const z = (e.clientY - rect.top - oz) / s + BOUNDS.minZ
+    const k = rect.width / W
+    const x = ((e.clientX - rect.left) / k - ox) / s + BOUNDS.minX
+    const z = ((e.clientY - rect.top) / k - oz) / s + BOUNDS.minZ
     const zone = roomAt(x, z)
     if (zone >= 0) document.getElementById(ZONES[zone].id)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -104,11 +115,11 @@ export function Minimap() {
   return (
     <canvas
       ref={ref}
-      style={{ width: W, height: H, left: onHero ? 'auto' : 32, right: onHero ? 32 : 'auto' }}
+      style={{ width: `${W / 16}rem`, height: `${H / 16}rem`, left: onHero ? 'auto' : '2rem', right: onHero ? '2rem' : 'auto' }}
       onClick={onClick}
       role="img"
       aria-label="Facility minimap"
-      className="pointer-events-auto absolute bottom-8 hidden cursor-pointer rounded-md border border-grid bg-ground/80 transition-opacity sm:block"
+      className="pointer-events-auto absolute bottom-8 hidden cursor-pointer rounded-md border border-grid bg-ground/90 transition-opacity sm:block"
     />
   )
 }

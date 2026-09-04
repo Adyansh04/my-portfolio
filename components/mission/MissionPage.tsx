@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { ZONES } from '@/lib/mission/zones'
 import { mission, setProgress } from '@/lib/mission/store'
+import { ENTRY_T } from '@/lib/mission/path'
 import { ZoneSection } from './ZoneSection'
 import { Hud } from './hud/Hud'
 import { WorldCanvas } from './WorldCanvas'
@@ -45,6 +46,11 @@ export function MissionPage() {
         const { zone, zoneT, beat, beatT } = mission
         sections.forEach((el, i) => {
           const zt = i < zone ? 1 : i > zone ? 0 : zoneT
+          // hold this zone's copy back until the robot has actually arrived in the room
+          const lo = ENTRY_T[i] * 0.72
+          const hi = ENTRY_T[i] + 0.012
+          const enter = i < zone ? 1 : i > zone ? 0 : Math.min(1, Math.max(0, (zoneT - lo) / (hi - lo)))
+          el.style.setProperty('--enter', enter.toFixed(4))
           const b = i < zone ? ZONES[i].beats - 1 : i > zone ? 0 : beat
           el.style.setProperty('--zt', zt.toFixed(4))
           el.style.setProperty('--bt', (i === zone ? beatT : i < zone ? 1 : 0).toFixed(4))

@@ -17,14 +17,14 @@ export function ExperienceSection() {
           {experiences.map((e, i) => (
             <li key={e.id} className="rail-node relative pl-6 py-2.5" style={{ '--i': i } as React.CSSProperties}>
               <span className="rail-dot absolute -left-[5px] top-4 h-2.5 w-2.5 rounded-full border border-grid bg-ground" />
-              <div className="font-mono text-[11px] tracking-[0.12em] text-muted">{e.period}</div>
+              <div className="font-mono text-[0.6875rem] tracking-[0.12em] text-muted">{e.period}</div>
               <div className="rail-label text-sm text-muted">{e.company}</div>
             </li>
           ))}
         </ol>
       </div>
 
-      <div className="beat-stack lg:ml-auto lg:w-[min(560px,100%)]">
+      <div className="beat-stack lg:ml-auto lg:w-[min(35rem,100%)]">
         {experiences.map((e, i) => (
           <Panel key={e.id} className="beat" style={{ '--i': i } as React.CSSProperties}>
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -37,7 +37,7 @@ export function ExperienceSection() {
                   <div className="text-sm text-accent">{e.company}</div>
                 </div>
               </div>
-              <div className="text-right font-mono text-[11px] leading-5 tracking-[0.1em] text-muted">
+              <div className="text-right font-mono text-[0.6875rem] leading-5 tracking-[0.1em] text-muted">
                 <div>{e.period}</div>
                 <div className="flex items-center justify-end gap-1">
                   <MapPin className="h-3 w-3" /> {e.location}
