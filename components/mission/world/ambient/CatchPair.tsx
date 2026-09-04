@@ -7,6 +7,7 @@ import r1Json from '@/public/models/r1/robot.json'
 import { asset } from '@/lib/base-path'
 import type { RobotDef } from '@/lib/mission/robots'
 import { CATCH, catchState } from '@/lib/mission/traffic'
+import { ContactShadow } from '../ContactShadow'
 import { ArticulatedRobot, type JointValues } from '../robots/ArticulatedRobot'
 import { makeRobotMaterial, r1MaterialFor } from '../robots/robotMaterial'
 
@@ -85,6 +86,7 @@ function Player({ side }: { side: 0 | 1 }) {
 
   return (
     <group ref={outer} position={[home[0], PELVIS, home[1]]} rotation={[0, facing, 0]}>
+      <ContactShadow radius={0.34} stretch={1.1} opacity={0.5} y={-PELVIS + 0.016} />
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <ArticulatedRobot def={DEF} folder={FOLDER} joints={joints} material={material} materialFor={r1MaterialFor} />
       </group>

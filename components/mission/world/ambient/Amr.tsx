@@ -7,6 +7,7 @@ import { RoundedBox } from '@react-three/drei'
 import { mission } from '@/lib/mission/store'
 import { buildTimeline, samplePose, type RouteDef } from '@/lib/mission/traffic'
 import { makeLabelTexture } from '../labels'
+import { ContactShadow } from '../ContactShadow'
 
 const ACCENT = '#ff7a1a'
 const CYAN = '#4fd1ff'
@@ -108,9 +109,10 @@ export function Amr({ route, label, phase, yieldRadius = 2.1 }: Props) {
 
   return (
     <group ref={root}>
+      <ContactShadow radius={0.56} stretch={1.5} opacity={0.5} />
       {/* floor glow */}
       <mesh material={glowMat} position={[0, 0.012, 0]} rotation-x={-Math.PI / 2}>
-        <circleGeometry args={[0.72, 24]} />
+        <circleGeometry args={[0.6, 24]} />
       </mesh>
       {/* bumper skirt + chassis */}
       <mesh material={mats.dark} position={[0, 0.075, 0]}>

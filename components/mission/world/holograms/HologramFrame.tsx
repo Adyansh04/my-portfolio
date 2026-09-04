@@ -8,6 +8,7 @@ import type { Project } from '@/content/types'
 import { makeHologramMaterial } from './hologramMaterial'
 import { makeLabelTexture } from '../labels'
 import { Sparkles } from './parts'
+import { ContactShadow } from '../ContactShadow'
 
 interface HologramCtxValue {
   /** camera close enough for the content to animate */
@@ -51,7 +52,7 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
     )
     return new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })
   }, [project])
-  const glow = useMemo(() => new THREE.MeshBasicMaterial({ color: '#ff7a1a', transparent: true, opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false }), [])
+  const glow = useMemo(() => new THREE.MeshBasicMaterial({ color: '#ff7a1a', transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending, depthWrite: false }), [])
 
   useFrame(({ camera }, dt) => {
     const d = Math.min(0.05, dt || 0.016)
@@ -87,9 +88,10 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
         <cylinderGeometry args={[0.72, 0.72, 1.7, 32, 1, true]} />
       </mesh>
       <pointLight ref={light} position={[0, 1.6, 0]} color="#ffc9a0" intensity={1} distance={4} decay={1.8} />
-      {/* soft glow pool on the floor */}
+      {/* the pedestal sits on the floor (shadow) and spills a little accent onto it (pool) */}
+      <ContactShadow radius={0.82} opacity={0.62} />
       <mesh position={[0, 0.02, 0]} rotation-x={-Math.PI / 2} material={glow}>
-        <circleGeometry args={[1.4, 40]} />
+        <circleGeometry args={[1.15, 40]} />
       </mesh>
       {/* label plate faces the aisle (pedestals north of the aisle face +z, south ones face -z) */}
       <mesh position={[0, 0.55, z < 38 ? 0.63 : -0.63]} rotation={[0, z < 38 ? 0 : Math.PI, 0]} material={plate}>

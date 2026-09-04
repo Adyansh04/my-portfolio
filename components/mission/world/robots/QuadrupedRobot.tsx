@@ -6,6 +6,7 @@ import { useFrame } from '@react-three/fiber'
 import { mission } from '@/lib/mission/store'
 import type { QuadrupedLegs, RobotDef, RobotLink } from '@/lib/mission/robots'
 import { trot, type GaitParams } from '@/lib/mission/gait'
+import { ContactShadow } from '../ContactShadow'
 import { ArticulatedRobot, type JointValues } from './ArticulatedRobot'
 import { makeRobotMaterial } from './robotMaterial'
 
@@ -117,6 +118,7 @@ export function QuadrupedRobot({ def, folder, legs, gait, headingOffset, scale =
 
   return (
     <group ref={outer}>
+      <ContactShadow radius={0.46 * scale} stretch={1.5} opacity={0.5} />
       <group ref={body} scale={scale}>
         <group rotation={[-Math.PI / 2, 0, 0]}>
           <ArticulatedRobot def={def} folder={folder} joints={joints} material={material} materialFor={materialFor} />

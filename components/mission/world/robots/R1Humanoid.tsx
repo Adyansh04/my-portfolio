@@ -7,6 +7,7 @@ import r1Json from '@/public/models/r1/robot.json'
 import { asset } from '@/lib/base-path'
 import type { RobotDef } from '@/lib/mission/robots'
 import { mission } from '@/lib/mission/store'
+import { ContactShadow } from '../ContactShadow'
 import { ArticulatedRobot, type JointValues } from './ArticulatedRobot'
 import { makeRobotMaterial, r1MaterialFor } from './robotMaterial'
 
@@ -72,6 +73,7 @@ export function R1Humanoid({ position, facing }: Props) {
 
   return (
     <group ref={outer} position={[position[0], position[1] + PELVIS, position[2]]} rotation={[0, facing, 0]}>
+      <ContactShadow radius={0.34} stretch={1.1} opacity={0.5} y={-PELVIS + 0.016} />
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <ArticulatedRobot def={DEF} folder={FOLDER} joints={joints} material={material} materialFor={r1MaterialFor} />
       </group>
