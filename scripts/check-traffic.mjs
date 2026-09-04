@@ -5,6 +5,7 @@
  */
 import { BOUNDS, PEDESTALS, PODIUMS, RACKS, roomAt, wallPieces } from '../lib/mission/facility.ts'
 import { AMR_ROUTES, DRONE_PATHS, HALL_RACKS, RACK_BAY, STATIONS, buildTimeline, samplePose, CATCH, fleet } from '../lib/mission/traffic.ts'
+import { ROUTE, routePose } from '../lib/mission/path.ts'
 
 const AMR_HALF = 0.48 // widest half-extent of a unit
 const PED_R = 0.72 // hologram volume radius
@@ -83,6 +84,20 @@ for (const route of AMR_ROUTES)
     if (st.action && !servable.some((p) => Math.hypot(p[0] - st.p[0], p[1] - st.p[1]) < 2.2)) errors.push(`${route.id} ${st.action}s at ${st.p} with nothing to work with within 2.2 m`)
 for (const s of STATIONS)
   if (!AMR_ROUTES.some((r) => r.stops.some((st) => st.action && Math.hypot(s.p[0] - st.p[0], s.p[1] - st.p[1]) < 2.2))) errors.push(`station at ${s.p} is not served by any route`)
+
+// the hero robot walks its own route through all of this: nothing we add may stand in its way
+const HERO_HALF = 0.5
+for (let zone = 0; zone < ROUTE.length; zone++)
+  for (let beat = 0; beat < ROUTE[zone].length; beat++)
+    for (let u = 0; u <= 1; u += 0.01) {
+      const { x, z } = routePose(zone, beat, u)
+      for (const b of boxes) {
+        const d = boxDist(x, z, b)
+        if (d < HERO_HALF) errors.push(`hero route zone ${zone} beat ${beat} runs into a ${b.what} (${d.toFixed(2)} m) at ${x.toFixed(2)},${z.toFixed(2)}`)
+      }
+      for (const p of PADS) if (Math.hypot(x - p[0], z - p[1]) < HERO_HALF + 0.78) errors.push(`hero route zone ${zone} beat ${beat} crosses a drone pad at ${x.toFixed(2)},${z.toFixed(2)}`)
+      for (const [name, p] of [['catch A', CATCH.a], ['catch B', CATCH.b]]) if (Math.hypot(x - p[0], z - p[1]) < HERO_HALF + 0.45) errors.push(`hero route zone ${zone} beat ${beat} walks into ${name}`)
+    }
 
 const lanes = fleet().length
 if (errors.length) {

@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "check:content": "node scripts/check-content.mjs",
     "typecheck": "tsc --noEmit",
-    "check:traffic": "node scripts/check-traffic.mjs"
+    "check:traffic": "node --import ./scripts/register-ts.mjs scripts/check-traffic.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
