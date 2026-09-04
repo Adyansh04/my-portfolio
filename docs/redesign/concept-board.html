@@ -1,0 +1,679 @@
+<meta charset="utf-8">
+<title>Adyansh Portfolio Directions</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Big+Shoulders+Display:wght@600;800&family=Martian+Mono:wght@400;600&family=Unbounded:wght@500;800&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --paper:#F2F3F1; --panel:#FFFFFF; --ink:#171A1C; --muted:#5E666B; --rule:#D5D9D6; --rule-soft:#E6E9E7;
+    --accent:#E0501B; --accent-ink:#FFFFFF; --rec:#0F6B4E; --rec-bg:#E3F1EB;
+    --code-bg:#ECEFEC;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0F1214; --panel:#171B1F; --ink:#E6E9E8; --muted:#8C959B; --rule:#2A3035; --rule-soft:#1F2429;
+      --accent:#FF7A3D; --accent-ink:#141414; --rec:#7FD1AE; --rec-bg:#12271F; --code-bg:#1B2024;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1214; --panel:#171B1F; --ink:#E6E9E8; --muted:#8C959B; --rule:#2A3035; --rule-soft:#1F2429;
+    --accent:#FF7A3D; --accent-ink:#141414; --rec:#7FD1AE; --rec-bg:#12271F; --code-bg:#1B2024;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 24px 96px}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1,h2,h3,h4{font-family:"Archivo","IBM Plex Sans",system-ui,sans-serif;line-height:1.05;margin:0;text-wrap:balance}
+  h1{font-size:clamp(38px,6vw,64px);font-weight:800;font-stretch:112%;letter-spacing:-.02em;margin:10px 0 18px}
+  h2{font-size:clamp(26px,3.4vw,36px);font-weight:700;font-stretch:105%;letter-spacing:-.015em}
+  h3{font-size:20px;font-weight:600;margin-bottom:6px}
+  h4{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-family:"IBM Plex Mono",monospace;margin-bottom:8px}
+  p{max-width:68ch;margin:0 0 14px}
+  .lede{font-size:19px;line-height:1.5;max-width:62ch;color:var(--ink)}
+  a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+  section{border-top:1px solid var(--rule);padding:44px 0 8px;margin-top:28px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  @media(max-width:820px){.row{grid-template-columns:1fr}}
+  code,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.92em}
+  code{background:var(--code-bg);padding:1px 6px;border-radius:4px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  th{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  td.num{font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",monospace}
+  .scroll-x{overflow-x:auto}
+  ul{padding-left:20px;margin:0 0 14px}
+  li{margin:4px 0;max-width:70ch}
+  .callout{border:1px solid var(--rule);border-left:4px solid var(--accent);padding:16px 18px;background:var(--panel);border-radius:6px;margin:18px 0}
+  .callout.rec{border-left-color:var(--rec);background:var(--rec-bg)}
+  .callout p:last-child{margin-bottom:0}
+
+  /* direction blocks */
+  .dir{border:1px solid var(--rule);border-radius:10px;background:var(--panel);padding:0;margin:26px 0;overflow:hidden}
+  .dir-head{display:flex;align-items:baseline;gap:18px;padding:22px 26px 10px;flex-wrap:wrap}
+  .dir-tag{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.14em;color:var(--accent-ink);background:var(--accent);padding:4px 9px;border-radius:4px;font-weight:600}
+  .dir-head .thesis{flex-basis:100%;color:var(--muted);font-size:17px;max-width:72ch;margin:6px 0 0}
+  .dir-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;border-top:1px solid var(--rule-soft)}
+  @media(max-width:900px){.dir-body{grid-template-columns:1fr}}
+  .sketch{padding:18px 26px 22px;border-right:1px solid var(--rule-soft)}
+  @media(max-width:900px){.sketch{border-right:none;border-bottom:1px solid var(--rule-soft)}}
+  .sketch canvas{width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--rule-soft)}
+  .sketch .cap{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);margin-top:10px}
+  .specs{padding:18px 26px 22px;display:flex;flex-direction:column;gap:18px}
+  .swatches{display:flex;gap:6px;flex-wrap:wrap}
+  .sw{flex:1 1 72px;min-width:72px;height:54px;border-radius:5px;border:1px solid rgba(0,0,0,.12);display:flex;align-items:flex-end;padding:5px 6px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.02em}
+  .ramp{height:14px;border-radius:4px;flex-basis:100%;background:linear-gradient(90deg,#30123B,#4686FB,#1AE4B6,#F9F03B,#E4460A,#7A0403);border:1px solid rgba(0,0,0,.12)}
+  .type-sample{border:1px solid var(--rule-soft);border-radius:6px;padding:14px 16px;background:var(--paper)}
+  .type-sample .d{font-size:34px;line-height:1;margin-bottom:6px}
+  .type-sample .b{font-size:15px;line-height:1.45;max-width:46ch;margin-bottom:6px}
+  .type-sample .m{font-size:12px;color:var(--muted)}
+  .beats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:0 26px 24px}
+  @media(max-width:900px){.beats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:560px){.beats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .beat{border:1px solid var(--rule-soft);border-radius:6px;padding:10px 10px 12px;background:var(--paper);font-size:13px;line-height:1.4}
+  .beat b{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;font-weight:600}
+  .meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:0 26px 24px;font-size:14px}
+  @media(max-width:700px){.meta{grid-template-columns:1fr}}
+  .meta div{border-top:2px solid var(--rule);padding-top:8px}
+  .meta b{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:500}
+  .pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:2px 8px;border:1px solid var(--rule);border-radius:999px;color:var(--muted);margin:2px 2px 0 0}
+  .qs li{margin:10px 0}
+  .qs li b{display:block}
+  .small{font-size:13.5px;color:var(--muted)}
+  @media (prefers-reduced-motion: reduce){ .sketch .cap::after{content:" · animation paused (reduced motion)"} }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Concept board · Adyansh Gupta portfolio · 3 September 2026 · branch <span class="mono">redesign-3d</span></div>
+  <h1>Three directions for a robotics portfolio that feels like a robot built it</h1>
+  <p class="lede">The facts stay exactly as they are: ten projects, six roles, three hackathon results, one paper, two patents, three certifications, two degrees, the résumé and the chat assistant. Everything else is on the table. Each direction below turns one of Adyansh's real specialties into the mechanic that holds the whole site together, instead of decorating a card stack with neon.</p>
+
+  <div class="callout">
+    <p><strong>Why the current site reads as "basic".</strong> It is a vertical stack of glass cards with a green glow, glitch text, and a stock Spline humanoid that is not one of Adyansh's robots. Nothing spatial connects the sections, so the 3D is a poster on the wall rather than the room you are standing in. The fix is not more effects. It is one strong spatial idea that the scroll drives.</p>
+  </div>
+
+  <section>
+    <div class="eyebrow">Direction A · recommended</div>
+    <div class="dir">
+      <div class="dir-head">
+        <span class="dir-tag">A</span>
+        <h2>Mission Log</h2>
+        <p class="thesis">The site is an autonomous inspection mission. A quadruped explores an unknown facility; the map builds itself as you scroll, and every discovered zone is a section of the portfolio. Adyansh's own Go2 project becomes the navigation model for the whole page.</p>
+      </div>
+      <div class="dir-body">
+        <div class="sketch">
+          <canvas id="skA" width="720" height="405" aria-label="Animated sketch: a robot sweeps a LiDAR beam and reveals an occupancy grid zone by zone"></canvas>
+          <div class="cap">Sketch: frontier exploration reveals the floor plan. Zones light up as they are mapped. Real build: WebGL world, scroll-scrubbed camera, live minimap.</div>
+        </div>
+        <div class="specs">
+          <div>
+            <h4>Palette</h4>
+            <div class="swatches">
+              <div class="sw" style="background:#0B0F14;color:#9AA5B4">#0B0F14</div>
+              <div class="sw" style="background:#141A22;color:#9AA5B4">#141A22</div>
+              <div class="sw" style="background:#2A3340;color:#C9D1DB">#2A3340</div>
+              <div class="sw" style="background:#E9EEF3;color:#333">#E9EEF3</div>
+              <div class="sw" style="background:#FF7A1A;color:#1a1a1a">#FF7A1A</div>
+              <div class="ramp" title="turbo colormap for point clouds"></div>
+            </div>
+            <p class="small" style="margin-top:8px">Graphite blue-black like an RViz viewport, occupancy-grid greys for structure, one safety-orange accent for UI, and the turbo colormap reserved for sensor data only. No neon green.</p>
+          </div>
+          <div>
+            <h4>Type</h4>
+            <div class="type-sample">
+              <div class="d" style="font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;letter-spacing:.01em">ZONE 03 · PROJECTS</div>
+              <div class="b" style="font-family:'IBM Plex Sans',sans-serif">Body in IBM Plex Sans: quiet, engineered, made for long technical text.</div>
+              <div class="m" style="font-family:'IBM Plex Mono',monospace">/scan 10 Hz · /tf 100 Hz · mapped 43% · IBM Plex Mono for telemetry</div>
+            </div>
+          </div>
+          <div>
+            <h4>How the content maps</h4>
+            <ul class="small" style="color:var(--ink)">
+              <li><b>Profile</b> → Zone 01, a wall display: education timeline and the tech stack as an equipment inventory.</li>
+              <li><b>Experience</b> → Zone 02, a corridor. Each role is a doorway with a placard; the camera tracks along it.</li>
+              <li><b>Projects</b> → Zone 03, ten pedestals, each with a holographic mini-scene (Go2 map, arm and mesh, factor graph, fiducial marker). Click opens the detail sheet with the real media.</li>
+              <li><b>Hackathons</b> → Zone 04 trophy alcove. <b>Credentials</b> → Zone 05 archive. <b>Contact</b> → Zone 06 docking station; the chat assistant becomes mission control.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="beats">
+        <div class="beat"><b>Boot</b>Black. A HUD boots like RViz opening. One robot, one LiDAR sweep. The name resolves as "detected text".</div>
+        <div class="beat"><b>Explore</b>First scroll: sweeps reveal floor grid and walls. Headline draws in as a frontier. Status: MODE EXPLORE.</div>
+        <div class="beat"><b>Zone 01–02</b>Camera glides into the profile wall, then down the experience corridor. Sections are pinned DOM, world moves behind.</div>
+        <div class="beat"><b>Zone 03</b>Project hall. Pedestals light as the camera passes. Hover a tech tag and every project sharing it glows.</div>
+        <div class="beat"><b>Zone 04–05</b>Trophies and archive drawers. Short beats, deliberately quieter.</div>
+        <div class="beat"><b>Dock</b>Robot docks. Mission report: 100% mapped. Contact links, résumé, and mission-control chat.</div>
+      </div>
+      <div class="meta">
+        <div><b>Always on screen</b>Minimap with the visitor's position and zone labels (Nav2 costmap style). Topic ticker with scroll progress as mission progress. Keyboard and reduced-motion paths that skip the world.</div>
+        <div><b>Tech</b>React Three Fiber + drei, scroll-scrubbed camera on a spline path, instanced point-cloud shader, Go2 model with a procedural walk, DOM sections layered over a pinned canvas. Mobile: pre-rendered poster video plus 2D minimap.</div>
+        <div><b>Effort · risk</b>Highest of the three. Performance on phones is the risk; the fallback path is designed in from day one, not bolted on. Payoff is the only portfolio of its kind.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Direction B</div>
+    <div class="dir">
+      <div class="dir-head">
+        <span class="dir-tag" style="background:#0F4C81;color:#fff">B</span>
+        <h2>Drawing Sheet</h2>
+        <p class="thesis">A mechanical engineer who became a roboticist presents the work as a bound set of engineering drawings. Paper by day, blueprint by night. The hero is an exploded assembly that snaps together as you scroll; every project is a sheet with a real title block.</p>
+      </div>
+      <div class="dir-body">
+        <div class="sketch">
+          <canvas id="skB" width="720" height="405" aria-label="Animated sketch: an isometric omni-wheel robot exploding into parts with dimension lines"></canvas>
+          <div class="cap">Sketch: exploded isometric of a three-wheel omni robot with live dimension lines. Move the pointer over it to pull it apart. Real build: orthographic WebGL model, scroll-driven explode.</div>
+        </div>
+        <div class="specs">
+          <div>
+            <h4>Palette</h4>
+            <div class="swatches">
+              <div class="sw" style="background:#EEF0EC;color:#333">#EEF0EC</div>
+              <div class="sw" style="background:#1B1F1D;color:#ccc">#1B1F1D</div>
+              <div class="sw" style="background:#0F4C81;color:#fff">#0F4C81</div>
+              <div class="sw" style="background:#C8102E;color:#fff">#C8102E</div>
+              <div class="sw" style="background:#6B7370;color:#fff">#6B7370</div>
+              <div class="sw" style="background:#0E2A47;color:#9fc0e0;flex-basis:100%">#0E2A47 dark mode = blueprint</div>
+            </div>
+            <p class="small" style="margin-top:8px">Cool drafting vellum, cyanotype blue for dimension lines, red only for revision marks (a real drawing convention), graphite for notes. The rare light-theme developer portfolio.</p>
+          </div>
+          <div>
+            <h4>Type</h4>
+            <div class="type-sample" style="background:#EEF0EC;color:#1B1F1D;border-color:#cfd4d0">
+              <div class="d" style="font-family:'Archivo',sans-serif;font-weight:800;font-stretch:118%;text-transform:uppercase;letter-spacing:-.01em">Sheet 03 / 10</div>
+              <div class="b" style="font-family:'Archivo',sans-serif;font-weight:400">Archivo, wide for titles and normal width for body. One family, two widths.</div>
+              <div class="m" style="font-family:'Martian Mono',monospace;color:#0F4C81">REV B · SCALE 1:4 · DRAWN A.GUPTA · Martian Mono for title blocks</div>
+            </div>
+          </div>
+          <div>
+            <h4>How the content maps</h4>
+            <ul class="small" style="color:var(--ink)">
+              <li><b>Cover sheet</b> → name, index of sheets (the navigation), issue date.</li>
+              <li><b>General arrangement</b> → profile: education and tech stack as a parts list with quantities.</li>
+              <li><b>Assembly sequence</b> → experience: each role is an assembly step; the robot gains a subsystem per step.</li>
+              <li><b>Sheets 01–10</b> → projects, each with title block, notes, and the media as "views". Hackathons and credentials are the revision table and approvals. Contact is "released for manufacture".</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="beats">
+        <div class="beat"><b>Cover</b>Paper texture, title block, sheet index. Hover an index row and its sheet preview appears.</div>
+        <div class="beat"><b>Explode</b>Scroll pulls the hero robot apart along its axis. Dimension lines animate with SVG path drawing.</div>
+        <div class="beat"><b>Assemble</b>Experience: each step adds a subsystem and a callout. Camera orbits slightly per step.</div>
+        <div class="beat"><b>Sheets</b>Projects as full-bleed drawing sheets, horizontally paged on desktop, stacked on mobile.</div>
+        <div class="beat"><b>Revisions</b>Hackathons and credentials as a revision table with stamps.</div>
+        <div class="beat"><b>Release</b>Contact and résumé. A "released" stamp animates on scroll end.</div>
+      </div>
+      <div class="meta">
+        <div><b>Always on screen</b>Sheet number and revision in the corner. Cursor rotates the orthographic view on any sheet.</div>
+        <div><b>Tech</b>React Three Fiber for the exploded model (orthographic camera), SVG path-length animation for dimensions, CSS grid for sheets. Lightest 3D load; very mobile friendly.</div>
+        <div><b>Effort · risk</b>Medium. Risk is that it reads as refined rather than immersive. It honours the mechanical-engineering half of the CV better than anything else here.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Direction C</div>
+    <div class="dir">
+      <div class="dir-head">
+        <span class="dir-tag" style="background:#FF4FA3;color:#1a1a1a">C</span>
+        <h2>Sensor Stack</h2>
+        <p class="thesis">See the site the way a robot sees it. The visitor moves through the perception pipeline: raw points, detections, map, plan. Scroll is rosbag playback. Projects are nodes in a factor graph joined by the tech they share, which is also a working filter.</p>
+      </div>
+      <div class="dir-body">
+        <div class="sketch">
+          <canvas id="skC" width="720" height="405" aria-label="Animated sketch: the name resolves out of a noisy point cloud as a scan sweep passes, then a detection box labels it"></canvas>
+          <div class="cap">Sketch: a LiDAR sweep resolves the name from noise, coloured by depth with the turbo colormap, then a detector labels it. Real build: GPU point cloud, HUD, rosbag scrubber.</div>
+        </div>
+        <div class="specs">
+          <div>
+            <h4>Palette</h4>
+            <div class="swatches">
+              <div class="sw" style="background:#0A0D12;color:#9AA5B4">#0A0D12</div>
+              <div class="sw" style="background:#161B23;color:#9AA5B4">#161B23</div>
+              <div class="sw" style="background:#9AA5B4;color:#111">#9AA5B4</div>
+              <div class="sw" style="background:#E6EBF2;color:#333">#E6EBF2</div>
+              <div class="sw" style="background:#FF4FA3;color:#1a1a1a">#FF4FA3</div>
+              <div class="ramp" title="turbo colormap for depth"></div>
+            </div>
+            <p class="small" style="margin-top:8px">Cool near-black, steel greys for UI, detection magenta as the single accent, turbo for depth. Colour means data here, never decoration.</p>
+          </div>
+          <div>
+            <h4>Type</h4>
+            <div class="type-sample" style="background:#0A0D12;color:#E6EBF2;border-color:#2a3038">
+              <div class="d" style="font-family:'Unbounded',sans-serif;font-weight:800;letter-spacing:-.02em">Perception</div>
+              <div class="b" style="font-family:'Instrument Sans',sans-serif;color:#c9d1db">Instrument Sans for body: neutral, slightly warm, reads well small on dark.</div>
+              <div class="m" style="font-family:'JetBrains Mono',monospace;color:#FF4FA3">headline 0.99 · t=00:12.480 · /projects · JetBrains Mono for HUD</div>
+            </div>
+          </div>
+          <div>
+            <h4>How the content maps</h4>
+            <ul class="small" style="color:var(--ink)">
+              <li><b>Profile</b> → camera frustum HUD; education and stack appear as calibrated "sensors" with specs.</li>
+              <li><b>Experience</b> → a TF tree growing from <code>base_link</code>; each role is a frame with its transform (dates, place).</li>
+              <li><b>Projects</b> → factor graph: nodes are projects, edges are shared tech. Hover ROS2 and seven nodes light. Detail view is a split "RGB | depth | detections" media viewer.</li>
+              <li><b>Hackathons</b> → detection results with confidence badges. <b>Credentials</b> → calibration certificates. <b>Contact</b> → publish to <code>/contact</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="beats">
+        <div class="beat"><b>Raw</b>Noise. A sweep passes and the name resolves as depth-coloured points. Detector box labels it.</div>
+        <div class="beat"><b>Calibrate</b>Profile as sensor specs. Frustum HUD tracks the cursor.</div>
+        <div class="beat"><b>Transform</b>Experience as a TF tree drawing itself frame by frame.</div>
+        <div class="beat"><b>Graph</b>Projects as a live factor graph. Filter by tech, open a node.</div>
+        <div class="beat"><b>Detect</b>Hackathons and credentials with confidence badges.</div>
+        <div class="beat"><b>Publish</b>Contact. Rosbag scrubber reaches the end of the recording.</div>
+      </div>
+      <div class="meta">
+        <div><b>Always on screen</b>Rosbag playback bar: timestamp, current topic, scroll position. Coordinate readout follows the cursor.</div>
+        <div><b>Tech</b>React Three Fiber point clouds in GLSL, DOM HUD with Motion, force-layout graph in SVG. Medium-heavy, mostly fragment-shader work rather than geometry.</div>
+        <div><b>Effort · risk</b>Medium-high. The risk is gimmick creep: every element wanting a HUD. It needs strict restraint to stay elegant.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Recommendation</div>
+    <h2>Build A, borrow two things</h2>
+    <div class="callout rec">
+      <p><strong>Mission Log</strong> is the one where the mechanic is the message. Frontier exploration, zone segmentation, and a docking station are literally what Adyansh shipped for the Go2 hackathon and for OLIVE. A visitor who never reads a word still learns what he does. It is also the direction with the most room to be the best site in its category rather than a very good version of a known pattern.</p>
+      <p>Two borrowings keep it from being one-note. From <strong>C</strong>: the tech-tag filter that lights up related projects, and turbo-coloured point clouds as the only place colour carries data. From <strong>B</strong>: the title-block treatment for project detail sheets, because the CAD lineage deserves one honest nod. The boldness lives in the world and the camera; everything else stays quiet.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Foundations regardless of direction</div>
+    <div class="row">
+      <div>
+        <h3>What must not change</h3>
+        <div class="scroll-x">
+        <table>
+          <tr><th>Section</th><th>Items</th><th>Source of truth today</th></tr>
+          <tr><td>Projects</td><td class="num">10</td><td><span class="mono">projects-grid.tsx</span> (descriptions, stacks, challenges, links, media folders)</td></tr>
+          <tr><td>Experience</td><td class="num">6</td><td><span class="mono">experience-timeline.tsx</span></td></tr>
+          <tr><td>Hackathons</td><td class="num">3</td><td><span class="mono">hackathons-section.tsx</span></td></tr>
+          <tr><td>Publication / patents / certs</td><td class="num">1 / 2 / 3</td><td><span class="mono">credentials-accordion.tsx</span></td></tr>
+          <tr><td>Education, mission, tech stack</td><td class="num">2 / 1 / 28</td><td><span class="mono">bento-grid.tsx</span></td></tr>
+          <tr><td>Contact, résumé, chat</td><td class="num">3 + 1 + 1</td><td><span class="mono">contact-terminal.tsx</span>, <span class="mono">hero-section.tsx</span></td></tr>
+        </table>
+        </div>
+        <p class="small" style="margin-top:10px">First engineering step in every direction: lift all of this into one typed content file so the new components render the same facts, verifiably.</p>
+      </div>
+      <div>
+        <h3>Constraints found in the repo</h3>
+        <ul>
+          <li><b>Static export to GitHub Pages</b> under <code>/my-portfolio</code>. No server code; the chat already goes through a Cloudflare Worker, so that keeps working.</li>
+          <li><b>769 MB of project media</b> sits in <code>public/projects</code>: GIFs of 65 to 95 MB and videos up to 94 MB. GitHub Pages sites are capped near 1 GB, and a phone will never finish loading a 95 MB GIF. Re-encoding to MP4/WebM keeps the content identical and cuts this by roughly 10 to 20 times.</li>
+          <li><b>One broken file</b>: <code>abu-robocon/Robocon 1.mp4</code> is 0 bytes.</li>
+          <li><b>Spline hero</b> loads a stock humanoid from an external URL through a heavy runtime. Replacing it with a model of an actual robot Adyansh worked with is both lighter and truer.</li>
+          <li><b>Five-colour theme switcher</b> works against a designed palette. Recommendation: commit to one palette per direction and drop it.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+    <section>
+    <div class="eyebrow">Research · what the best sites actually do</div>
+    <h2>Reference sites and the one thing to take from each</h2>
+    <p>Award pages (Awwwards, CSS Design Awards, FWA, Codrops case studies) from 2024 to 2026. The pattern across winners: one hard spatial idea, executed with asset discipline, not a stack of effects.</p>
+    <div class="scroll-x">
+    <table>
+      <tr><th>Site</th><th>Mechanic</th><th>Take from it</th></tr>
+      <tr><td><a href="https://bruno-simon.com" target="_blank" rel="noopener">Bruno Simon</a> (2025 rebuild)</td><td>Drive a car through a toy world; exploration replaces scrolling. One shader codebase runs on WebGL and WebGPU.</td><td>Play beats reading. A single playable moment makes people stay.</td></tr>
+      <tr><td><a href="https://joseph-san.com" target="_blank" rel="noopener">Joseph Santamaria</a> (Codrops 2026)</td><td>Scroll is one continuous camera take; a small state machine snaps into four held "beats" then releases back to free scroll.</td><td>Mode-switching scroll: glide between zones, lock in for each section.</td></tr>
+      <tr><td><a href="https://igloo.inc" target="_blank" rel="noopener">Igloo Inc</a> (Awwwards SOTY 2024)</td><td>Three sections only; each project encased in procedurally grown ice; camera drifts between pedestals.</td><td>Pedestal drift for projects. Swap ice for a LiDAR scan-in: points first, mesh second.</td></tr>
+      <tr><td><a href="https://drone.riotters.com" target="_blank" rel="noopener">Riotters · LiDAR Drone Scanning</a> (2026)</td><td>A real drone LiDAR scan rendered as a live point cloud with anomaly overlays and confidence percentages.</td><td>Real sensor data as the hero. Closest existing cousin to Direction C.</td></tr>
+      <tr><td><a href="https://iyo.ai/iyo-one" target="_blank" rel="noopener">IYO One</a> · Dyson cutaways</td><td>Scroll-driven exploded view of hardware with callouts.</td><td>The exploded-view reference for Direction B; callouts carry real specs.</td></tr>
+      <tr><td><a href="https://weisdevice.xyz" target="_blank" rel="noopener">Weisdevice</a> (Codrops 2025)</td><td>A malfunctioning robot on an island; every glitch has a story reason. 0.76 MB model, render pauses off-screen.</td><td>Give every effect a reason. Budget discipline: under 4 MB of 3D.</td></tr>
+      <tr><td><a href="https://sebastien-lempens.com" target="_blank" rel="noopener">Sébastien Lempens</a> (SOTD 2024)</td><td>Scroll-driven scooter tour of Paris; camera switches first-person, follow, skydive per section.</td><td>Camera-mode swaps keep a long scroll from feeling like one long dolly.</td></tr>
+      <tr><td><a href="https://github.com/ttktjmt/mjswan" target="_blank" rel="noopener">mjswan</a> (open source)</td><td>MuJoCo compiled to WebAssembly plus an ONNX policy: a legged robot walks in the browser and visitors can push it. Runs on GitHub Pages.</td><td>The robotics version of Bruno's car: a Go2 you can shove. Stretch goal for A.</td></tr>
+      <tr><td><a href="https://github.com/gkjohnson/urdf-loaders" target="_blank" rel="noopener">urdf-loaders</a> (NASA JPL)</td><td>Loads URDF robots into three.js with draggable joints.</td><td>Correct kinematics for free. Its default look is RViz grey; the art direction is ours to add.</td></tr>
+      <tr><td><a href="https://lusion.co" target="_blank" rel="noopener">Lusion</a> · <a href="https://landonorris.com" target="_blank" rel="noopener">Lando Norris</a></td><td>Cursor-reactive shaders; one neon on near-black, everything else silent.</td><td>Restraint. One accent, one ground, and the type does the rest.</td></tr>
+    </table>
+    </div>
+    <div class="row" style="margin-top:22px">
+      <div>
+        <h3>The open lane</h3>
+        <p>Robotics companies (Boston Dynamics, Figure, 1X, Unitree, Apptronik) ship video heroes and spec grids, not real-time 3D. Robotics engineers' portfolios that use real URDFs or SLAM demos look like RViz screenshots with no art direction. Nobody found has combined an actual robot model, live telemetry, and award-level design. Direction A sits exactly there.</p>
+      </div>
+      <div>
+        <h3>What now reads as dated</h3>
+        <ul>
+          <li>Glitch text with no story reason, floating particle backgrounds, multi-speed parallax. The current site uses all three.</li>
+          <li>Hero video or 3D with zero interaction; autoplay audio.</li>
+          <li>Effect stacking instead of one idea; templates with a neon accent swapped in.</li>
+        </ul>
+        <p class="small">Table stakes in 2026: 60 fps on a mid-range phone or a designed fallback, reduced-motion path, compressed assets (Draco or Meshopt, KTX2 textures), rendering paused off-screen.</p>
+      </div>
+    </div>
+  </section>
+
+
+    <section>
+    <div class="eyebrow">Research · how to build it on this repo</div>
+    <h2>Tech decisions, checked against what is installed</h2>
+    <div class="row">
+      <div>
+        <h3>Scroll and 3D architecture</h3>
+        <p><strong>GSAP ScrollTrigger driving a React Three Fiber canvas pinned with CSS <code>position: sticky</code>, with normal DOM sections in between.</strong> GSAP and all its plugins have been free since April 2025. Each section registers a trigger whose progress is written to a ref and read inside the render loop, so React never re-renders per scroll tick. Lenis smooth scroll is optional and only added if plain scrubbing is not smooth enough.</p>
+        <p>Rejected: drei's ScrollControls (it puts its own scroll container in front of the canvas and fights a Tailwind page), and Framer Motion's scroll hooks as the main engine (fine for one hero, no pin or snap timelines for a six-zone story). WebGPU stays off the table for now: first-class React Three Fiber support is still in alpha, and the drei helpers are partly broken on it. Shaders stay small in GLSL so a later port is cheap.</p>
+        <h3>Robot models</h3>
+        <p>Real robot descriptions load with <code>urdf-loader</code> (Apache-2.0), which gives animatable joints for free. The simpler route for the final build is to bake each robot into one compressed GLB with named joint nodes and rotate those nodes directly, dropping the loader from the bundle. URDF files are Z-up; the scene rotates them once.</p>
+      </div>
+      <div>
+        <h3>Weight budget, measured</h3>
+        <div class="scroll-x">
+        <table>
+          <tr><th>Piece</th><th>gzipped</th><th>Note</th></tr>
+          <tr><td>Spline runtime (current hero)</td><td class="num">1.43 MB</td><td>plus a remote scene fetch. Removing it pays for everything below.</td></tr>
+          <tr><td>three + R3F + drei subset</td><td class="num">259 KB</td><td>already installed</td></tr>
+          <tr><td>GSAP core + ScrollTrigger</td><td class="num">46 KB</td><td>add <code>gsap</code>, <code>@gsap/react</code></td></tr>
+          <tr><td>urdf-loader</td><td class="num">9.5 KB</td><td>or zero if robots are baked to GLB</td></tr>
+          <tr><td>Lenis</td><td class="num">5.4 KB</td><td>optional</td></tr>
+          <tr><td>Postprocessing bloom</td><td class="num">109 KB</td><td>skip; additive emissive points are cheaper and look the same</td></tr>
+        </table>
+        </div>
+        <p class="small" style="margin-top:10px">Target under 4 MB of 3D assets in total, Draco or Meshopt compressed. Canvas loads client-side only, after a real poster image is on screen, so the first paint stays fast. Frame loop runs on demand except while the world is in view. Pixel ratio capped at 1.5, adaptive under load, static pose for reduced motion and low-tier GPUs.</p>
+      </div>
+    </div>
+    <h3 style="margin-top:22px">Free robot geometry, licenses verified from the actual repos</h3>
+    <div class="scroll-x">
+    <table>
+      <tr><th>Robot / part</th><th>Source</th><th>License</th><th>Format · size</th><th>Fit</th></tr>
+      <tr><td>Unitree Go2</td><td><a href="https://github.com/unitreerobotics/unitree_ros" target="_blank" rel="noopener">unitree_ros / go2_description</a></td><td>BSD-3</td><td>URDF + 7 DAE, 52 MB raw → decimate to ~1 MB GLB</td><td>Hero robot for A. 12 animatable leg joints.</td></tr>
+      <tr><td>Unitree R1 humanoid</td><td>unitree_ros / r1_description</td><td>BSD-3</td><td>URDF + 43 STL, 22.7 MB raw</td><td>Current job. Experience zone.</td></tr>
+      <tr><td>6-DOF arm</td><td><a href="https://github.com/xArm-Developer/xarm_ros2" target="_blank" rel="noopener">xArm7</a> or <a href="https://github.com/UniversalRobots/Universal_Robots_ROS2_Description" target="_blank" rel="noopener">UR5e</a></td><td>BSD-3 (both; avoid UR's newer models, different terms)</td><td>2.1 MB / 9.3 MB</td><td>RWTH hackathon pedestal. Which arm did you actually use?</td></tr>
+      <tr><td>Crazyflie 2.1</td><td><a href="https://github.com/bitcraze/crazyflie-simulation" target="_blank" rel="noopener">bitcraze / crazyflie-simulation</a></td><td>MIT</td><td>DAE, 219 KB, already low-poly</td><td>Drone project. Zero effort.</td></tr>
+      <tr><td>DJI Tello</td><td>Sketchfab (megamodels)</td><td>CC-BY, credit required</td><td>GLB, 4k faces</td><td>Drone project.</td></tr>
+      <tr><td>Mecanum AMR + wheels</td><td>Clearpath Ridgeback, Robotnik Summit XL</td><td>BSD</td><td>STL, 0.5 MB / ~1 MB</td><td>R2 Robocon and AgroBot stand-ins unless your own CAD exists.</td></tr>
+      <tr><td>Kiwi omni base</td><td><a href="https://github.com/SIGRobotics-UIUC/LeKiwi" target="_blank" rel="noopener">LeKiwi</a></td><td>Apache-2.0</td><td>URDF + STL, 61 MB raw (needs heavy decimation)</td><td>Only if your own Kiwi CAD is unavailable.</td></tr>
+      <tr><td>LiDAR, depth camera</td><td><a href="https://github.com/RobotnikAutomation/robotnik_sensors" target="_blank" rel="noopener">robotnik_sensors</a></td><td>BSD-3</td><td>Livox Mid-360 0.5 MB, VLP-16, RealSense D435, Ouster OS1</td><td>Sensor props for OLIVE and WhyCode pedestals.</td></tr>
+      <tr><td>Jetson, ESP32</td><td>No clean Jetson source; ESP32 on Sketchfab</td><td>Jetson proprietary; ESP32 CC-BY</td><td>—</td><td>Jetson gets a stylised board; ESP32 low-poly.</td></tr>
+    </table>
+    </div>
+    <p class="small" style="margin-top:10px">Pipeline: Blender or cascadio for STEP and DAE to GLB, then <code>gltf-transform optimize</code> with Draco. If you have CAD of your own robots, it goes through the same pipeline and replaces the stand-ins above.</p>
+  </section>
+
+
+  <section>
+    <div class="eyebrow">Decisions needed</div>
+    <h2>Questions before building</h2>
+    <ol class="qs">
+      <li><b>Direction.</b> A, B, C, or the recommended A with borrowings?</li>
+      <li><b>Your own robots.</b> Do you have CAD, URDF, STEP or STL files for any robot you built: the Kiwi drive, AgroBot, R2, Vanguard, the rocker-bogie? Real geometry of your machines beats any downloaded model and would be the single biggest differentiator.</li>
+      <li><b>Keep or drop.</b> The Spline humanoid, the five-colour theme switcher, and the AI chat assistant. My recommendation: drop the first two, keep and restyle the chat.</li>
+      <li><b>Media.</b> May I re-encode the GIFs and videos to compressed MP4/WebM and generate poster frames? Same content, a fraction of the weight. Also: do you have a replacement for the empty Robocon 1 video?</li>
+      <li><b>Audience and devices.</b> Recruiters on phones matter? That sets how much of the 3D must degrade gracefully versus being desktop-first.</li>
+      <li><b>Themes.</b> Dark only, or dark and light? A and C are dark-first; B is light-first with a blueprint dark mode.</li>
+      <li><b>Domain.</b> Staying on GitHub Pages at <code>/my-portfolio</code>, or moving to a custom domain? It changes the base path and lets media move to a CDN.</li>
+      <li><b>Which arms.</b> Which robot arm did you use at the RWTH hackathon, and which at Robotics Collective? The models should match the real hardware.</li>
+      <li><b>Sound.</b> Subtle, off-by-default UI sound (dock chime, sweep tick) is common on award-level sites. Want it as an option, or never?</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ---------- turbo colormap (Google polynomial approximation) ----------
+  function turbo(x){
+    x=Math.min(1,Math.max(0,x));
+    const v=[1,x,x*x,x*x*x], w=[x*x*x*x,x*x*x*x*x];
+    const r=0.13572138+4.61539260*v[1]-42.66032258*v[2]+132.13108234*v[3]-152.94239396*w[0]+59.28637943*w[1];
+    const g=0.09140261+2.19418839*v[1]+4.84296658*v[2]-14.18503333*v[3]+4.27729857*w[0]+2.82956604*w[1];
+    const b=0.10667330+12.64194608*v[1]-60.58204836*v[2]+110.36276771*v[3]-89.90310912*w[0]+27.34824973*w[1];
+    return `rgb(${(r*255)|0},${(g*255)|0},${(b*255)|0})`;
+  }
+  function onVisible(el, start){
+    if(!('IntersectionObserver' in window)){start(); return;}
+    let running=false, raf=0, stop=null;
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting && !running){running=true; stop=start();}
+        else if(!e.isIntersecting && running){running=false; if(stop) stop();}
+      });
+    },{threshold:0.05});
+    io.observe(el);
+  }
+
+  // ---------- Sketch A: frontier exploration over an occupancy grid ----------
+  (function(){
+    const c=document.getElementById('skA'); if(!c) return;
+    const ctx=c.getContext('2d'); const W=c.width,H=c.height;
+    const cols=72, rows=40, cs=W/cols;
+    const wall=new Uint8Array(cols*rows), seen=new Uint8Array(cols*rows);
+    const idx=(x,y)=>y*cols+x;
+    function box(x0,y0,x1,y1){for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)wall[idx(x,y)]=1;}
+    box(0,0,cols-1,0); box(0,rows-1,cols-1,rows-1); box(0,0,0,rows-1); box(cols-1,0,cols-1,rows-1);
+    // three internal walls with door gaps -> four zones
+    box(18,1,18,14); box(18,20,18,rows-2);
+    box(36,1,36,9);  box(36,15,36,rows-2);
+    box(54,1,54,22); box(54,28,54,rows-2);
+    box(37,24,53,24); // a shelf inside zone 3
+    const zones=[
+      {label:'zone_1 PROFILE',x0:1,x1:17},{label:'zone_2 EXPERIENCE',x0:19,x1:35},
+      {label:'zone_3 PROJECTS',x0:37,x1:53},{label:'zone_4 CONTACT',x0:55,x1:cols-2}];
+    const path=[[8,20],[14,17],[24,17],[30,12],[40,12],[46,18],[46,30],[60,25],[64,12],[64,30]];
+    let t=0, seg=0, ang=0, last=0;
+    function reset(){seen.fill(0); t=0; seg=0;}
+    function robotPos(){
+      const a=path[seg], b=path[Math.min(seg+1,path.length-1)];
+      return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];
+    }
+    function cast(rx,ry,a){
+      const dx=Math.cos(a), dy=Math.sin(a);
+      for(let d=0; d<40; d+=0.5){
+        const x=Math.floor(rx+dx*d), y=Math.floor(ry+dy*d);
+        if(x<0||y<0||x>=cols||y>=rows) return;
+        seen[idx(x,y)]=1; if(wall[idx(x,y)]) return;
+      }
+    }
+    function step(dt){
+      const [rx,ry]=robotPos();
+      ang+=dt*2.4;
+      for(let i=0;i<48;i++) cast(rx+.5,ry+.5, ang-0.5+i*(1.0/48));
+      t+=dt*0.22; if(t>=1){t=0; seg++; if(seg>=path.length-1){ setTimeout(reset,1200); seg=path.length-2; t=0.999; }}
+    }
+    function draw(){
+      ctx.fillStyle='#0B0F14'; ctx.fillRect(0,0,W,H);
+      for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){
+        const i=idx(x,y); if(!seen[i]) continue;
+        ctx.fillStyle= wall[i] ? '#E9EEF3' : '#1B222C';
+        ctx.fillRect(x*cs+0.5,y*cs+0.5,cs-1,cs-1);
+      }
+      const [rx,ry]=robotPos(); const px=(rx+.5)*cs, py=(ry+.5)*cs;
+      // sweep wedge
+      const g=ctx.createRadialGradient(px,py,0,px,py,cs*40);
+      g.addColorStop(0,'rgba(255,122,26,.55)'); g.addColorStop(1,'rgba(255,122,26,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(px,py); ctx.arc(px,py,cs*40,ang-0.5,ang+0.5); ctx.closePath(); ctx.fill();
+      // robot
+      ctx.fillStyle='#FF7A1A'; ctx.beginPath(); ctx.arc(px,py,cs*0.9,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,122,26,.5)'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(px,py,cs*2.2,0,Math.PI*2); ctx.stroke();
+      // zone labels once >30% mapped
+      let total=0, tot=0;
+      ctx.font='600 12px "IBM Plex Mono", monospace'; ctx.textBaseline='top';
+      zones.forEach(z=>{
+        let n=0,m=0; for(let y=1;y<rows-1;y++)for(let x=z.x0;x<=z.x1;x++){n++; if(seen[idx(x,y)]) m++;}
+        total+=m; tot+=n;
+        if(m/n>0.3){ ctx.fillStyle='rgba(233,238,243,.85)'; ctx.fillText(z.label,(z.x0+1)*cs,2*cs); }
+      });
+      // HUD
+      const pct=Math.round(100*total/tot);
+      ctx.fillStyle='rgba(11,15,20,.85)'; ctx.fillRect(10,H-30,300,22);
+      ctx.fillStyle='#FF7A1A'; ctx.fillText(`MODE EXPLORE  ·  mapped ${String(pct).padStart(2,' ')}%  ·  /scan 10 Hz`,16,H-26);
+      // minimap
+      const mw=110, mh=61, mx=W-mw-10, my=H-mh-10;
+      ctx.fillStyle='rgba(11,15,20,.9)'; ctx.fillRect(mx,my,mw,mh);
+      ctx.strokeStyle='rgba(255,122,26,.6)'; ctx.strokeRect(mx+.5,my+.5,mw-1,mh-1);
+      zones.forEach(z=>{ctx.strokeStyle='rgba(154,165,180,.5)'; ctx.strokeRect(mx+z.x0/cols*mw+.5,my+2.5,(z.x1-z.x0)/cols*mw,mh-5);});
+      ctx.fillStyle='#FF7A1A'; ctx.fillRect(mx+rx/cols*mw-2,my+ry/rows*mh-2,4,4);
+    }
+    function start(){
+      if(reduce){ for(let k=0;k<400;k++) step(1/30); draw(); return null; }
+      let raf; last=performance.now(); for(let k=0;k<20;k++) step(1/30); draw();
+      const loop=(now)=>{const dt=Math.min(.05,(now-last)/1000); last=now; step(dt); draw(); raf=requestAnimationFrame(loop);};
+      raf=requestAnimationFrame(loop); return ()=>cancelAnimationFrame(raf);
+    }
+    onVisible(c,start);
+  })();
+
+  // ---------- Sketch B: exploded isometric omni robot ----------
+  (function(){
+    const c=document.getElementById('skB'); if(!c) return;
+    const ctx=c.getContext('2d'); const W=c.width,H=c.height;
+    const INK='#0F4C81', PAPER='#EEF0EC', GRAPH='#6B7370', RED='#C8102E';
+    const cx=W*0.42, cy=H*0.62, S=1.0;
+    function iso(x,y,z){ // x right-forward, y left-forward, z up
+      const a=Math.PI/6;
+      return [cx+(x-y)*Math.cos(a)*S, cy+(x+y)*Math.sin(a)*S - z*S];
+    }
+    function poly(pts,fill,stroke){ctx.beginPath(); pts.forEach((p,i)=>{const q=iso(...p); i?ctx.lineTo(...q):ctx.moveTo(...q);}); ctx.closePath(); if(fill){ctx.fillStyle=fill; ctx.fill();} if(stroke){ctx.strokeStyle=stroke; ctx.stroke();}}
+    function disc(x,y,z,r,fill,stroke,n=36){const pts=[]; for(let i=0;i<n;i++){const a=i/n*Math.PI*2; pts.push([x+Math.cos(a)*r,y+Math.sin(a)*r,z]);} poly(pts,fill,stroke);}
+    function cyl(x,y,z,r,h,fill){ // vertical cylinder: side + top
+      const l=iso(x-r*0.707,y+r*0.707,z), r2=iso(x+r*0.707,y-r*0.707,z);
+      ctx.beginPath(); ctx.moveTo(...l); ctx.lineTo(l[0],l[1]-h); ctx.lineTo(r2[0],r2[1]-h); ctx.lineTo(...r2); ctx.closePath(); ctx.fillStyle=fill; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+      disc(x,y,z+h,r,fill,INK);
+    }
+    function dim(p0,p1,label,offset){ // vertical dimension line between two screen points
+      const x=p0[0]+offset;
+      ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(p0[0],p0[1]); ctx.lineTo(x+6,p0[1]); ctx.moveTo(p1[0],p1[1]); ctx.lineTo(x+6,p1[1]); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x,p0[1]); ctx.lineTo(x,p1[1]); ctx.stroke();
+      [[x,p0[1],1],[x,p1[1],-1]].forEach(([ax,ay,d])=>{ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(ax-3,ay+6*d); ctx.lineTo(ax+3,ay+6*d); ctx.closePath(); ctx.fillStyle=INK; ctx.fill();});
+      ctx.font='600 11px "Martian Mono", monospace'; ctx.fillStyle=INK; ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(label,x+8,(p0[1]+p1[1])/2);
+    }
+    let e=0, target=0, pointer=null, t0=performance.now();
+    c.addEventListener('pointermove',ev=>{const r=c.getBoundingClientRect(); pointer=1-(ev.clientY-r.top)/r.height;});
+    c.addEventListener('pointerleave',()=>pointer=null);
+    function draw(now){
+      const auto=(Math.sin((now-t0)/1000*0.7)+1)/2;
+      target= pointer==null ? auto : pointer;
+      e+= (target-e)*0.08;
+      ctx.fillStyle=PAPER; ctx.fillRect(0,0,W,H);
+      // grid paper
+      ctx.strokeStyle='rgba(15,76,129,.10)'; ctx.lineWidth=1;
+      for(let x=0;x<W;x+=18){ctx.beginPath(); ctx.moveTo(x+.5,0); ctx.lineTo(x+.5,H); ctx.stroke();}
+      for(let y=0;y<H;y+=18){ctx.beginPath(); ctx.moveTo(0,y+.5); ctx.lineTo(W,y+.5); ctx.stroke();}
+      ctx.lineWidth=1.2;
+      const R=70, lift=e*70;
+      // wheels (bottom layer): three omni wheels at 120°
+      for(let i=0;i<3;i++){
+        const a=i*Math.PI*2/3+Math.PI/2; const wx=Math.cos(a)*(R+6), wy=Math.sin(a)*(R+6);
+        // wheel as a thick disc lying tangentially: approximate with a small vertical cylinder rotated -> draw as ellipse pair
+        const p=iso(wx,wy,-lift*0.6); ctx.save(); ctx.translate(p[0],p[1]); ctx.rotate(a*0.5);
+        ctx.beginPath(); ctx.ellipse(0,0,18,9,0,0,Math.PI*2); ctx.fillStyle='#DDE3E0'; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0,0,8,4,0,0,Math.PI*2); ctx.stroke(); ctx.restore();
+        // motor stub
+        cyl(wx*0.75,wy*0.75,-lift*0.6+2,7,10,'#D2D9D6');
+      }
+      // chassis plate
+      disc(0,0,0,R,'#E4E8E5',INK); ctx.strokeStyle='rgba(15,76,129,.35)'; ctx.setLineDash([4,4]); disc(0,0,0,R*0.6,null,'rgba(15,76,129,.35)'); ctx.setLineDash([]);
+      // battery + controller (middle layer)
+      const z1=lift*1.0+6;
+      poly([[-40,-25,z1],[40,-25,z1],[40,25,z1],[-40,25,z1]],'#D7DEDB',INK);
+      poly([[-40,25,z1],[40,25,z1],[40,25,z1+16],[-40,25,z1+16]],'#C6CECB',INK);
+      poly([[40,-25,z1],[40,25,z1],[40,25,z1+16],[40,-25,z1+16]],'#BFC7C4',INK);
+      poly([[-40,-25,z1+16],[40,-25,z1+16],[40,25,z1+16],[-40,25,z1+16]],'#E0E6E3',INK);
+      // ESP32 board on top of battery
+      const z2=lift*1.6+26; poly([[-22,-14,z2],[22,-14,z2],[22,14,z2],[-22,14,z2]],'#CFE0D6',INK);
+      for(let i=-16;i<=16;i+=8){const p=iso(i,-14,z2), q=iso(i,14,z2); ctx.strokeStyle='rgba(15,76,129,.6)'; ctx.beginPath(); ctx.moveTo(...p); ctx.lineTo(...q); ctx.stroke();}
+      // mast + LiDAR puck (top layer)
+      const z3=lift*2.3+40; cyl(0,0,z3,4,26,'#D2D9D6'); cyl(0,0,z3+26,22,14,'#E4E8E5');
+      ctx.strokeStyle=RED; ctx.setLineDash([3,3]); disc(0,0,z3+47,30,null,RED); ctx.setLineDash([]);
+      // dimension lines
+      const base=iso(R,0,0), top=iso(R,0,z3+40);
+      dim(base,top,`H ${Math.round(140+lift*3.2)}`,60);
+      const l=iso(-R,0,0), r=iso(R,0,0);
+      ctx.strokeStyle=INK; ctx.beginPath(); ctx.moveTo(l[0],l[1]+40); ctx.lineTo(r[0],r[1]+40); ctx.stroke();
+      ctx.font='600 11px "Martian Mono", monospace'; ctx.fillStyle=INK; ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('Ø 180',(l[0]+r[0])/2,(l[1]+r[1])/2+44);
+      // title block
+      const bw=236,bh=64,bx=W-bw-14,by=H-bh-14;
+      ctx.fillStyle='rgba(238,240,236,.92)'; ctx.fillRect(bx,by,bw,bh); ctx.strokeStyle=INK; ctx.strokeRect(bx+.5,by+.5,bw-1,bh-1);
+      ctx.beginPath(); ctx.moveTo(bx,by+22); ctx.lineTo(bx+bw,by+22); ctx.moveTo(bx+118,by+22); ctx.lineTo(bx+118,by+bh); ctx.stroke();
+      ctx.textAlign='left'; ctx.font='600 11px "Martian Mono", monospace'; ctx.fillStyle=INK;
+      ctx.fillText('KIWI DRIVE · EXPLODED VIEW',bx+8,by+6);
+      ctx.font='400 10px "Martian Mono", monospace'; ctx.fillStyle=GRAPH;
+      ctx.fillText('SHEET 07 / 10',bx+8,by+30); ctx.fillText('SCALE 1:4',bx+8,by+46);
+      ctx.fillText('REV B',bx+126,by+30); ctx.fillStyle=RED; ctx.fillText(`EXPLODE ${Math.round(e*100)}%`,bx+126,by+46);
+    }
+    function start(){
+      if(reduce){ e=0.7; draw(performance.now()); return null; }
+      e=0.5; draw(performance.now());
+      let raf; const loop=(now)=>{draw(now); raf=requestAnimationFrame(loop);}; raf=requestAnimationFrame(loop); return ()=>cancelAnimationFrame(raf);
+    }
+    onVisible(c,start);
+  })();
+
+  // ---------- Sketch C: name resolves out of a point cloud ----------
+  (function(){
+    const c=document.getElementById('skC'); if(!c) return;
+    const ctx=c.getContext('2d'); const W=c.width,H=c.height;
+    // sample text into points
+    const off=document.createElement('canvas'); off.width=W; off.height=H; const o=off.getContext('2d');
+    o.fillStyle='#fff'; o.font='800 118px "Unbounded", "Archivo", Impact, sans-serif'; o.textAlign='center'; o.textBaseline='middle';
+    o.fillText('ADYANSH',W/2,H/2-8);
+    const img=o.getImageData(0,0,W,H).data; const pts=[];
+    for(let y=0;y<H;y+=4)for(let x=0;x<W;x+=4){ if(img[(y*W+x)*4+3]>128){ pts.push({tx:x,ty:y,x:Math.random()*W,y:Math.random()*H,d:Math.random()}); } }
+    let bx0=W,bx1=0,by0=H,by1=0; pts.forEach(p=>{bx0=Math.min(bx0,p.tx);bx1=Math.max(bx1,p.tx);by0=Math.min(by0,p.ty);by1=Math.max(by1,p.ty);});
+    let t0=performance.now();
+    const T_SWEEP=3.2, T_HOLD=2.2, T_TOTAL=T_SWEEP+T_HOLD+0.8;
+    function draw(now){
+      let t=((now-t0)/1000)%T_TOTAL;
+      const sweepX = t<T_SWEEP ? (t/T_SWEEP)*(W+80)-40 : W+80;
+      ctx.fillStyle='#0A0D12'; ctx.fillRect(0,0,W,H);
+      // faint grid
+      ctx.strokeStyle='rgba(154,165,180,.08)'; for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);ctx.stroke();} for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);ctx.stroke();}
+      const jit = t>T_SWEEP+T_HOLD ? 1 : 0; // scatter again at the end
+      for(const p of pts){
+        const resolved = p.tx < sweepX && !jit;
+        if(resolved){ p.x+=(p.tx-p.x)*0.18; p.y+=(p.ty-p.y)*0.18; }
+        else { p.x+=(Math.random()-.5)*6 + ((p.tx*0.15+W*0.42)-p.x)*0.01; p.y+=(Math.random()-.5)*6 + ((p.ty*0.3+H*0.35)-p.y)*0.01; }
+        const depth = resolved ? (0.15+0.7*((p.ty-by0)/(by1-by0))*0.6 + p.d*0.25) : 0.5;
+        ctx.fillStyle = resolved ? turbo(depth) : 'rgba(154,165,180,.35)';
+        ctx.fillRect(p.x,p.y, resolved?2.2:1.6, resolved?2.2:1.6);
+      }
+      // sweep line
+      if(t<T_SWEEP){
+        const g=ctx.createLinearGradient(sweepX-60,0,sweepX,0); g.addColorStop(0,'rgba(255,79,163,0)'); g.addColorStop(1,'rgba(255,79,163,.35)');
+        ctx.fillStyle=g; ctx.fillRect(sweepX-60,0,60,H);
+        ctx.fillStyle='#FF4FA3'; ctx.fillRect(sweepX,0,1.5,H);
+      }
+      // detection box after sweep
+      if(t>=T_SWEEP && t<T_SWEEP+T_HOLD){
+        const k=Math.min(1,(t-T_SWEEP)/0.35);
+        const pad=14; const x=bx0-pad, y=by0-pad, w=(bx1-bx0+pad*2)*k, h=(by1-by0+pad*2);
+        ctx.strokeStyle='#FF4FA3'; ctx.lineWidth=1.5; ctx.strokeRect(x+.5,y+.5,w,h);
+        ctx.fillStyle='#FF4FA3'; ctx.fillRect(x,y-20,118,20);
+        ctx.fillStyle='#1a1a1a'; ctx.font='600 12px "JetBrains Mono", monospace'; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText('name 0.99',x+8,y-10);
+        ctx.fillStyle='rgba(230,235,242,.85)'; ctx.font='400 11px "JetBrains Mono", monospace';
+        ctx.fillText(`robotics_engineer 0.97`,x+8,y+h+14);
+      }
+      // rosbag bar
+      ctx.fillStyle='rgba(10,13,18,.9)'; ctx.fillRect(0,H-26,W,26);
+      ctx.fillStyle='rgba(154,165,180,.25)'; ctx.fillRect(16,H-14,W-32,2);
+      ctx.fillStyle='#FF4FA3'; ctx.fillRect(16,H-14,(W-32)*(t/T_TOTAL),2);
+      ctx.fillStyle='rgba(230,235,242,.8)'; ctx.font='500 11px "JetBrains Mono", monospace'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+      ctx.fillText(`t=${t.toFixed(3).padStart(6,'0')}  /points  /detections`,16,H-17);
+      ctx.textAlign='right'; ctx.fillText('rosbag play  ▶',W-16,H-17);
+    }
+    function start(){
+      if(reduce){ // static resolved frame with box
+        const fake=t0-(T_SWEEP+0.5)*1000; t0=fake; for(let i=0;i<40;i++){ draw(performance.now()); } return null; }
+      window.__skC.state='started'; draw(performance.now());
+      let raf; const loop=(now)=>{draw(now); raf=requestAnimationFrame(loop);}; raf=requestAnimationFrame(loop); return ()=>cancelAnimationFrame(raf);
+    }
+    window.__skC={state:'init', draw, points:()=>pts.length};
+    // wait for the display font so sampling uses the right glyphs
+    const fontWait = document.fonts ? document.fonts.load('800 118px "Unbounded"').catch(()=>{}) : Promise.resolve();
+    const timeout = new Promise(r=>setTimeout(r,1800)); // never let a stalled font block the sketch
+    Promise.race([fontWait,timeout]).then(()=>{
+      pts.length=0; o.clearRect(0,0,W,H); o.fillStyle='#fff'; o.fillText('ADYANSH',W/2,H/2-8);
+      const d=o.getImageData(0,0,W,H).data; for(let y=0;y<H;y+=4)for(let x=0;x<W;x+=4){ if(d[(y*W+x)*4+3]>128) pts.push({tx:x,ty:y,x:Math.random()*W,y:Math.random()*H,d:Math.random()}); }
+      bx0=W;bx1=0;by0=H;by1=0; pts.forEach(p=>{bx0=Math.min(bx0,p.tx);bx1=Math.max(bx1,p.tx);by0=Math.min(by0,p.ty);by1=Math.max(by1,p.ty);});
+      window.__skC.state='ready';
+      onVisible(c,start);
+    });
+  })();
+})();
+</script>
