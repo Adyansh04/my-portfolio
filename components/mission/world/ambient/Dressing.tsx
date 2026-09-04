@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { AMR_ROUTES, HALL_RACKS, RACK_BAY, STATIONS, buildTimeline } from '@/lib/mission/traffic'
 import { makeLabelTexture } from '../labels'
+import { shadowTexture } from '../ContactShadow'
 
 const ACCENT = '#ff7a1a'
 const CYAN = '#4fd1ff'
@@ -105,8 +106,22 @@ function Stations() {
     [],
   )
 
+  const shadows = useMemo(() => {
+    const geos = STATIONS.map((s) => {
+      const g = new THREE.PlaneGeometry(2.1, 1.9)
+      g.rotateX(-Math.PI / 2)
+      g.translate(s.p[0], 0.013, s.p[1])
+      return g
+    })
+    const m = mergeGeometries(geos, false)!
+    geos.forEach((g) => g.dispose())
+    return m
+  }, [])
+  const shadowMat = useMemo(() => new THREE.MeshBasicMaterial({ map: shadowTexture(), transparent: true, opacity: 0.6, depthWrite: false, toneMapped: false }), [])
+
   return (
     <group>
+      <mesh geometry={shadows} material={shadowMat} renderOrder={-3} />
       <mesh geometry={pallets}>
         <meshStandardMaterial color="#20272f" roughness={0.9} />
       </mesh>
@@ -235,14 +250,41 @@ function Truss() {
     geos.forEach((g) => g.dispose())
     return m
   }, [])
+  const pools = useMemo(() => {
+    const geos: THREE.BufferGeometry[] = []
+    for (const x of [5, 13, 21, 29])
+      for (let z = 32; z < 45; z += 3.2) {
+        const g = new THREE.PlaneGeometry(4.4, 5.6)
+        g.rotateX(-Math.PI / 2)
+        g.translate(x, 0.012, z)
+        geos.push(g)
+      }
+    const m = mergeGeometries(geos, false)!
+    geos.forEach((g) => g.dispose())
+    return m
+  }, [])
+  const poolMat = useMemo(() => {
+    const c = document.createElement('canvas')
+    c.width = c.height = 64
+    const x = c.getContext('2d')!
+    const g = x.createRadialGradient(32, 32, 2, 32, 32, 32)
+    g.addColorStop(0, 'rgba(196,222,255,0.26)')
+    g.addColorStop(0.55, 'rgba(150,180,225,0.07)')
+    g.addColorStop(1, 'rgba(0,0,0,0)')
+    x.fillStyle = g
+    x.fillRect(0, 0, 64, 64)
+    return new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })
+  }, [])
+
   return (
     <group>
       <mesh geometry={geometry}>
-        <meshStandardMaterial color="#48525f" roughness={0.7} metalness={0.35} />
+        <meshStandardMaterial color="#5b6675" roughness={0.55} metalness={0.5} />
       </mesh>
       <mesh geometry={lamps}>
-        <meshBasicMaterial color="#cfe4ff" transparent opacity={0.5} toneMapped={false} />
+        <meshBasicMaterial color="#a8c2e6" transparent opacity={0.5} toneMapped={false} />
       </mesh>
+      <mesh geometry={pools} material={poolMat} renderOrder={-2} />
     </group>
   )
 }

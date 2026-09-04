@@ -19,8 +19,8 @@ export function makeHologramMaterial(color = '#ff7a1a', opacity = 1) {
       void main() {
         float fres = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0);
         float scan = 0.85 + 0.15 * sin(vW.y * 70.0 - uTime * 5.0);
-        float a = (0.24 + 0.75 * fres) * scan * uOpacity * (0.5 + 0.5 * uActive);
-        gl_FragColor = vec4(uColor * (0.7 + 1.1 * fres), a);
+        float a = (0.3 + 0.85 * fres) * scan * uOpacity * (0.5 + 0.5 * uActive);
+        gl_FragColor = vec4(uColor * (1.05 + 1.7 * fres), a);
       }`,
     transparent: true,
     depthWrite: false,

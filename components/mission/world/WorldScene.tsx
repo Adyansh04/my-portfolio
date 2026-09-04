@@ -1,12 +1,16 @@
 'use client'
 
 import { Suspense } from 'react'
+import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { AdaptiveDpr, PerformanceMonitor } from '@react-three/drei'
 import { Floor } from './Floor'
 import { Walls } from './Walls'
+import { Ceiling } from './Ceiling'
 import { Sky } from './Sky'
 import { CameraLight } from './CameraLight'
+import { Ambience } from './Ambience'
+import { PostFx } from './PostFx'
 import { MissionDriver } from './MissionDriver'
 import { CameraRig } from './CameraRig'
 import { RobotProxy } from './RobotProxy'
@@ -28,25 +32,38 @@ export function WorldScene() {
   return (
     <Canvas
       dpr={[1, 1.5]}
-      gl={{ antialias: false, powerPreference: 'high-performance', alpha: false, preserveDrawingBuffer: capturing() }}
+      gl={{
+        antialias: true,
+        powerPreference: 'high-performance',
+        alpha: false,
+        preserveDrawingBuffer: capturing(),
+        // Khronos PBR Neutral instead of the ACES default: ACES crushes everything below mid-grey,
+        // which is exactly where this facility lives, so the walls read as black under it.
+        toneMapping: THREE.NeutralToneMapping,
+        toneMappingExposure: 1.15,
+      }}
       camera={{ fov: 50, near: 0.1, far: 160, position: [1.0, 1.05, 7.2] }}
       frameloop="always"
     >
       <PerformanceMonitor flipflops={3} />
+      <PostFx />
       <PosterCapture />
       <DebugHook />
       <AdaptiveDpr pixelated />
       <color attach="background" args={['#0b0f14']} />
-      <fogExp2 attach="fog" args={['#0d1219', 0.016]} />
+      <fogExp2 attach="fog" args={['#101722', 0.0125]} />
       <Sky />
-      <hemisphereLight args={['#324766', '#0b0f14', 0.9]} />
-      <ambientLight intensity={0.45} />
-      <directionalLight position={[10, 18, 6]} intensity={0.9} color="#dbe7ff" />
+      <Ambience />
+      <hemisphereLight args={['#4a6488', '#131a24', 1.2]} />
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[10, 18, 6]} intensity={0.85} color="#dbe7ff" />
+      <directionalLight position={[-14, 10, 34]} intensity={0.3} color="#8fb4ff" />
       <CameraLight />
       <MissionDriver />
       <CameraRig />
       <Floor />
       <Walls />
+      <Ceiling />
       <Zone1Profile />
       <Zone2Experience />
       <Zone4Hackathons />

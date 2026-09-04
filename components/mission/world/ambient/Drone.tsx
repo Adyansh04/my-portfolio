@@ -48,7 +48,9 @@ export function Drone({ path }: { path: DronePath }) {
     const bob = Math.sin(clock.current * 1.7 + path.pts.length) * 0.045
     g.position.set(tmp.p.x, tmp.p.y + bob, tmp.p.z)
 
-    const near = camera.position.distanceTo(g.position) < CULL
+    // drones are the only things that can fly into the lens: cull far away, and also point blank
+    const view = camera.position.distanceTo(g.position)
+    const near = view < CULL && view > 2.2
     g.visible = near
     if (!near) return
 
