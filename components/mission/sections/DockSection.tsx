@@ -9,7 +9,7 @@ import { ChatConsole } from './ChatConsole'
 
 export function DockSection() {
   return (
-    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-20 sm:px-10 lg:grid-cols-2 lg:pb-52">
+    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-20 sm:px-10 lg:grid-cols-2 lg:pb-[var(--hud-bottom)]">
       <div className="space-y-6">
         <div className="beat-acc" style={{ '--i': 0 } as React.CSSProperties}>
           <Eyebrow>ZONE 06 · {site.sections.contact.eyebrow}</Eyebrow>

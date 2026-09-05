@@ -6,7 +6,7 @@ const BOOT_LINES = ['sensors ok', 'lidar ok', 'map empty', 'awaiting operator']
 
 export function HeroSection() {
   return (
-    <div className="hero-frame mx-auto flex h-full max-w-7xl flex-col justify-center px-6 pb-24 pt-20 sm:px-10 lg:justify-start lg:pb-56 lg:pt-28">
+    <div className="hero-frame mx-auto flex h-full max-w-7xl flex-col justify-center px-6 pb-24 pt-20 sm:px-10 lg:justify-start lg:pb-[var(--hud-bottom)] lg:pt-28">
       {/* boot log: runs once on load, not scroll-driven */}
       <ol className="boot-log mb-8 hidden font-mono text-[0.6875rem] leading-5 tracking-[0.12em] text-muted sm:block" aria-hidden>
         {BOOT_LINES.map((l, i) => (

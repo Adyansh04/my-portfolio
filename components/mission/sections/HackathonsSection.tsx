@@ -8,7 +8,7 @@ import { Panel } from '../ui/Panel'
 
 export function HackathonsSection() {
   return (
-    <div className="mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-24 pt-20 sm:px-10 lg:pb-64">
+    <div className="mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-24 pt-20 sm:px-10 lg:pb-[var(--hud-bottom)]">
       <Eyebrow>ZONE 04 · {site.sections.hackathons.eyebrow}</Eyebrow>
       <h2 className="font-display mt-3 text-5xl font-bold uppercase tracking-wide text-text sm:text-6xl">{site.sections.hackathons.title}</h2>
       <div className="mt-6 grid gap-3 md:grid-cols-3 lg:max-w-[65rem]">

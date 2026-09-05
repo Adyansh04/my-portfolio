@@ -39,6 +39,11 @@
   --input: var(--grid);
   --ring: var(--accent);
   --radius: 0.375rem;
+  /* Clearance the zone frames leave along the bottom edge for the HUD (minimap + ticker). It has to
+     answer to viewport height, not just width: a fixed 16rem pushed the hackathon cards — which are
+     bottom-aligned — clean off the top of a 720px-tall screen. The minimap hides under 760px
+     anyway, so less room is needed exactly where there is less room. */
+  --hud-bottom: clamp(6rem, 18vh, 15rem);
 }
 
 @theme inline {

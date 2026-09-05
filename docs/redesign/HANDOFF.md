@@ -6,7 +6,7 @@
 > Everything needed to continue the redesign without the original conversation is here. Update the
 > "Work log" and "Next steps" sections at the end of every working session.
 
-Last updated: 2026-09-04 (session 3 — snapshot committed, ambient life, lighting pass; **paused mid-way through a readability pass — see the RESUME HERE entry at the end of the work log**)
+Last updated: 2026-09-05 (session 3 — snapshot committed, ambient life, lighting pass, reveal timing + full-screen readability; layout audited clean across 7 viewport sizes)
 
 ## 1. Ground rules (from Adyansh, non-negotiable)
 

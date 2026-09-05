@@ -7,7 +7,7 @@ import { Panel } from '../ui/Panel'
 
 export function ProfileSection() {
   return (
-    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-24 sm:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:pb-56">
+    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-24 sm:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:pb-[var(--hud-bottom)]">
       <div className="space-y-6">
         <div>
           <Eyebrow>ZONE 01 · {site.sections.profile.title} · {site.sections.profile.subtitle}</Eyebrow>
