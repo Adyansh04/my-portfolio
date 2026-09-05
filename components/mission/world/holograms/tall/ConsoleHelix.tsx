@@ -10,7 +10,8 @@ import { asset } from '@/lib/base-path'
 import { QuadrupedRobot } from '../../robots/QuadrupedRobot'
 import { go2MaterialFor } from '../../robots/robotMaterial'
 import { emissive, lineMat, useClock, useNear, H } from './tallParts'
-import type { SlabDesign } from '../slab/slabContent'
+import type { SlabDesign } from '../data/projects'
+import { READOUTS, type ReadoutState } from './readouts'
 
 /**
  * V3 + V4 as one object rather than two side by side: the robot works a helical ramp in the lower
@@ -31,12 +32,18 @@ const TURNS = 2.2
 const R = 0.46
 const RAMP_TOP = 0.78
 const PW = 1.26
-const CANVAS_W = 1024
-const CANVAS_H = 700
+const CANVAS_W = 900
+const CANVAS_H = 616
 const PH = PW * (CANVAS_H / CANVAS_W)
 const SCREEN_Y = RAMP_TOP + 0.08 + PH / 2
 
-export function ConsoleHelix({ design, detections }: { design: SlabDesign; detections: string[] }) {
+/**
+ * What rides the ramp. Only a few projects have a real model; rather than put a Go2 in a hologram
+ * that is not about a Go2, everything else carries a machined sensor puck — honest and consistent.
+ */
+export type Climber = 'go2' | 'puck'
+
+export function ConsoleHelix({ design, projectKey, climber = 'puck' }: { design: SlabDesign; projectKey: string; climber?: Climber }) {
   const t = useClock()
   const near = useNear()
   const pose = useRef({ x: 0, z: 0, yaw: 0 })
@@ -107,8 +114,9 @@ export function ConsoleHelix({ design, detections }: { design: SlabDesign; detec
   const beadMat = useMemo(() => emissive(design.data, 3.2), [design.data])
   const tmp = useMemo(() => new THREE.Object3D(), [])
   const lastDraw = useRef(0)
+  const worldPos = useMemo(() => new THREE.Vector3(), [])
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     if (!near()) return
     const now = t.current
     const u = (now * 0.055) % 1 // one full climb = one full traversal of the route
@@ -155,9 +163,16 @@ export function ConsoleHelix({ design, detections }: { design: SlabDesign; detec
       m.instanceMatrix.needsUpdate = true
     }
 
-    if (now - lastDraw.current < 0.09) return
+    // ten of these redrawing a canvas every frame costs real frame time; the far ones barely move
+    // on screen, so they can update far less often
+    if (lift.current) lift.current.getWorldPosition(worldPos)
+    const dist = camera.position.distanceTo(worldPos)
+    if (dist > 17) return
+    const interval = dist < 9 ? 0.09 : 0.4
+    if (now - lastDraw.current < interval) return
     lastDraw.current = now
-    drawScreen(ctx, design, detections, trail.current, found.current, rx, rz, heading, u)
+    const state: ReadoutState = { t: now, u, trail: trail.current, found: found.current, robot: [rx, rz], heading }
+    ;(READOUTS[projectKey] ?? READOUTS['go2-inspection'])(ctx, CANVAS_W, CANVAS_H, design, state)
     tex.needsUpdate = true
   })
 
@@ -167,11 +182,15 @@ export function ConsoleHelix({ design, detections }: { design: SlabDesign; detec
       <mesh geometry={ramp} material={rampMat} />
       <primitive object={rail} />
       <group ref={lift}>
-        <Suspense fallback={null}>
-          <group scale={0.36}>
-            <QuadrupedRobot def={GO2_DEF} folder={asset('/models/go2')} legs={GO2_LEGS} gait={GO2_GAIT} headingOffset={0} scale={1} baseHeight={0.32} pose={pose.current} autoWalk materialFor={go2MaterialFor} flipAxis="z" />
-          </group>
-        </Suspense>
+        {climber === 'go2' ? (
+          <Suspense fallback={null}>
+            <group scale={0.36}>
+              <QuadrupedRobot def={GO2_DEF} folder={asset('/models/go2')} legs={GO2_LEGS} gait={GO2_GAIT} headingOffset={0} scale={1} baseHeight={0.32} pose={pose.current} autoWalk materialFor={go2MaterialFor} flipAxis="z" />
+            </group>
+          </Suspense>
+        ) : (
+          <Puck pose={pose.current} color={design.data} t={t} />
+        )}
       </group>
 
       {/* the link between them */}
@@ -200,113 +219,31 @@ export function ConsoleHelix({ design, detections }: { design: SlabDesign; detec
   )
 }
 
-/** The console contents. Drawn to canvas so the type stays crisp at any distance. */
-function drawScreen(
-  x: CanvasRenderingContext2D,
-  design: SlabDesign,
-  labels: string[],
-  trail: [number, number][],
-  found: number[],
-  rx: number,
-  rz: number,
-  heading: number,
-  progress: number,
-) {
-  const W = CANVAS_W
-  const Hc = CANVAS_H
-  x.fillStyle = '#070c13'
-  x.fillRect(0, 0, W, Hc)
-
-  // header
-  x.fillStyle = '#0d141d'
-  x.fillRect(0, 0, W, 62)
-  x.fillStyle = design.accent
-  x.font = '700 27px "IBM Plex Mono", ui-monospace, monospace'
-  x.fillText('/map · RTAB-MAP SLAM', 24, 40)
-  x.fillStyle = '#8892a2'
-  x.font = '500 21px "IBM Plex Mono", ui-monospace, monospace'
-  x.fillText(`coverage ${(progress * 100).toFixed(0)}%`, W - 232, 40)
-  x.fillStyle = 'rgba(120,140,165,0.25)'
-  x.fillRect(W - 236, 48, 212, 5)
-  x.fillStyle = design.accent
-  x.fillRect(W - 236, 48, 212 * progress, 5)
-
-  const PANEL = 300
-  const MW = W - PANEL
-  const MX = MW / 2
-  const MY = (Hc + 62) / 2
-  const SC = 560
-
-  // occupancy grid
-  x.strokeStyle = 'rgba(90,110,140,0.14)'
-  x.lineWidth = 1
-  for (let g = 0; g < MW; g += 42) { x.beginPath(); x.moveTo(g, 62); x.lineTo(g, Hc); x.stroke() }
-  for (let g = 62; g < Hc; g += 42) { x.beginPath(); x.moveTo(0, g); x.lineTo(MW, g); x.stroke() }
-
-  // walls
-  x.strokeStyle = '#d3dce7'
-  x.lineWidth = 6
-  x.lineCap = 'round'
-  for (const [a, b] of design.runs) {
-    x.beginPath()
-    x.moveTo(MX + a[0] * SC, MY + a[1] * SC)
-    x.lineTo(MX + b[0] * SC, MY + b[1] * SC)
-    x.stroke()
-  }
-  x.lineCap = 'butt'
-
-  // travelled trajectory
-  x.strokeStyle = design.data
-  x.lineWidth = 3
-  x.beginPath()
-  trail.forEach((q, i) => (i ? x.lineTo(MX + q[0] * SC, MY + q[1] * SC) : x.moveTo(MX + q[0] * SC, MY + q[1] * SC)))
-  x.stroke()
-
-  // detections, boxed once found
-  design.pins.forEach((pin, i) => {
-    const px = MX + pin.p[0] * SC
-    const py = MY + pin.p[1] * SC
-    const hit = found.includes(i)
-    x.strokeStyle = hit ? design.accent : 'rgba(140,155,175,0.3)'
-    x.lineWidth = hit ? 3 : 1.5
-    x.strokeRect(px - 17, py - 17, 34, 34)
-    if (hit) {
-      x.fillStyle = design.accent
-      x.font = '700 16px "IBM Plex Mono", ui-monospace, monospace'
-      x.fillText(String(i + 1), px + 22, py - 20)
+/** A machined sensor unit for the projects with no model of their own: a chamfered body, a lit
+ *  band, and a scanner ring that spins as it climbs. */
+function Puck({ pose, color, t }: { pose: { x: number; z: number; yaw: number }; color: string; t: React.MutableRefObject<number> }) {
+  const g = useRef<THREE.Group>(null)
+  const ring = useRef<THREE.Mesh>(null)
+  const shell = useMemo(() => new THREE.MeshStandardMaterial({ color: '#9aa4b1', metalness: 0.75, roughness: 0.35 }), [])
+  const band = useMemo(() => emissive(color, 2.4), [color])
+  useFrame(() => {
+    if (g.current) {
+      g.current.position.set(pose.x, 0.03, pose.z)
+      g.current.rotation.y = pose.yaw
     }
+    if (ring.current) ring.current.rotation.y = t.current * 3
   })
-
-  // the robot
-  x.fillStyle = '#ffffff'
-  x.beginPath()
-  x.arc(MX + rx * SC, MY + rz * SC, 10, 0, 7)
-  x.fill()
-  x.strokeStyle = '#ffffff'
-  x.lineWidth = 3
-  x.beginPath()
-  x.moveTo(MX + rx * SC, MY + rz * SC)
-  x.lineTo(MX + rx * SC + Math.cos(heading) * 32, MY + rz * SC + Math.sin(heading) * 32)
-  x.stroke()
-
-  // findings panel — fills in as it goes
-  x.fillStyle = '#0a1119'
-  x.fillRect(MW, 62, PANEL, Hc - 62)
-  x.strokeStyle = 'rgba(120,140,165,0.3)'
-  x.beginPath(); x.moveTo(MW, 62); x.lineTo(MW, Hc); x.stroke()
-  x.fillStyle = '#7f8b9c'
-  x.font = '700 18px "IBM Plex Mono", ui-monospace, monospace'
-  x.fillText('DETECTED', MW + 22, 100)
-  x.font = '500 19px "IBM Plex Mono", ui-monospace, monospace'
-  found.forEach((idx, row) => {
-    const y = 140 + row * 40
-    x.fillStyle = design.accent
-    x.fillText(String(idx + 1), MW + 22, y)
-    x.fillStyle = '#c6d0dc'
-    x.fillText((labels[idx] ?? 'object').slice(0, 18), MW + 52, y)
-  })
-  if (!found.length) {
-    x.fillStyle = 'rgba(140,155,175,0.5)'
-    x.fillText('scanning…', MW + 22, 140)
-  }
+  return (
+    <group ref={g}>
+      <mesh material={shell}>
+        <cylinderGeometry args={[0.055, 0.065, 0.05, 16]} />
+      </mesh>
+      <mesh material={band} position={[0, 0.032, 0]}>
+        <cylinderGeometry args={[0.042, 0.042, 0.014, 16]} />
+      </mesh>
+      <mesh ref={ring} material={band} position={[0, 0.05, 0]} rotation-x={-Math.PI / 2}>
+        <ringGeometry args={[0.07, 0.085, 20, 1, 0, 1.4]} />
+      </mesh>
+    </group>
+  )
 }
