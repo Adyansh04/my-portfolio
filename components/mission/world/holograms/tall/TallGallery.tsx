@@ -11,6 +11,7 @@ import { makeLabelTexture } from '../../labels'
 import { TALL_FORMS } from './contentTall'
 import { LiveScene } from './LiveScene'
 import { VERTICAL_DEMOS } from './verticalDemos'
+import { ConsoleHelix } from './ConsoleHelix'
 import { SLAB_DESIGNS, type SlabDesign } from '../slab/slabContent'
 
 /**
@@ -28,7 +29,13 @@ const DETECTIONS: Record<string, string[]> = {
   olive: ['WhyCode L0', 'WhyCode L1', 'WhyCode L2'],
 }
 const LIVE = { id: 't0', name: 'Live Scene', blurb: 'The project actually running: the real robot working a real environment, with the map and detections assembling in the column above it.', C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <LiveScene design={design} detections={DETECTIONS[projectKey] ?? []} /> }
-const FORMS = [...VERTICAL_DEMOS, LIVE] as const
+const COMBO = {
+  id: 'v5',
+  name: 'Console + Helix',
+  blurb: 'V3 and V4 as one object: the robot works the ramp below, the console above shows what that work produced. One climb equals one traversal of the route, so the trail grows and detections list as it passes them.',
+  C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <ConsoleHelix design={design} detections={DETECTIONS[projectKey] ?? []} />,
+}
+const FORMS = [COMBO, ...VERTICAL_DEMOS, LIVE] as const
 const CELLS = PROJECTS.flatMap((p, pi) => FORMS.map((f, fi) => ({ p, f, pi, fi, key: `${f.id}-${p.key}` })))
 
 function Pedestal({ label }: { label: string }) {
