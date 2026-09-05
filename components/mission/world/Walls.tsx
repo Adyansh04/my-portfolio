@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-import { DOOR_WIDTH, WALL_HEIGHT, WALL_THICKNESS, WALLS, wallPieces } from '@/lib/mission/facility'
+import { DOOR_WIDTH, ROOMS, WALL_HEIGHT, WALL_THICKNESS, WALLS, wallPieces } from '@/lib/mission/facility'
 
 const T = WALL_THICKNESS
 
@@ -72,6 +72,35 @@ function panelMaterial() {
   return m
 }
 
+/**
+ * Fascia closing the strip between the wall tops (2.6 m) and the ceiling (3.2 m). Without it you
+ * see the sky through a 60 cm slot all the way round, which reads as a hole rather than a room.
+ * The project hall carries no ceiling, so its walls go up to meet the roof truss instead.
+ */
+const CEIL_Y = 3.2
+const HALL_Y = 4.75
+const hall = ROOMS[3]
+const inHall = (x: number, z: number) => x >= hall.x0 - 0.3 && x <= hall.x1 + 0.3 && z >= hall.z0 - 0.3 && z <= hall.z1 + 0.3
+
+function fasciaGeometry() {
+  const geos = wallPieces().map((p) => {
+    const dx = p.b[0] - p.a[0]
+    const dz = p.b[1] - p.a[1]
+    const len = Math.hypot(dx, dz)
+    const cx = (p.a[0] + p.b[0]) / 2
+    const cz = (p.a[1] + p.b[1]) / 2
+    const top = inHall(cx, cz) ? HALL_Y : CEIL_Y
+    const h = top - WALL_HEIGHT
+    const g = new THREE.BoxGeometry(len + WALL_THICKNESS, h, WALL_THICKNESS)
+    g.rotateY(Math.atan2(-dz, dx))
+    g.translate(cx, WALL_HEIGHT + h / 2, cz)
+    return g
+  })
+  const m = mergeGeometries(geos, false)!
+  geos.forEach((g) => g.dispose())
+  return m
+}
+
 /** Skirting, cap rail, pilasters and door frames — the extruded edges that give the walls a silhouette. */
 function trimGeometry() {
   const geos: THREE.BufferGeometry[] = []
@@ -123,7 +152,7 @@ function trimGeometry() {
 
 /** Solid wall pieces (doors already cut out) merged into one mesh, plus the trim that dresses them. */
 export function Walls() {
-  const { geometry, edges, trim } = useMemo(() => {
+  const { geometry, edges, trim, fascia } = useMemo(() => {
     const geos = wallPieces().map((p) => {
       const dx = p.b[0] - p.a[0]
       const dz = p.b[1] - p.a[1]
@@ -135,7 +164,7 @@ export function Walls() {
     })
     const geometry = mergeGeometries(geos, false)!
     geos.forEach((g) => g.dispose())
-    return { geometry, edges: new THREE.EdgesGeometry(geometry, 20), trim: trimGeometry() }
+    return { geometry, edges: new THREE.EdgesGeometry(geometry, 20), trim: trimGeometry(), fascia: fasciaGeometry() }
   }, [])
 
   const material = useMemo(panelMaterial, [])
@@ -143,6 +172,9 @@ export function Walls() {
   return (
     <group>
       <mesh geometry={geometry} material={material} />
+      <mesh geometry={fascia}>
+        <meshStandardMaterial color="#2b3542" roughness={0.85} metalness={0.15} />
+      </mesh>
       <mesh geometry={trim}>
         <meshStandardMaterial color="#59657a" roughness={0.44} metalness={0.55} />
       </mesh>
