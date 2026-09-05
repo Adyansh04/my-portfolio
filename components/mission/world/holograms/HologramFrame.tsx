@@ -70,22 +70,22 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
   return (
     <group ref={group} position={[x, 0, z]}>
       <mesh position={[0, 0.45, 0]}>
-        <cylinderGeometry args={[0.55, 0.62, 0.9, 28]} />
+        <cylinderGeometry args={[0.78, 0.86, 0.9, 32]} />
         <meshStandardMaterial color="#141a22" roughness={0.75} metalness={0.1} />
       </mesh>
       <mesh position={[0, 0.905, 0]} rotation-x={-Math.PI / 2}>
-        <ringGeometry args={[0.44, 0.56, 40]} />
+        <ringGeometry args={[0.66, 0.8, 48]} />
         <meshBasicMaterial ref={ringMat} color="#ff7a1a" transparent opacity={0.5} />
       </mesh>
       <pointLight ref={light} position={[0, 1.3, 0]} color="#ffc9a0" intensity={1} distance={3.2} decay={1.8} />
       {/* the pedestal sits on the floor (shadow) and spills a little accent onto it (pool) */}
-      <ContactShadow radius={0.82} opacity={0.62} />
+      <ContactShadow radius={1.08} opacity={0.62} />
       <mesh position={[0, 0.02, 0]} rotation-x={-Math.PI / 2} material={glow}>
-        <circleGeometry args={[1.15, 40]} />
+        <circleGeometry args={[1.55, 44]} />
       </mesh>
       {/* label plate faces the aisle (pedestals north of the aisle face +z, south ones face -z) */}
-      <mesh position={[0, 0.55, z < 38 ? 0.63 : -0.63]} rotation={[0, z < 38 ? 0 : Math.PI, 0]} material={plate}>
-        <planeGeometry args={[1.0, 0.25]} />
+      <mesh position={[0, 0.55, z < 38 ? 0.87 : -0.87]} rotation={[0, z < 38 ? 0 : Math.PI, 0]} material={plate}>
+        <planeGeometry args={[1.28, 0.32]} />
       </mesh>
       <group ref={content} position={[0, 0.905, 0]} rotation={[0, z < 38 ? 0 : Math.PI, 0]} scale={1.2}>
         <HologramCtx.Provider value={ctx}>

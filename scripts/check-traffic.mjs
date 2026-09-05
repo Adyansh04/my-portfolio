@@ -10,7 +10,9 @@ import { ZONES } from '../lib/mission/zones.ts'
 import { shotAt } from '../lib/mission/camera.ts'
 
 const AMR_HALF = 0.48 // widest half-extent of a unit
-const PED_R = 0.72 // hologram volume radius
+// The pedestal column, which is what ground traffic can actually hit. The hologram platform
+// overhangs it to 1.08 m, but that sits at 1.17 m — over the head of anything driving past.
+const PED_R = 0.92
 const errors = []
 
 /** distance from point p to segment ab */
