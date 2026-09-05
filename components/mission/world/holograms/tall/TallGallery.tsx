@@ -8,11 +8,9 @@ import { PostFx } from '../../PostFx'
 import { ContactShadow } from '../../ContactShadow'
 import { DebugHook } from '../../DebugHook'
 import { makeLabelTexture } from '../../labels'
-import { TALL_FORMS } from './contentTall'
-import { LiveScene } from './LiveScene'
-import { VERTICAL_DEMOS } from './verticalDemos'
-import { ConsoleHelix } from './ConsoleHelix'
-import { SLAB_DESIGNS, type SlabDesign } from '../data/projects'
+import { ProjectConsole } from './ProjectConsole'
+import { SLAB_DESIGNS } from '../data/projects'
+import { STAGE_FOR } from './stages'
 
 /**
  * Previews every concept from the shot it actually has to survive: the hall rig sits at
@@ -21,25 +19,20 @@ import { SLAB_DESIGNS, type SlabDesign } from '../data/projects'
  */
 const CAM_OFFSET = new THREE.Vector3(4.2, 3.5, 6.1)
 const LOOK_OFFSET = new THREE.Vector3(1.1, 0.8, 1.15)
-const SPACING = 4.4
-const ROW = 5.0
+const SPACING = 5.2
 const PROJECTS = [
   { key: 'go2-inspection', name: 'Go2 Inspection' },
+  { key: 'ai-robotics', name: 'AI+Robotics' },
   { key: 'olive', name: 'OLIVE' },
+  { key: 'whycode', name: 'WhyCode' },
+  { key: 'sepsis-atlas', name: 'Sepsis Atlas' },
+  { key: 'abu-robocon', name: 'ABU Robocon' },
+  { key: 'kiwi-drive', name: 'Kiwi Drive' },
+  { key: 'vanguard', name: 'Vanguard' },
+  { key: 'agrobot', name: 'AgroBot' },
+  { key: 'drone-systems', name: 'Drone Systems' },
 ] as const
-const DETECTIONS: Record<string, string[]> = {
-  'go2-inspection': ['fire extinguisher', 'pallet stack', 'office chair', 'toolbox', 'shelving unit', 'cable drum'],
-  olive: ['WhyCode L0', 'WhyCode L1', 'WhyCode L2'],
-}
-const LIVE = { id: 't0', name: 'Live Scene', blurb: 'The project actually running: the real robot working a real environment, with the map and detections assembling in the column above it.', C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <LiveScene design={design} detections={DETECTIONS[projectKey] ?? []} /> }
-const COMBO = {
-  id: 'v5',
-  name: 'Console + Helix',
-  blurb: 'V3 and V4 as one object: the robot works the ramp below, the console above shows what that work produced. One climb equals one traversal of the route, so the trail grows and detections list as it passes them.',
-  C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <ConsoleHelix design={design} projectKey={projectKey} climber={projectKey === 'go2-inspection' ? 'go2' : 'puck'} />,
-}
-const FORMS = [COMBO, ...VERTICAL_DEMOS, LIVE] as const
-const CELLS = PROJECTS.flatMap((p, pi) => FORMS.map((f, fi) => ({ p, f, pi, fi, key: `${f.id}-${p.key}` })))
+const CELLS = PROJECTS.map((p, i) => ({ ...p, i }))
 
 function Pedestal({ label }: { label: string }) {
   const plate = useMemo(() => {
@@ -48,16 +41,17 @@ function Pedestal({ label }: { label: string }) {
   }, [label])
   return (
     <group>
-      <ContactShadow radius={0.95} opacity={0.6} />
+      <ContactShadow radius={1.2} opacity={0.6} />
       <mesh position={[0, 0.45, 0]}>
-        <cylinderGeometry args={[0.62, 0.7, 0.9, 32]} />
+        <cylinderGeometry args={[0.78, 0.86, 0.9, 32]} />
         <meshStandardMaterial color="#161d26" roughness={0.72} metalness={0.15} />
       </mesh>
+      <pointLight position={[0, 1.3, 0]} color="#ffc9a0" intensity={2.2} distance={3.2} decay={1.8} />
       <mesh position={[0, 0.905, 0]} rotation-x={-Math.PI / 2}>
-        <ringGeometry args={[0.5, 0.62, 44]} />
+        <ringGeometry args={[0.66, 0.8, 48]} />
         <meshBasicMaterial color="#ff7a1a" transparent opacity={0.55} toneMapped={false} />
       </mesh>
-      <mesh position={[0, 0.55, 0.705]} material={plate}>
+      <mesh position={[0, 0.55, 0.87]} material={plate}>
         <planeGeometry args={[1.0, 1.0 * (96 / 640)]} />
       </mesh>
     </group>
@@ -99,11 +93,10 @@ function Rig({ focus }: { focus: number | null }) {
   const camera = useThree((s) => s.camera)
   const want = useMemo(() => {
     if (focus === null) {
-      const mid = ((FORMS.length - 1) / 2) * SPACING
-      return { pos: new THREE.Vector3(mid, 10, 18), look: new THREE.Vector3(mid, 1.4, -ROW / 2) }
+      const mid = ((CELLS.length - 1) / 2) * SPACING
+      return { pos: new THREE.Vector3(mid, 12, 24), look: new THREE.Vector3(mid, 1.4, 0) }
     }
-    const c = CELLS[focus]
-    const base = new THREE.Vector3(c.fi * SPACING, 0, -c.pi * ROW)
+    const base = new THREE.Vector3(focus * SPACING, 0, 0)
     return { pos: base.clone().add(CAM_OFFSET), look: base.clone().add(LOOK_OFFSET) }
   }, [focus])
   useFrame((_, dt) => {
@@ -140,35 +133,35 @@ export function TallGallery() {
         <directionalLight position={[10, 18, 6]} intensity={0.85} color="#dbe7ff" />
         <HallContext />
         <Rig focus={focus} />
-        {CELLS.map((c) => (
-          <group key={c.key} position={[c.fi * SPACING, 0, -c.pi * ROW]}>
-            <Pedestal label={`${c.f.name} · ${c.p.name}`} />
+        {CELLS.filter((c) => focus === null || c.i === focus).map((c) => (
+          <group key={c.key} position={[c.i * SPACING, 0, 0]}>
+            <Pedestal label={c.name} />
             <group position={[0, 0.905, 0]} scale={1.2}>
-              <c.f.C design={SLAB_DESIGNS[c.p.key]} projectKey={c.p.key} />
+              <ProjectConsole design={SLAB_DESIGNS[c.key]} projectKey={c.key} />
             </group>
           </group>
         ))}
       </Canvas>
 
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-10 flex flex-col gap-2 p-5">
-        <div className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted">Tall hologram concepts · shown from the real hall camera (7.4 m out, 3.5 m up)</div>
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 flex flex-col gap-2 p-5">
+        <div className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted">Project holograms · shown from the real hall camera (7.4 m out, 3.5 m up)</div>
         <div className="pointer-events-auto flex flex-wrap gap-1.5">
           <button onClick={() => setFocus(null)} className={`rounded-sm border px-2.5 py-1 font-mono text-[0.6875rem] tracking-[0.1em] transition ${focus === null ? 'border-accent bg-accent/15 text-accent' : 'border-grid bg-ground/85 text-muted hover:text-text'}`}>ALL</button>
           {CELLS.map((c, i) => (
             <button key={c.key} onClick={() => setFocus(i)} className={`rounded-sm border px-2.5 py-1 font-mono text-[0.6875rem] tracking-[0.1em] transition ${focus === i ? 'border-accent bg-accent/15 text-accent' : 'border-grid bg-ground/85 text-muted hover:text-text'}`}>
-              {c.f.id.toUpperCase()} · {c.p.name}
+              {c.name}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="pointer-events-none fixed left-5 bottom-5 z-10 max-w-[26rem] rounded-md border border-grid bg-ground/90 p-4 backdrop-blur-xl">
+      <div className="pointer-events-none fixed left-5 top-5 z-10 max-w-[26rem] rounded-md border border-grid bg-ground/90 p-4 backdrop-blur-xl">
         {focus === null ? (
-          <p className="text-[0.875rem] leading-relaxed text-muted">Three forms, each generated from the project's own data, shown on two different projects. Pick a cell to see it from the shot it has to survive.</p>
+          <p className="text-[0.875rem] leading-relaxed text-muted">Every project in its shipped form: its own hardware working below, its own SVG poster on the panel above. Pick one to see it from the shot it has to survive.</p>
         ) : (
           <>
-            <div className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">{CELLS[focus].f.name} · {CELLS[focus].p.name}</div>
-            <p className="mt-1.5 text-[0.875rem] leading-relaxed text-muted">{CELLS[focus].f.blurb}</p>
+            <div className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-accent">{CELLS[focus].name}</div>
+            <p className="mt-1.5 text-[0.875rem] leading-relaxed text-muted">Stage: {STAGE_FOR[CELLS[focus].key]}</p>
           </>
         )}
       </div>
