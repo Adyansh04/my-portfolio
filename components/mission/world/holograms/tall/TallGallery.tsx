@@ -10,6 +10,7 @@ import { DebugHook } from '../../DebugHook'
 import { makeLabelTexture } from '../../labels'
 import { TALL_FORMS } from './contentTall'
 import { LiveScene } from './LiveScene'
+import { VERTICAL_DEMOS } from './verticalDemos'
 import { SLAB_DESIGNS, type SlabDesign } from '../slab/slabContent'
 
 /**
@@ -21,16 +22,13 @@ const CAM_OFFSET = new THREE.Vector3(4.2, 3.5, 6.1)
 const LOOK_OFFSET = new THREE.Vector3(1.1, 0.8, 1.15)
 const SPACING = 4.4
 const ROW = 5.0
-const PROJECTS = [
-  { key: 'go2-inspection', name: 'Go2 Inspection' },
-  { key: 'olive', name: 'OLIVE' },
-] as const
+const PROJECTS = [{ key: 'go2-inspection', name: 'Go2 Inspection' }] as const
 const DETECTIONS: Record<string, string[]> = {
   'go2-inspection': ['fire extinguisher', 'pallet stack', 'office chair', 'toolbox', 'shelving unit', 'cable drum'],
   olive: ['WhyCode L0', 'WhyCode L1', 'WhyCode L2'],
 }
 const LIVE = { id: 't0', name: 'Live Scene', blurb: 'The project actually running: the real robot working a real environment, with the map and detections assembling in the column above it.', C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <LiveScene design={design} detections={DETECTIONS[projectKey] ?? []} /> }
-const FORMS = [LIVE, ...TALL_FORMS] as const
+const FORMS = [...VERTICAL_DEMOS, LIVE] as const
 const CELLS = PROJECTS.flatMap((p, pi) => FORMS.map((f, fi) => ({ p, f, pi, fi, key: `${f.id}-${p.key}` })))
 
 function Pedestal({ label }: { label: string }) {
