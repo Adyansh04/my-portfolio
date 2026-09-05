@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, type MutableRefObject } from 'react'
+import { useMemo, useRef, useState, type MutableRefObject } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useHologram } from '../HologramFrame'
@@ -33,6 +33,21 @@ export function useClock(speed = 1): MutableRefObject<number> {
 export function useNear() {
   const holo = useHologram()
   return () => !holo || holo.near.current
+}
+
+/**
+ * The same proximity as a React state rather than a ref, for the things that have to mount and
+ * unmount rather than just skip a frame — the offscreen glyph hosts, mainly, since ten live
+ * framer-motion trees on the main thread is not free.
+ */
+export function useNearState() {
+  const holo = useHologram()
+  const [near, setNear] = useState(!holo)
+  useFrame(() => {
+    const n = !holo || holo.near.current
+    if (n !== near) setNear(n)
+  })
+  return near
 }
 
 export function emissive(color: string, strength = 1.0, opacity = 1) {

@@ -16,7 +16,7 @@ import { DroneSystemsSvg } from "./drone-systems"
 type GlyphComponent = ComponentType<{ className?: string }>
 
 /** Maps a project's mediaFolder to its animated SVG line-art glyph. */
-const GLYPHS: Record<string, GlyphComponent> = {
+export const GLYPHS: Record<string, GlyphComponent> = {
   "go2-inspection": Go2Svg,
   whycode: WhyCodeSvg,
   "ai-robotics": AiRoboticsSvg,
