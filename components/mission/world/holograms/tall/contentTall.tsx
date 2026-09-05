@@ -5,14 +5,14 @@ import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { useFrame } from '@react-three/fiber'
 import { emissive, glowMat, lineMat, useClock, useNear, H } from './tallParts'
-import type { SlabDesign } from '../slab/slabContent'
+import type { SlabDesign } from '../data/projects'
 
 /**
  * Tall holograms whose geometry comes from the project's own data, not from a pretty shape. Every
  * ring is that project's real plan, every node one of its real entities, every link one of its
  * real relations — so the silhouette that reads from across the hall is *about something*.
  *
- * Data comes from slabContent.ts, which already describes all ten projects as runs (structure),
+ * Data comes from data/projects.ts, which describes all ten projects as runs (structure),
  * a path (the route or circuit) and pins (the things that matter).
  */
 

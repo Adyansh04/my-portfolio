@@ -1,11 +1,19 @@
 'use client'
 
 import type { ComponentType } from 'react'
-import { SLAB_HOLOGRAMS } from './slab/SlabHologram'
+import { ConsoleHelix } from './tall/ConsoleHelix'
+import { SLAB_DESIGNS } from './data/projects'
 
 /**
- * Project mediaFolder → hologram content. Every project is now a milled plate (the "terrain slab"
- * style): the subject raised out of an anodised deck as chamfered relief, its route routed as a lit
- * channel, with pulses and a tool light doing the moving. The earlier line-art scenes are gone.
+ * Project mediaFolder → hologram content. Every project is a console-and-helix: the robot works a
+ * helical ramp in the lower half and an upright console above shows what that work produced, both
+ * driven by one progress value. The pair exists because of the shot — the hall camera is 7.4 m out
+ * and 21 degrees down, so the helix carries silhouette and motion while the console carries detail
+ * on a surface that angle cannot crush.
  */
-export const HOLOGRAMS: Record<string, ComponentType> = SLAB_HOLOGRAMS
+export const HOLOGRAMS: Record<string, ComponentType> = Object.fromEntries(
+  Object.keys(SLAB_DESIGNS).map((key) => [
+    key,
+    () => <ConsoleHelix design={SLAB_DESIGNS[key]} projectKey={key} climber={key === 'go2-inspection' ? 'go2' : 'puck'} />,
+  ]),
+)

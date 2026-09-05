@@ -1,21 +1,22 @@
-import type { XZ } from './slabParts'
+export type XZ = [number, number]
 
 /**
- * Each project milled into the plate: which runs stand proud, which path is routed and lit, and
- * where the marker pins go. Coordinates are the slab's own, roughly ±0.46 by ±0.34.
+ * Each project described as three things the holograms build from: the runs that make up its
+ * structure, the path its route or circuit follows, and the pins marking what matters. Coordinates
+ * are roughly ±0.46 by ±0.34.
  */
 export interface SlabDesign {
-  /** colour of the routed channel */
+  /** the project's primary colour */
   accent: string
   /** colour of the live data — pins, pulses, readouts */
   data: string
-  /** wall runs raised out of the deck */
+  /** structural runs: walls, rows, spokes */
   runs: [XZ, XZ][]
-  /** the routed channel the pulses travel */
+  /** the route or circuit travelled */
   path: XZ[]
   closed?: boolean
   pins: { p: XZ; h?: number }[]
-  /** a second, lower set of runs for texture (crop rows, shelving, data rows) */
+  /** a secondary set of runs for texture (crop rows, shelving, data rows) */
   detail?: [XZ, XZ][]
 }
 

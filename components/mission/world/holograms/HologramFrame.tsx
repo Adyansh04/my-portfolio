@@ -65,7 +65,6 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
     active.current += (target - active.current) * (1 - Math.exp(-d * 4))
     if (ringMat.current) ringMat.current.opacity = 0.35 + 0.65 * active.current
     if (light.current) light.current.intensity = 0.6 + 2.2 * active.current
-    if (content.current) content.current.rotation.y += d * 0.12
   })
 
   return (
@@ -88,7 +87,7 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
       <mesh position={[0, 0.55, z < 38 ? 0.63 : -0.63]} rotation={[0, z < 38 ? 0 : Math.PI, 0]} material={plate}>
         <planeGeometry args={[1.0, 0.25]} />
       </mesh>
-      <group ref={content} position={[0, 0.905, 0]} scale={1.2}>
+      <group ref={content} position={[0, 0.905, 0]} rotation={[0, z < 38 ? 0 : Math.PI, 0]} scale={1.2}>
         <HologramCtx.Provider value={ctx}>
           {children}
         </HologramCtx.Provider>

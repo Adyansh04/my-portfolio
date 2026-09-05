@@ -12,7 +12,7 @@ import { TALL_FORMS } from './contentTall'
 import { LiveScene } from './LiveScene'
 import { VERTICAL_DEMOS } from './verticalDemos'
 import { ConsoleHelix } from './ConsoleHelix'
-import { SLAB_DESIGNS, type SlabDesign } from '../slab/slabContent'
+import { SLAB_DESIGNS, type SlabDesign } from '../data/projects'
 
 /**
  * Previews every concept from the shot it actually has to survive: the hall rig sits at
@@ -23,7 +23,10 @@ const CAM_OFFSET = new THREE.Vector3(4.2, 3.5, 6.1)
 const LOOK_OFFSET = new THREE.Vector3(1.1, 0.8, 1.15)
 const SPACING = 4.4
 const ROW = 5.0
-const PROJECTS = [{ key: 'go2-inspection', name: 'Go2 Inspection' }] as const
+const PROJECTS = [
+  { key: 'go2-inspection', name: 'Go2 Inspection' },
+  { key: 'olive', name: 'OLIVE' },
+] as const
 const DETECTIONS: Record<string, string[]> = {
   'go2-inspection': ['fire extinguisher', 'pallet stack', 'office chair', 'toolbox', 'shelving unit', 'cable drum'],
   olive: ['WhyCode L0', 'WhyCode L1', 'WhyCode L2'],
@@ -33,7 +36,7 @@ const COMBO = {
   id: 'v5',
   name: 'Console + Helix',
   blurb: 'V3 and V4 as one object: the robot works the ramp below, the console above shows what that work produced. One climb equals one traversal of the route, so the trail grows and detections list as it passes them.',
-  C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <ConsoleHelix design={design} detections={DETECTIONS[projectKey] ?? []} />,
+  C: ({ design, projectKey }: { design: SlabDesign; projectKey: string }) => <ConsoleHelix design={design} projectKey={projectKey} climber={projectKey === 'go2-inspection' ? 'go2' : 'puck'} />,
 }
 const FORMS = [COMBO, ...VERTICAL_DEMOS, LIVE] as const
 const CELLS = PROJECTS.flatMap((p, pi) => FORMS.map((f, fi) => ({ p, f, pi, fi, key: `${f.id}-${p.key}` })))

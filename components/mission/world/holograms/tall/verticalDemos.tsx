@@ -10,7 +10,7 @@ import { asset } from '@/lib/base-path'
 import { QuadrupedRobot } from '../../robots/QuadrupedRobot'
 import { go2MaterialFor } from '../../robots/robotMaterial'
 import { emissive, lineMat, pointsMat, useClock, useNear, H } from './tallParts'
-import type { SlabDesign } from '../slab/slabContent'
+import type { SlabDesign } from '../data/projects'
 
 /**
  * Four answers to the same geometric problem. The hall camera looks down at 21 degrees, so a

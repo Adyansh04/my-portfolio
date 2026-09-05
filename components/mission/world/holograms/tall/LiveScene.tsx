@@ -11,7 +11,7 @@ import { QuadrupedRobot } from '../../robots/QuadrupedRobot'
 import { go2MaterialFor } from '../../robots/robotMaterial'
 import { makeLabelTexture } from '../../labels'
 import { emissive, lineMat, useClock, useNear, H } from './tallParts'
-import type { SlabDesign } from '../slab/slabContent'
+import type { SlabDesign } from '../data/projects'
 
 /**
  * The project actually happening, staged vertically: the real robot working a real environment at
