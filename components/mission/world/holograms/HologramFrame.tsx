@@ -77,7 +77,9 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
         <ringGeometry args={[0.66, 0.8, 48]} />
         <meshBasicMaterial ref={ringMat} color="#ff7a1a" transparent opacity={0.5} />
       </mesh>
-      <pointLight ref={light} position={[0, 1.3, 0]} color="#ffc9a0" intensity={1} distance={3.2} decay={1.8} />
+      {/* Above the content, not inside it. At 1.3 m this sat 13 cm off the stage deck, buried in
+          the hardware, and blew a specular starburst through the bloom on whatever it touched. */}
+      <pointLight ref={light} position={[0, 2.05, 0]} color="#ffc9a0" intensity={1} distance={3.4} decay={1.8} />
       {/* the pedestal sits on the floor (shadow) and spills a little accent onto it (pool) */}
       <ContactShadow radius={1.08} opacity={0.62} />
       <mesh position={[0, 0.02, 0]} rotation-x={-Math.PI / 2} material={glow}>
