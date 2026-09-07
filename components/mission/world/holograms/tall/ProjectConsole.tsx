@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { useFrame } from '@react-three/fiber'
-import { emissive, lineMat, useClock, useNearState } from './tallParts'
+import { emissive, lineMat, useClock, useNear } from './tallParts'
 import { useGlyphTexture } from './useGlyphTexture'
 import { STAGES, STAGE_FOR, DECK } from './stages'
 import type { SlabDesign } from '../data/projects'
@@ -30,13 +30,14 @@ const PH = PW * 0.75 // the glyphs are all authored 400×300
 const SCREEN_Y = 1.38
 const PANEL_Z = -0.52
 const MAST_Z = -0.74
-const CANVAS_W = 1200
-const CANVAS_H = 900
+const CANVAS_W = 900
+const CANVAS_H = 675
 
 export function ProjectConsole({ design, projectKey }: { design: SlabDesign; projectKey: string }) {
   const t = useClock()
-  const near = useNearState()
-  const texture = useGlyphTexture(projectKey, CANVAS_W, CANVAS_H, near)
+  const near = useNear()
+  const root = useRef<THREE.Group>(null)
+  const texture = useGlyphTexture(projectKey, root, CANVAS_W, CANVAS_H)
   const Stage = STAGES[STAGE_FOR[projectKey] ?? 'patrol']
 
   /* ---------------- the gantry that holds the panel ---------------- */
@@ -80,7 +81,7 @@ export function ProjectConsole({ design, projectKey }: { design: SlabDesign; pro
   }, [scanMat])
 
   useFrame(() => {
-    if (!near) return
+    if (!near()) return
     const now = t.current
     const m = beads.current
     if (m) {
@@ -98,7 +99,7 @@ export function ProjectConsole({ design, projectKey }: { design: SlabDesign; pro
   })
 
   return (
-    <group>
+    <group ref={root}>
       <Stage design={design} />
 
       <mesh geometry={gantry} material={steel} />

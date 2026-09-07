@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { createRoot } from 'react-dom/client'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
@@ -17,13 +17,68 @@ import { GLYPHS } from '@/components/glyphs'
  *
  * Rasterising rather than floating the DOM over the canvas keeps the panel inside the scene, so it
  * takes the bloom, the fog and the depth sorting like everything else.
+ *
+ * ## Why only one of these runs at a time
+ *
+ * The first version gave every hologram within 22 m its own live glyph and cost the hall 45 fps:
+ * ten SVG trees of a couple of hundred elements each, every one of them having its inline styles
+ * rewritten 60 times a second, is style, layout and paint work the browser does before three.js
+ * gets a look in. Measured: 0 hosts 60 fps, 5 hosts 45, 7 hosts 15, 10 hosts 11.
+ *
+ * So a live host is a scarce resource. The nearest hologram holds one — that is the one being
+ * looked at, and the only one whose animation anyone can resolve. One more is loaned to whichever
+ * panel has never been painted, so nothing further down the aisle is ever blank. Everything else
+ * keeps the last frame it drew, which at 15 m is indistinguishable from a live one.
  */
+
+/** Beyond this a panel keeps whatever it last painted. */
+const LIVE_RANGE = 26
+/** How many glyph trees may animate at once: the one in shot, plus one being primed. */
+const CAP = 2
+const FPS = 10
+/** Glyphs play an entrance animation on mount; painting before it finishes captures a half-drawn
+ *  poster, which is exactly what made a freshly-approached panel look sparse. A primed panel keeps
+ *  its *last* frame, so priming has to run past the longest entrance — about two seconds. */
+const SETTLE = 1.5
+const PRIME_FRAMES = 12
+
+interface Entry {
+  dist: number
+  want: boolean
+  primed: boolean
+}
+const entries = new Map<number, Entry>()
+let nextId = 1
+
+/** Nearest in range, plus the nearest that has never painted. */
+function grant(): Set<number> {
+  const out = new Set<number>()
+  const live = [...entries.entries()].filter(([, e]) => e.want).sort((a, b) => a[1].dist - b[1].dist)
+  if (live.length) out.add(live[0][0])
+  for (const [id, e] of live) {
+    if (out.size >= CAP) break
+    if (!e.primed && !out.has(id)) out.add(id)
+  }
+  return out
+}
 
 /** The glyphs are all authored on a 400×300 field. */
 export const GLYPH_ASPECT = 4 / 3
 
-export function useGlyphTexture(folder: string, W: number, H: number, enabled: boolean, fps = 12) {
+export function useGlyphTexture(folder: string, anchor: RefObject<THREE.Object3D | null>, W: number, H: number) {
+  const id = useMemo(() => nextId++, [])
+  const entry = useMemo<Entry>(() => ({ dist: Infinity, want: false, primed: false }), [])
+  useEffect(() => {
+    entries.set(id, entry)
+    return () => {
+      entries.delete(id)
+    }
+  }, [id, entry])
+
+  const [hasHost, setHasHost] = useState(false)
   const [host, setHost] = useState<HTMLDivElement | null>(null)
+  const holds = useRef(false)
+
   const canvas = useMemo(() => {
     const c = document.createElement('canvas')
     c.width = W
@@ -38,17 +93,21 @@ export function useGlyphTexture(folder: string, W: number, H: number, enabled: b
     return t
   }, [canvas])
 
-  // An offscreen host so framer-motion actually runs and there is something live to serialise.
-  // It gets its own React root rather than a portal: this hook is called from inside the R3F tree,
-  // whose reconciler has no idea what to do with a <div>.
+  // An offscreen host so framer-motion actually runs and there is something live to serialise. It
+  // gets its own React root rather than a portal: this hook is called from inside the R3F tree,
+  // whose reconciler has no idea what to do with a <div>. `content-visibility` keeps the browser
+  // from laying out and painting a tree that only exists to be read.
   const Glyph = GLYPHS[folder]
+  const mountedAt = useRef(0)
+  const clock = useRef(0)
   useEffect(() => {
-    if (!enabled || !Glyph) return
+    if (!hasHost || !Glyph) return
     const d = document.createElement('div')
-    d.style.cssText = 'position:fixed;left:-99999px;top:0;width:400px;height:300px;pointer-events:none;'
+    d.style.cssText = 'position:fixed;left:-99999px;top:0;width:400px;height:300px;pointer-events:none;content-visibility:hidden;contain:strict;'
     document.body.appendChild(d)
     const root = createRoot(d)
     root.render(<Glyph />)
+    mountedAt.current = clock.current
     setHost(d)
     return () => {
       setHost(null)
@@ -57,21 +116,42 @@ export function useGlyphTexture(folder: string, W: number, H: number, enabled: b
         d.remove()
       })
     }
-  }, [enabled, Glyph])
+  }, [hasHost, Glyph])
 
   const img = useMemo(() => new Image(), [])
   const pending = useRef(false)
   const last = useRef(-99)
-  const clock = useRef(0)
+  const lastGrant = useRef(-99)
+  const painted = useRef(0)
+  const pos = useMemo(() => new THREE.Vector3(), [])
 
-  useFrame((_, dt) => {
-    if (!enabled || !host) return
+  useFrame(({ camera }, dt) => {
     clock.current += Math.min(0.05, dt || 0.016)
-    if (clock.current - last.current < 1 / fps || pending.current) return
+
+    const a = anchor.current
+    if (a) {
+      a.getWorldPosition(pos)
+      entry.dist = pos.distanceTo(camera.position)
+    }
+    entry.want = entry.dist < LIVE_RANGE
+
+    // arbitration is cheap but pointless every frame, and flapping would remount glyph trees
+    if (clock.current - lastGrant.current > 0.3) {
+      lastGrant.current = clock.current
+      const want = grant().has(id)
+      if (want !== holds.current) {
+        holds.current = want
+        setHasHost(want)
+      }
+    }
+
+    if (!host || pending.current) return
+    if (clock.current - mountedAt.current < SETTLE) return
+    if (clock.current - last.current < 1 / FPS) return
     last.current = clock.current
+
     const svg = host.querySelector('svg')
     if (!svg) return
-
     const clone = svg.cloneNode(true) as SVGSVGElement
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
     clone.setAttribute('width', String(W))
@@ -91,6 +171,7 @@ export function useGlyphTexture(folder: string, W: number, H: number, enabled: b
       paint(ctx, img, W, H)
       texture.needsUpdate = true
       pending.current = false
+      if (++painted.current >= PRIME_FRAMES) entry.primed = true
     }
     img.onerror = () => {
       pending.current = false
