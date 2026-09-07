@@ -175,6 +175,52 @@
       }
     ]
   },
+  "go2-inspection": {
+    "project": "go2-inspection",
+    "total": 5,
+    "media": [
+      {
+        "type": "video",
+        "src": "/my-portfolio/projects/go2-inspection/00-full-go2-demo.mp4",
+        "alt": "Full Go2 Demo",
+        "title": "Full Go2 Demo",
+        "filename": "00-full-go2-demo.mp4",
+        "size": 2384530
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/01-frontier-exploration.gif",
+        "alt": "Frontier Exploration",
+        "title": "Frontier Exploration",
+        "filename": "01-frontier-exploration.gif",
+        "size": 14292900
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/02-zone-segmentation.gif",
+        "alt": "Zone Segmentation",
+        "title": "Zone Segmentation",
+        "filename": "02-zone-segmentation.gif",
+        "size": 816763
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/03-zone-inspection.gif",
+        "alt": "Zone Inspection",
+        "title": "Zone Inspection",
+        "filename": "03-zone-inspection.gif",
+        "size": 4255954
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/go2-inspection/04-zone-report.gif",
+        "alt": "Zone Report",
+        "title": "Zone Report",
+        "filename": "04-zone-report.gif",
+        "size": 3725419
+      }
+    ]
+  },
   "kiwi-drive": {
     "project": "kiwi-drive",
     "total": 1,
@@ -186,6 +232,76 @@
         "title": "Wheel Omni",
         "filename": "3-wheel-omni.mp4",
         "size": 70467479
+      }
+    ]
+  },
+  "olive": {
+    "project": "olive",
+    "total": 8,
+    "media": [
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/00-maze-loop-demo.gif",
+        "alt": "Maze Loop Demo",
+        "title": "Maze Loop Demo",
+        "filename": "00-maze-loop-demo.gif",
+        "size": 64961819
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/01-trajectory-vs-ground-truth.png",
+        "alt": "Trajectory Vs Ground Truth",
+        "title": "Trajectory Vs Ground Truth",
+        "filename": "01-trajectory-vs-ground-truth.png",
+        "size": 53691
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/02-local-vs-wheel-odometry.png",
+        "alt": "Local Vs Wheel Odometry",
+        "title": "Local Vs Wheel Odometry",
+        "filename": "02-local-vs-wheel-odometry.png",
+        "size": 87566
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/03-accuracy-over-time.png",
+        "alt": "Accuracy Over Time",
+        "title": "Accuracy Over Time",
+        "filename": "03-accuracy-over-time.png",
+        "size": 70193
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/04-odometry-continuity.png",
+        "alt": "Odometry Continuity",
+        "title": "Odometry Continuity",
+        "filename": "04-odometry-continuity.png",
+        "size": 84254
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/05-bias-estimation.png",
+        "alt": "Bias Estimation",
+        "title": "Bias Estimation",
+        "filename": "05-bias-estimation.png",
+        "size": 127331
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/06-visual-odometry-features.png",
+        "alt": "Visual Odometry Features",
+        "title": "Visual Odometry Features",
+        "filename": "06-visual-odometry-features.png",
+        "size": 534797
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/olive/07-visual-odometry-trajectory.png",
+        "alt": "Visual Odometry Trajectory",
+        "title": "Visual Odometry Trajectory",
+        "filename": "07-visual-odometry-trajectory.png",
+        "size": 76300
       }
     ]
   },

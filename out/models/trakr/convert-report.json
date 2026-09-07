@@ -1,0 +1,189 @@
+[
+ {
+  "link": "fl_hip",
+  "faces": 11212,
+  "bytes": 202876,
+  "extents": [
+   0.056,
+   0.096,
+   0.104
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fl_shank",
+  "faces": 7652,
+  "bytes": 138288,
+  "extents": [
+   0.237,
+   0.052,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fl_thigh",
+  "faces": 55624,
+  "bytes": 1000816,
+  "extents": [
+   0.267,
+   0.102,
+   0.092
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fl_toe",
+  "faces": 5980,
+  "bytes": 109012,
+  "extents": [
+   0.036,
+   0.043,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fr_hip",
+  "faces": 11212,
+  "bytes": 202880,
+  "extents": [
+   0.056,
+   0.096,
+   0.104
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fr_shank",
+  "faces": 7664,
+  "bytes": 138564,
+  "extents": [
+   0.237,
+   0.052,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fr_thigh",
+  "faces": 56306,
+  "bytes": 1013164,
+  "extents": [
+   0.267,
+   0.102,
+   0.092
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "fr_toe",
+  "faces": 5980,
+  "bytes": 109016,
+  "extents": [
+   0.036,
+   0.043,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rl_hip",
+  "faces": 11212,
+  "bytes": 202876,
+  "extents": [
+   0.056,
+   0.096,
+   0.104
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rl_shank",
+  "faces": 7652,
+  "bytes": 138288,
+  "extents": [
+   0.237,
+   0.052,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rl_thigh",
+  "faces": 55636,
+  "bytes": 1001032,
+  "extents": [
+   0.267,
+   0.102,
+   0.092
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rl_toe",
+  "faces": 5980,
+  "bytes": 109012,
+  "extents": [
+   0.036,
+   0.043,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rr_hip",
+  "faces": 11212,
+  "bytes": 202876,
+  "extents": [
+   0.056,
+   0.096,
+   0.104
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rr_shank",
+  "faces": 7664,
+  "bytes": 138524,
+  "extents": [
+   0.237,
+   0.052,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rr_thigh",
+  "faces": 56306,
+  "bytes": 1013108,
+  "extents": [
+   0.267,
+   0.102,
+   0.092
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "rr_toe",
+  "faces": 5980,
+  "bytes": 109016,
+  "extents": [
+   0.036,
+   0.043,
+   0.036
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "base_link",
+  "faces": 81542,
+  "bytes": 1461824,
+  "extents": [
+   0.219,
+   0.487,
+   0.128
+  ],
+  "scale": 1.0
+ }
+]
