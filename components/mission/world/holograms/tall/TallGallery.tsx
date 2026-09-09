@@ -19,6 +19,19 @@ import { STAGE_FOR } from './stages'
  */
 const CAM_OFFSET = new THREE.Vector3(4.2, 3.5, 6.1)
 const LOOK_OFFSET = new THREE.Vector3(1.1, 0.8, 1.15)
+/** `?cam=x,y,z&look=x,y,z` moves the rig for inspecting a stage close up — checking that a robot
+ *  actually clears its own walls needs a viewpoint the hall shot deliberately does not give. */
+function offsets() {
+  if (typeof window === 'undefined') return { cam: CAM_OFFSET, look: LOOK_OFFSET }
+  const q = new URLSearchParams(window.location.search)
+  const v = (k: string, d: THREE.Vector3) => {
+    const raw = q.get(k)
+    if (!raw) return d
+    const n = raw.split(',').map(Number)
+    return n.length === 3 && n.every(Number.isFinite) ? new THREE.Vector3(n[0], n[1], n[2]) : d
+  }
+  return { cam: v('cam', CAM_OFFSET), look: v('look', LOOK_OFFSET) }
+}
 const SPACING = 5.2
 const PROJECTS = [
   { key: 'go2-inspection', name: 'Go2 Inspection' },
@@ -96,8 +109,9 @@ function Rig({ focus }: { focus: number | null }) {
       const mid = ((CELLS.length - 1) / 2) * SPACING
       return { pos: new THREE.Vector3(mid, 12, 24), look: new THREE.Vector3(mid, 1.4, 0) }
     }
+    const o = offsets()
     const base = new THREE.Vector3(focus * SPACING, 0, 0)
-    return { pos: base.clone().add(CAM_OFFSET), look: base.clone().add(LOOK_OFFSET) }
+    return { pos: base.clone().add(o.cam), look: base.clone().add(o.look) }
   }, [focus])
   useFrame((_, dt) => {
     const k = 1 - Math.exp(-Math.min(0.05, dt || 0.016) * 3)
