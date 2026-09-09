@@ -100,7 +100,7 @@ export function ProjectConsole({ design, projectKey }: { design: SlabDesign; pro
 
   return (
     <group ref={root}>
-      <Stage design={design} />
+      <Stage design={design} projectKey={projectKey} />
 
       <mesh geometry={gantry} material={steel} />
       <instancedMesh ref={beads} args={[undefined, undefined, 5]} material={beadMat}>

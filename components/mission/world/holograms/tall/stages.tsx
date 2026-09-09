@@ -12,7 +12,7 @@ import { UR5eArm, type ArmPhase } from '../../robots/UR5eArm'
 import { CrazyflieDrone } from '../../robots/CrazyflieDrone'
 import { go2MaterialFor } from '../../robots/robotMaterial'
 import { emissive, lineMat, useClock, useNear } from './tallParts'
-import type { SlabDesign, XZ } from '../data/projects'
+import { TRAFFIC, wallRuns, type SlabDesign, type XZ } from '../data/projects'
 
 /**
  * The lower half of each hologram: the project's own hardware doing the project's own job.
@@ -28,6 +28,20 @@ import type { SlabDesign, XZ } from '../data/projects'
 const S = 1.8
 /** Deck surface. The console panel starts at 0.77, so a stage has 0.22 → 0.72 to work in. */
 export const DECK = 0.22
+
+/**
+ * Vehicle sizes come from the same TRAFFIC table `check:holograms` measures against, so a robot
+ * can never quietly outgrow the gap it was cleared for. `half` is a half-width in design units;
+ * ×2×S is the full width on the deck.
+ */
+/** the Go2 is about 0.31 m across the hips */
+const GO2_SCALE = (TRAFFIC['go2-inspection'].half * 2 * S) / 0.31
+/** Rover draws its body `size * 1.7` wide */
+const ROVER_SIZE = { agrobot: (TRAFFIC.agrobot.half * 2 * S) / 1.7 }
+/** how far the picker can reach off the furrow: half a row spacing, near enough */
+const REACH = 0.155
+/** the UR5e's 0.85 m reach lands at 0.6 on the deck — inside the 0.9 platform */
+const ARM_SCALE = 0.7
 
 /* ------------------------------------------------------------------ shared */
 
@@ -96,19 +110,34 @@ function Route({ design, color, y = 0.004, width = 1 }: { design: SlabDesign; co
 /** Follows the project's own path; every stage that moves, moves along this. */
 function usePathPose(design: SlabDesign, speed = 0.5) {
   const t = useClock()
-  const pose = useRef({ x: 0, z: 0, yaw: 0, u: 0 })
-  useFrame(() => {
+  const pose = useRef<Pose>({ x: 0, z: 0, yaw: 0, u: 0 })
+  const prev = useRef<[number, number] | null>(null)
+  useFrame((_, dt) => {
     const p = design.path
-    const total = design.closed ? p.length : p.length - 1
-    const s = (t.current * speed) % total
-    const i = Math.floor(s)
+    const legs = design.closed ? p.length : p.length - 1
+    // An open route is walked out and back. Wrapping it would teleport the robot the length of the
+    // stage on every lap, which is what the AgroBot was doing at the end of each field pass.
+    const span = design.closed ? legs : legs * 2
+    let s = (t.current * speed) % span
+    if (!design.closed && s > legs) s = span - s
+    const i = Math.min(legs - 1, Math.floor(s))
     const k = s - i
     const a = p[i]
     const b = p[(i + 1) % p.length]
-    pose.current.x = (a[0] + (b[0] - a[0]) * k) * S
-    pose.current.z = (a[1] + (b[1] - a[1]) * k) * S
-    pose.current.yaw = Math.atan2(-(b[1] - a[1]), b[0] - a[0])
-    pose.current.u = s / total
+    const x = (a[0] + (b[0] - a[0]) * k) * S
+    const z = (a[1] + (b[1] - a[1]) * k) * S
+    // Heading comes from where it actually moved, not from the leg direction, so it stays right
+    // going backwards along a ping-pong and turns rather than snapping at a corner.
+    const q = prev.current
+    if (q && (x - q[0]) ** 2 + (z - q[1]) ** 2 > 1e-9) {
+      const want = Math.atan2(-(z - q[1]), x - q[0])
+      const d = Math.atan2(Math.sin(want - pose.current.yaw), Math.cos(want - pose.current.yaw))
+      pose.current.yaw += d * (1 - Math.exp(-Math.min(0.05, dt || 0.016) * 9))
+    }
+    prev.current = [x, z]
+    pose.current.x = x
+    pose.current.z = z
+    pose.current.u = s / legs
   })
   return { pose, t }
 }
@@ -250,12 +279,17 @@ function useTrail(pose: Pose, color: string, max = 260) {
 
 export interface StageProps {
   design: SlabDesign
+  projectKey: string
 }
 
 /** go2-inspection — the Go2 walking an unknown facility room by room, logging what it finds. */
-export function PatrolStage({ design }: StageProps) {
+export function PatrolStage({ design, projectKey }: StageProps) {
   const { pose } = usePathPose(design, 0.42)
-  const walls = useMemo(() => runGeometry(design.runs, 0.105, 0.018, DECK), [design.runs])
+  // the same runs check:holograms validates — doorways cut wherever the route goes through
+  const walls = useMemo(
+    () => runGeometry(wallRuns(projectKey, design), 0.115, TRAFFIC[projectKey].runHalf * 2 * S, DECK),
+    [design, projectKey],
+  )
   const wallMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#4b545f', metalness: 0.4, roughness: 0.68 }), [])
   const trail = useTrail(pose.current, design.data)
   const found = useRef<number[]>([])
@@ -275,7 +309,7 @@ export function PatrolStage({ design }: StageProps) {
       <primitive object={trail} />
       <Posts pts={design.pins.map((p) => p.p)} color={design.data} active={found} />
       <Suspense fallback={null}>
-        <group scale={0.72} position={[0, DECK, 0]}>
+        <group scale={GO2_SCALE} position={[0, DECK, 0]}>
           <QuadrupedRobot def={GO2_DEF} folder={asset('/models/go2')} legs={GO2_LEGS} gait={GO2_GAIT} headingOffset={0} scale={1} baseHeight={0.32} pose={pose.current} autoWalk materialFor={go2MaterialFor} flipAxis="z" />
         </group>
       </Suspense>
@@ -283,53 +317,139 @@ export function PatrolStage({ design }: StageProps) {
   )
 }
 
-/** ai-robotics — the UR5e running its pick-and-place over a cluttered bench. */
+/**
+ * ai-robotics — the UR5e running a real pick-and-place.
+ *
+ * The arm's joint trajectory is the IK solution already used in the world scene, so the tool
+ * genuinely arrives at a pick pose and a place pose. Everything else here is derived from that
+ * rather than guessed: the part is parented to the reported tool centre while it is held, and the
+ * feed tray and the drop pad are moved to wherever the tool actually grasps and releases. The
+ * first version placed the part by hand in the stage's own frame — a whole deck height above the
+ * gripper — and put the bin somewhere the arm never reached.
+ */
 export function ArmStage({ design }: StageProps) {
   const phase = useRef<ArmPhase | null>(null)
-  const cube = useRef<THREE.Mesh>(null)
-  const cubeMat = useMemo(() => emissive(design.data, 1.1), [design.data])
+  const rig = useRef<THREE.Group>(null)
+  const part = useRef<THREE.Mesh>(null)
+  const tray = useRef<THREE.Group>(null)
+  const pad = useRef<THREE.Group>(null)
+  const pick = useMemo(() => new THREE.Vector3(), [])
+  const place = useMemo(() => new THREE.Vector3(), [])
+  const known = useRef(0)
+  const wasHeld = useRef(false)
+
+  const partMat = useMemo(() => emissive(design.data, 1.1), [design.data])
+  const steel = useMemo(STEEL, [])
+  const padMat = useMemo(() => lineMat(design.accent, 0.85), [design.accent])
+  const padRing = useMemo(() => {
+    const pts: THREE.Vector3[] = []
+    for (let i = 0; i <= 32; i++) {
+      const a = (i / 32) * Math.PI * 2
+      pts.push(new THREE.Vector3(Math.cos(a) * 0.085, 0, Math.sin(a) * 0.085))
+    }
+    return new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), padMat)
+  }, [padMat])
+  /** Both stations are columns standing on the deck whose tops get scaled up to meet the tool. A
+   *  bench at a guessed height leaves the part hovering above it, which is what gave the first
+   *  version away. Authored with the base at y=0 so scale.y sets the working height directly. */
+  const column = useMemo(() => {
+    const g = new THREE.BoxGeometry(0.26, 1, 0.26)
+    g.translate(0, 0.5, 0)
+    return g
+  }, [])
+  const post = useMemo(() => {
+    const g = new THREE.CylinderGeometry(0.1, 0.115, 1, 20)
+    g.translate(0, 0.5, 0)
+    return g
+  }, [])
+  /** the clutter it has to pick out of, sat around the feed tray */
   const clutter = useMemo(() => {
-    const geos = design.pins.slice(0, 5).map((p, i) => {
-      const g = new THREE.BoxGeometry(0.07, 0.055 + (i % 3) * 0.02, 0.07)
-      g.rotateY(i * 0.7)
-      g.translate(p.p[0] * S, DECK + 0.02, p.p[1] * S)
+    const geos = [
+      [-0.1, 0.02, 0.05], [0.09, 0.03, -0.06], [0.02, 0.05, 0.11], [-0.07, 0.04, -0.10],
+    ].map(([dx, h, dz], i) => {
+      const g = new THREE.BoxGeometry(0.06, 0.035 + h, 0.06)
+      g.rotateY(i * 0.8)
+      g.translate(dx, (0.035 + h) / 2, dz)
       return g
     })
-    return mergeGeometries(geos, false)
-  }, [design.pins])
+    return mergeGeometries(geos, false)!
+  }, [])
   const clutterMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#6a7482', metalness: 0.5, roughness: 0.55 }), [])
-  const binMat = useMemo(() => lineMat(design.accent, 0.8), [design.accent])
-  const bin = useMemo(() => {
-    const p = [
-      [-0.1, -0.1], [0.1, -0.1], [0.1, 0.1], [-0.1, 0.1],
-    ] as XZ[]
-    return new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(p.map((q) => new THREE.Vector3(q[0] - 0.3, DECK + 0.006, q[1] + 0.24))), binMat)
-  }, [binMat])
+
+  const PART = 0.055
 
   useFrame(() => {
     const p = phase.current
-    if (!p || !cube.current) return
-    // segments 2..5 are pick → lift → pre-place → place: the cube rides the tool through them
+    if (!p || !part.current) return
+    // ARM_POSES: 0 home, 1 pre-pick, 2 pick, 3 lift, 4 pre-place, 5 place, 6 retreat. Segment n
+    // travels from pose n to pose n+1, so the tool is at the pick pose when segment 1 ends and at
+    // the place pose when segment 4 ends — the part is attached in between.
     const held = p.segment >= 2 && p.segment <= 4
-    if (held) cube.current.position.copy(p.tcp)
-    else if (p.segment >= 5) cube.current.position.set(-0.3, DECK + 0.025, 0.24)
-    else cube.current.position.set(0.3, DECK + 0.025, -0.2)
+    if (held !== wasHeld.current) {
+      ;(held ? pick : place).copy(p.tcp)
+      known.current |= held ? 1 : 2
+      wasHeld.current = held
+    }
+    // a station's top is set to where the part's underside ends up, so the part lands on it
+    if (tray.current && known.current & 1) {
+      tray.current.position.set(pick.x, 0, pick.z)
+      const top = Math.max(0.02, pick.y - PART * 1.1)
+      tray.current.children[0].scale.y = top
+      tray.current.children[1].position.y = top
+      tray.current.visible = true
+    }
+    if (pad.current && known.current & 2) {
+      pad.current.position.set(place.x, 0, place.z)
+      const top = Math.max(0.02, place.y - PART * 1.1)
+      pad.current.children[0].scale.y = top
+      pad.current.children[1].position.y = top
+      pad.current.visible = true
+    }
+    // nothing is drawn until the arm has shown where it grasps and releases
+    part.current.visible = known.current === 3
+
+    if (held) {
+      // hangs in the gripper, just under the flange the trajectory reports
+      part.current.position.set(p.tcp.x, p.tcp.y - PART * 0.6, p.tcp.z)
+      part.current.scale.setScalar(1)
+    } else if (p.segment >= 5) {
+      part.current.position.copy(place)
+      part.current.position.y = place.y - PART * 0.6
+      // segment 6 carries the finished part away, so the next cycle is a new one rather than a jump
+      part.current.scale.setScalar(p.segment === 6 ? Math.max(0, 1 - p.u) : 1)
+    } else {
+      part.current.position.copy(pick)
+      part.current.position.y = pick.y - PART * 0.6
+      part.current.scale.setScalar(p.segment === 0 ? Math.min(1, p.u * 1.6) : 1)
+    }
+    part.current.rotation.y += 0.01
   })
 
   return (
     <group>
       <Plinth accent={design.accent} />
       <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
-      {clutter && <mesh geometry={clutter} material={clutterMat} />}
-      <primitive object={bin} />
-      <Suspense fallback={null}>
-        <group position={[0, DECK, 0]}>
-          <UR5eArm scale={0.72} onPhase={(p) => (phase.current = p)} />
+      <group ref={rig} position={[0, DECK, 0]}>
+        <Suspense fallback={null}>
+          <UR5eArm scale={ARM_SCALE} onPhase={(p) => (phase.current = p)} />
+        </Suspense>
+        {/* both stations sit where the kinematics actually put the tool */}
+        <group ref={tray} visible={false}>
+          <mesh geometry={column} material={steel} scale-y={0.02} />
+          <group>
+            <mesh geometry={clutter} material={clutterMat} />
+          </group>
         </group>
-      </Suspense>
-      <mesh ref={cube} material={cubeMat}>
-        <boxGeometry args={[0.06, 0.06, 0.06]} />
-      </mesh>
+        <group ref={pad} visible={false}>
+          <mesh geometry={post} material={steel} scale-y={0.02} />
+          <group>
+            <primitive object={padRing} />
+          </group>
+        </group>
+        <mesh ref={part} material={partMat}>
+          <boxGeometry args={[PART, PART, PART]} />
+        </mesh>
+      </group>
     </group>
   )
 }
@@ -759,9 +879,12 @@ export function WatchtowerStage({ design }: StageProps) {
 }
 
 /** agrobot — raised rows, cotton bolls, and an X-drive base that dips an arm to pick them. */
-export function RowsStage({ design }: StageProps) {
+export function RowsStage({ design, projectKey }: StageProps) {
   const { pose, t } = usePathPose(design, 0.3)
-  const rows = useMemo(() => runGeometry(design.runs, 0.085, 0.07, DECK), [design.runs])
+  const rows = useMemo(
+    () => runGeometry(design.runs, 0.085, TRAFFIC[projectKey].runHalf * 2 * S, DECK),
+    [design.runs, projectKey],
+  )
   const cropMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#4d6b48', metalness: 0.15, roughness: 0.85 }), [])
   const bollMat = useMemo(() => emissive(design.data, 1.0), [design.data])
   const arm = useRef<THREE.Group>(null)
@@ -772,7 +895,7 @@ export function RowsStage({ design }: StageProps) {
   useFrame(() => {
     pts.forEach((p, i) => {
       if (picked.current.includes(i)) return
-      if (Math.hypot(p[0] * S - pose.current.x, p[1] * S - pose.current.z) < 0.09) picked.current.push(i)
+      if (Math.hypot(p[0] * S - pose.current.x, p[1] * S - pose.current.z) < REACH) picked.current.push(i)
     })
     if (pose.current.u < 0.02) picked.current.length = 0
     bolls.current.forEach((m, i) => {
@@ -782,7 +905,7 @@ export function RowsStage({ design }: StageProps) {
     })
     // the arm dips whenever a boll is within reach
     if (arm.current) {
-      const near = pts.some((p) => Math.hypot(p[0] * S - pose.current.x, p[1] * S - pose.current.z) < 0.16)
+      const near = pts.some((p) => Math.hypot(p[0] * S - pose.current.x, p[1] * S - pose.current.z) < REACH * 1.7)
       arm.current.rotation.x += ((near ? 1.0 : 0.15) - arm.current.rotation.x) * 0.09
     }
   })
@@ -798,7 +921,7 @@ export function RowsStage({ design }: StageProps) {
         </mesh>
       ))}
       <Route design={design} color={design.accent} />
-      <Rover pose={pose.current} color={design.data} t={t} wheels={4} drive="omni" size={0.14}>
+      <Rover pose={pose.current} color={design.data} t={t} wheels={4} drive="omni" size={ROVER_SIZE.agrobot}>
         <group ref={arm} position={[0, 0.02, 0.04]}>
           <mesh material={STEEL()} position={[0, 0.05, 0.02]}>
             <boxGeometry args={[0.014, 0.11, 0.014]} />
