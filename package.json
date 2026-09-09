@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "check:content": "node scripts/check-content.mjs",
     "typecheck": "tsc --noEmit",
-    "check:traffic": "node --import ./scripts/register-ts.mjs scripts/check-traffic.mjs"
+    "check:traffic": "node --import ./scripts/register-ts.mjs scripts/check-traffic.mjs",
+    "check:holograms": "node --import ./scripts/register-ts.mjs scripts/check-holograms.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
