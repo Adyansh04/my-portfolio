@@ -10,7 +10,9 @@
     "check:content": "node scripts/check-content.mjs",
     "typecheck": "tsc --noEmit",
     "check:traffic": "node --import ./scripts/register-ts.mjs scripts/check-traffic.mjs",
-    "check:holograms": "node --import ./scripts/register-ts.mjs scripts/check-holograms.mjs"
+    "check:holograms": "node --import ./scripts/register-ts.mjs scripts/check-holograms.mjs",
+    "posters:shots": "node --import ./scripts/register-ts.mjs scripts/poster-shots.mjs",
+    "posters:sink": "node scripts/poster-sink.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
