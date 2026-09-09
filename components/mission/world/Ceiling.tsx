@@ -7,8 +7,11 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { ROOMS } from '@/lib/mission/facility'
 
 const CEIL_Y = 3.2
-/** the project hall carries its own deeper roof truss (see ambient/Dressing) */
-const SKIP = new Set([3])
+/** the hall is one storey taller and carries its own roof truss (see ambient/Dressing) */
+const HALL_Y = 4.75
+const HALL_ZONE = 3
+/** the project hall gets no joists; its truss does that job */
+const SKIP = new Set([HALL_ZONE])
 
 interface Bar {
   x: number
@@ -52,6 +55,23 @@ function layout() {
 }
 const r0 = (long: number, i: number, n: number) => (i / n) * long
 
+/**
+ * The deck the joists hang from. Without it you look up between the beams and straight out at the
+ * night sky, which is what made these rooms read as open boxes with a hole in the top rather than
+ * the inside of a building. Extended past the walls so there is no seam at the junction.
+ */
+function deckGeometry(zones: (z: number) => boolean, y: number) {
+  const geos = ROOMS.filter((r) => zones(r.zone)).map((r) => {
+    const g = new THREE.PlaneGeometry(r.x1 - r.x0 + 0.4, r.z1 - r.z0 + 0.4)
+    g.rotateX(Math.PI / 2) // normal down, so it is only lit and only seen from inside
+    g.translate((r.x0 + r.x1) / 2, y, (r.z0 + r.z1) / 2)
+    return g
+  })
+  const m = mergeGeometries(geos, false)!
+  geos.forEach((g) => g.dispose())
+  return m
+}
+
 function barGeometry(bars: Bar[], w: number, h: number, y: number) {
   const geos = bars.map((b) => {
     const g = new THREE.BoxGeometry(b.alongX ? b.len : w, h, b.alongX ? w : b.len)
@@ -73,6 +93,9 @@ export function Ceiling() {
   const { beams, lamps } = useMemo(layout, [])
   const structure = useMemo(() => barGeometry(beams, 0.11, 0.16, CEIL_Y), [beams])
   const strips = useMemo(() => barGeometry(lamps, 0.16, 0.06, CEIL_Y - 0.13), [lamps])
+  // just above the joists, so they read as hanging from it
+  const deck = useMemo(() => deckGeometry((z) => !SKIP.has(z), CEIL_Y + 0.09), [])
+  const hallDeck = useMemo(() => deckGeometry((z) => z === HALL_ZONE, HALL_Y), [])
   const pools = useMemo(() => {
     const geos = lamps.map((b) => {
       const g = new THREE.PlaneGeometry(b.alongX ? 4.6 : 3.4, b.alongX ? 3.4 : 4.6)
@@ -98,24 +121,37 @@ export function Ceiling() {
     return new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })
   }, [])
   const structureMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333d4c', roughness: 0.78, metalness: 0.2, transparent: true }), [])
+  const deckMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#202833', roughness: 0.92, metalness: 0.05, transparent: true }), [])
+  const hallDeckMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1c242e', roughness: 0.92, metalness: 0.05, transparent: true }), [])
   // dim enough that a fixture passing right over the lens doesn't turn into a white slab
   const stripMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#9fbbe0', transparent: true, toneMapped: false }), [])
 
   const group = useRef<THREE.Group>(null)
+  const hallGroup = useRef<THREE.Group>(null)
   useFrame(({ camera }, dt) => {
-    // fade out as the camera rises through it
-    const want = 1 - THREE.MathUtils.clamp((camera.position.y - CEIL_Y + 0.5) / 1.1, 0, 1)
+    // each roof dissolves as the camera rises through its own height, so the loop-closure shot
+    // still gets its view down into the facility
+    const fade = (y: number) => 1 - THREE.MathUtils.clamp((camera.position.y - y + 0.5) / 1.1, 0, 1)
+    const want = fade(CEIL_Y)
+    const hallWant = fade(HALL_Y)
     const k = 1 - Math.exp(-Math.min(0.05, dt || 0.016) * 6)
     structureMat.opacity += (want - structureMat.opacity) * k
+    deckMat.opacity += (want - deckMat.opacity) * k
+    hallDeckMat.opacity += (hallWant - hallDeckMat.opacity) * k
     stripMat.opacity += (want * 0.6 - stripMat.opacity) * k
     if (group.current) group.current.visible = structureMat.opacity > 0.02
+    if (hallGroup.current) hallGroup.current.visible = hallDeckMat.opacity > 0.02
   })
 
   return (
     <group>
       <group ref={group}>
+        <mesh geometry={deck} material={deckMat} />
         <mesh geometry={structure} material={structureMat} />
         <mesh geometry={strips} material={stripMat} />
+      </group>
+      <group ref={hallGroup}>
+        <mesh geometry={hallDeck} material={hallDeckMat} />
       </group>
       <mesh geometry={pools} material={poolMat} renderOrder={-2} />
     </group>
