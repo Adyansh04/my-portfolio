@@ -6,6 +6,7 @@
 import { BOUNDS, PEDESTALS, PODIUMS, RACKS, ROOMS, roomAt, wallPieces } from '../lib/mission/facility.ts'
 import { AMR_ROUTES, DRONE_PATHS, HALL_RACKS, RACK_BAY, STATIONS, buildTimeline, samplePose, CATCH, fleet } from '../lib/mission/traffic.ts'
 import { ROUTE, routePose, ENTRY_T } from '../lib/mission/path.ts'
+import { PROPS, RADIUS as PROP_R } from '../lib/mission/props.ts'
 import { ZONES } from '../lib/mission/zones.ts'
 import { shotAt } from '../lib/mission/camera.ts'
 
@@ -35,6 +36,8 @@ const walls = wallPieces()
 const blockers = [
   ...PEDESTALS.map((p) => ({ p: [p.x, p.z], r: PED_R, what: 'pedestal' })),
   ...PODIUMS.map((p) => ({ p: [p.x, p.z], r: 0.7, what: 'podium' })),
+  // the modelled prop kit; anything mounted above head height has no radius and is skipped
+  ...PROPS.filter((p) => PROP_R[p.kind]).map((p) => ({ p: [p.x, p.z], r: PROP_R[p.kind], what: p.kind })),
 ]
 /** racks are long boxes, not discs: 0.45 deep across the corridor, 2.5 long */
 const boxes = [

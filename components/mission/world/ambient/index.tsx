@@ -5,6 +5,7 @@ import { DRONE_PATHS, fleet } from '@/lib/mission/traffic'
 import { Amr } from './Amr'
 import { Drone } from './Drone'
 import { CatchPair } from './CatchPair'
+import { Props } from './Props'
 import { Dressing } from './Dressing'
 
 /**
@@ -17,6 +18,9 @@ export function AmbientLife() {
   return (
     <group>
       <Dressing />
+      <Suspense fallback={null}>
+        <Props />
+      </Suspense>
       {fleet().map((u) => (
         <Amr key={u.label} route={u.route} label={u.label} phase={u.phase} />
       ))}
