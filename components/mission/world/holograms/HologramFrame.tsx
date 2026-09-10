@@ -7,6 +7,7 @@ import { mission } from '@/lib/mission/store'
 import type { Project } from '@/content/types'
 import { makeLabelTexture } from '../labels'
 import { ContactShadow } from '../ContactShadow'
+import { surface } from '../materials'
 
 interface HologramCtxValue {
   /** camera close enough for the content to animate */
@@ -49,6 +50,8 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
     )
     return new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })
   }, [project])
+  // a cylinder's own UVs wrap u around the circumference, so the tile counts differ per axis
+  const plinthMat = useMemo(() => surface('concrete', { repeat: [5, 0.9], tint: '#2a323e', roughness: 1.0, metalness: 0.05, normalScale: 0.8 }), [])
   const glow = useMemo(() => new THREE.MeshBasicMaterial({ color: '#ff7a1a', transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending, depthWrite: false }), [])
 
   useFrame(({ camera }, dt) => {
@@ -69,9 +72,8 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
 
   return (
     <group ref={group} position={[x, 0, z]}>
-      <mesh position={[0, 0.45, 0]}>
+      <mesh position={[0, 0.45, 0]} material={plinthMat}>
         <cylinderGeometry args={[0.78, 0.86, 0.9, 32]} />
-        <meshStandardMaterial color="#141a22" roughness={0.75} metalness={0.1} />
       </mesh>
       <mesh position={[0, 0.905, 0]} rotation-x={-Math.PI / 2}>
         <ringGeometry args={[0.66, 0.8, 48]} />

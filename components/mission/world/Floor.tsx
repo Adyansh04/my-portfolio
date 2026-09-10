@@ -9,6 +9,7 @@ import { missionT } from '@/lib/mission/path'
 import { mission } from '@/lib/mission/store'
 import { DRIFT_VECTOR, driftAmount } from '@/lib/mission/drift'
 import { floorFrag, floorVert } from './shaders/floor'
+import { textures } from './materials'
 
 const COUNT = GRID_COLS * GRID_ROWS
 
@@ -37,6 +38,10 @@ export function Floor() {
             uGrid: { value: new THREE.Color('#44566f') },
             uFill: { value: new THREE.Color('#cfe0ff') },
             uSheen: { value: new THREE.Color('#5f7fb0') },
+            uMap: { value: null as THREE.Texture | null },
+            uNrm: { value: null as THREE.Texture | null },
+            uOrm: { value: null as THREE.Texture | null },
+            uTile: { value: 2.4 },
           },
         ]),
         vertexShader: floorVert,
@@ -45,6 +50,13 @@ export function Floor() {
       }),
     [],
   )
+
+  useLayoutEffect(() => {
+    const t = textures('concrete')
+    material.uniforms.uMap.value = t.map
+    material.uniforms.uNrm.value = t.normalMap
+    material.uniforms.uOrm.value = t.ormMap
+  }, [material])
 
   useLayoutEffect(() => {
     const m = ref.current

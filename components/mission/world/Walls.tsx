@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { surface, worldUV } from './materials'
 import { DOOR_WIDTH, ROOMS, WALL_HEIGHT, WALL_THICKNESS, WALLS, wallPieces } from '@/lib/mission/facility'
 
 const T = WALL_THICKNESS
@@ -13,7 +14,8 @@ const T = WALL_THICKNESS
  * shading was what made the facility read as a set of black boxes.
  */
 function panelMaterial() {
-  const m = new THREE.MeshStandardMaterial({ color: '#3b4658', roughness: 0.62, metalness: 0.28 })
+  // the baked painted-steel set carries the surface; the patch below carries the architecture
+  const m = surface('panel', { scale: 1.2, tint: '#74849f', roughness: 1.0, metalness: 0.28, normalScale: 0.85, ao: 0.9 })
   m.onBeforeCompile = (shader) => {
     shader.uniforms.uAccent = { value: new THREE.Color('#ff7a1a') }
     shader.vertexShader = shader.vertexShader
@@ -68,7 +70,7 @@ function panelMaterial() {
         totalEmissiveRadiance += uAccent * (strip * 0.5 + skirt * 0.22);`,
       )
   }
-  m.customProgramCacheKey = () => 'facility-wall-v2'
+  m.customProgramCacheKey = () => 'facility-wall-v3'
   return m
 }
 
@@ -162,22 +164,20 @@ export function Walls() {
       g.translate((p.a[0] + p.b[0]) / 2, WALL_HEIGHT / 2, (p.a[1] + p.b[1]) / 2)
       return g
     })
-    const geometry = mergeGeometries(geos, false)!
+    const geometry = worldUV(mergeGeometries(geos, false)!, 1.2)
     geos.forEach((g) => g.dispose())
-    return { geometry, edges: new THREE.EdgesGeometry(geometry, 20), trim: trimGeometry(), fascia: fasciaGeometry() }
+    return { geometry, edges: new THREE.EdgesGeometry(geometry, 20), trim: worldUV(trimGeometry(), 0.8), fascia: worldUV(fasciaGeometry(), 1.2) }
   }, [])
 
   const material = useMemo(panelMaterial, [])
+  const fasciaMat = useMemo(() => surface('deck', { scale: 1.6, tint: '#4f5c78', roughness: 1.0, metalness: 0.3, normalScale: 0.5 }), [])
+  const trimMat = useMemo(() => surface('steel', { scale: 0.7, tint: '#8f9db5', roughness: 0.85, metalness: 1, normalScale: 0.7 }), [])
 
   return (
     <group>
-      <mesh geometry={geometry} material={material} />
-      <mesh geometry={fascia}>
-        <meshStandardMaterial color="#2b3542" roughness={0.85} metalness={0.15} />
-      </mesh>
-      <mesh geometry={trim}>
-        <meshStandardMaterial color="#59657a" roughness={0.44} metalness={0.55} />
-      </mesh>
+      <mesh geometry={geometry} material={material} castShadow receiveShadow />
+      <mesh geometry={fascia} material={fasciaMat} castShadow receiveShadow />
+      <mesh geometry={trim} material={trimMat} castShadow receiveShadow />
       <lineSegments geometry={edges}>
         <lineBasicMaterial color="#63748f" transparent opacity={0.35} />
       </lineSegments>

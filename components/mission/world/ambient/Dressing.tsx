@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import * as THREE from 'three'
+import { surface, worldUV } from '../materials'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { AMR_ROUTES, HALL_RACKS, RACK_BAY, STATIONS, buildTimeline } from '@/lib/mission/traffic'
 import { makeLabelTexture } from '../labels'
@@ -70,7 +71,7 @@ function Stations() {
       g.translate(s.p[0], 0.06, s.p[1])
       return g
     })
-    const m = mergeGeometries(geos, false)!
+    const m = worldUV(mergeGeometries(geos, false)!, 0.45)
     geos.forEach((g) => g.dispose())
     return m
   }, [])
@@ -86,7 +87,7 @@ function Stations() {
         geos.push(g)
       }
     })
-    const m = mergeGeometries(geos, false)!
+    const m = worldUV(mergeGeometries(geos, false)!, 0.4)
     geos.forEach((g) => g.dispose())
     return m
   }, [])
@@ -118,16 +119,14 @@ function Stations() {
     return m
   }, [])
   const shadowMat = useMemo(() => new THREE.MeshBasicMaterial({ map: shadowTexture(), transparent: true, opacity: 0.6, depthWrite: false, toneMapped: false }), [])
+  const palletMat = useMemo(() => surface('crate', { scale: 0.45, tint: '#4a4238', roughness: 1.25, metalness: 0, normalScale: 1.2 }), [])
+  const toteMat = useMemo(() => surface('crate', { scale: 0.4, tint: '#7d8ea6', roughness: 1.05, metalness: 0.1, normalScale: 1.3 }), [])
 
   return (
     <group>
       <mesh geometry={shadows} material={shadowMat} renderOrder={-3} />
-      <mesh geometry={pallets}>
-        <meshStandardMaterial color="#20272f" roughness={0.9} />
-      </mesh>
-      <mesh geometry={totes}>
-        <meshStandardMaterial color="#4a5666" roughness={0.75} metalness={0.15} />
-      </mesh>
+      <mesh geometry={pallets} material={palletMat} />
+      <mesh geometry={totes} material={toteMat} />
       {decals.map(({ s, mat }, i) => (
         <mesh key={i} material={mat} position={[s.p[0], 0.016, s.p[1] + 0.7]} rotation-x={-Math.PI / 2}>
           <planeGeometry args={[0.58, 0.2]} />
@@ -172,16 +171,14 @@ function HallRacking() {
       geos.forEach((g) => g.dispose())
       return m
     }
-    return { frame: merge(f), totes: merge(t) }
+    return { frame: worldUV(merge(f), 0.5), totes: worldUV(merge(t), 0.42) }
   }, [])
+  const frameMat = useMemo(() => surface('steel', { scale: 0.5, tint: '#6b7285', roughness: 1.05, metalness: 0.95, normalScale: 0.8 }), [])
+  const binMat = useMemo(() => surface('crate', { scale: 0.42, tint: '#3a4453', roughness: 1.1, metalness: 0.05, normalScale: 1.1 }), [])
   return (
     <group>
-      <mesh geometry={frame}>
-        <meshStandardMaterial color="#2b3341" roughness={0.8} metalness={0.25} />
-      </mesh>
-      <mesh geometry={totes}>
-        <meshStandardMaterial color="#1a212b" roughness={0.9} />
-      </mesh>
+      <mesh geometry={frame} material={frameMat} />
+      <mesh geometry={totes} material={binMat} />
     </group>
   )
 }
@@ -233,10 +230,11 @@ function Truss() {
       // lamp bar slung under the chord
       push(0.12, 0.05, 13.5, x, 4.05, 38)
     }
-    const m = mergeGeometries(geos, false)!
+    const m = worldUV(mergeGeometries(geos, false)!, 0.45)
     geos.forEach((g) => g.dispose())
     return m
   }, [])
+  const trussMat = useMemo(() => surface('steel', { scale: 0.45, tint: '#8d97ab', roughness: 0.95, metalness: 1, normalScale: 0.7 }), [])
   const lamps = useMemo(() => {
     const geos: THREE.BufferGeometry[] = []
     for (const x of [5, 13, 21, 29])
@@ -278,9 +276,7 @@ function Truss() {
 
   return (
     <group>
-      <mesh geometry={geometry}>
-        <meshStandardMaterial color="#5b6675" roughness={0.55} metalness={0.5} />
-      </mesh>
+      <mesh geometry={geometry} material={trussMat} />
       <mesh geometry={lamps}>
         <meshBasicMaterial color="#a8c2e6" transparent opacity={0.5} toneMapped={false} />
       </mesh>

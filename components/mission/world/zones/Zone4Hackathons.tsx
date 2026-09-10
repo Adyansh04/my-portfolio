@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { surface } from '../materials'
 import { useFrame } from '@react-three/fiber'
 import { PODIUMS } from '@/lib/mission/facility'
 import { hackathons } from '@/content/hackathons'

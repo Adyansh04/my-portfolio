@@ -54,8 +54,8 @@ export function WorldScene() {
       <fogExp2 attach="fog" args={['#101722', 0.0125]} />
       <Sky />
       <Ambience />
-      <hemisphereLight args={['#4a6488', '#131a24', 1.2]} />
-      <ambientLight intensity={0.4} />
+      <hemisphereLight args={['#5a7396', '#161e2a', 1.45]} />
+      <ambientLight intensity={0.5} />
       <directionalLight position={[10, 18, 6]} intensity={0.85} color="#dbe7ff" />
       <directionalLight position={[-14, 10, 34]} intensity={0.3} color="#8fb4ff" />
       <CameraLight />

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { ROOMS } from '@/lib/mission/facility'
+import { surface, worldUV } from './materials'
 
 const CEIL_Y = 3.2
 /** the hall is one storey taller and carries its own roof truss (see ambient/Dressing) */
@@ -91,11 +92,11 @@ function barGeometry(bars: Bar[], w: number, h: number, y: number) {
  */
 export function Ceiling() {
   const { beams, lamps } = useMemo(layout, [])
-  const structure = useMemo(() => barGeometry(beams, 0.11, 0.16, CEIL_Y), [beams])
+  const structure = useMemo(() => worldUV(barGeometry(beams, 0.11, 0.16, CEIL_Y), 0.6), [beams])
   const strips = useMemo(() => barGeometry(lamps, 0.16, 0.06, CEIL_Y - 0.13), [lamps])
   // just above the joists, so they read as hanging from it
-  const deck = useMemo(() => deckGeometry((z) => !SKIP.has(z), CEIL_Y + 0.09), [])
-  const hallDeck = useMemo(() => deckGeometry((z) => z === HALL_ZONE, HALL_Y), [])
+  const deck = useMemo(() => worldUV(deckGeometry((z) => !SKIP.has(z), CEIL_Y + 0.09), 1.1), [])
+  const hallDeck = useMemo(() => worldUV(deckGeometry((z) => z === HALL_ZONE, HALL_Y), 1.4), [])
   const pools = useMemo(() => {
     const geos = lamps.map((b) => {
       const g = new THREE.PlaneGeometry(b.alongX ? 4.6 : 3.4, b.alongX ? 3.4 : 4.6)
@@ -120,9 +121,10 @@ export function Ceiling() {
     x.fillRect(0, 0, 64, 64)
     return new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })
   }, [])
-  const structureMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333d4c', roughness: 0.78, metalness: 0.2, transparent: true }), [])
-  const deckMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#202833', roughness: 0.92, metalness: 0.05, transparent: true }), [])
-  const hallDeckMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#1c242e', roughness: 0.92, metalness: 0.05, transparent: true }), [])
+  const structureMat = useMemo(() => surface('steel', { scale: 0.5, tint: '#5c6b80', roughness: 1.15, metalness: 0.85, normalScale: 0.6, transparent: true }), [])
+  // the deck is ribbed: that relief is the whole reason a roof reads as a roof from below
+  const deckMat = useMemo(() => surface('deck', { scale: 1.1, tint: '#3c4757', roughness: 1.05, metalness: 0.4, normalScale: 1.3, transparent: true }), [])
+  const hallDeckMat = useMemo(() => surface('deck', { scale: 1.4, tint: '#333d4b', roughness: 1.05, metalness: 0.4, normalScale: 1.3, transparent: true }), [])
   // dim enough that a fixture passing right over the lens doesn't turn into a white slab
   const stripMat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#9fbbe0', transparent: true, toneMapped: false }), [])
 
