@@ -267,6 +267,16 @@ html[data-static='true'] [data-zone] > div {
   overflow: visible !important;
   opacity: 1 !important;
 }
+/* The beat stack puts every card in one grid cell so exactly one is visible as the camera moves
+   through a zone. There is no camera in static mode, so the cell has to be released or all ten
+   project cards sit on top of each other — which is what they were doing on every phone. */
+html[data-static='true'] .beat-stack {
+  display: block;
+}
+html[data-static='true'] .beat-stack > * {
+  grid-column: auto;
+  grid-row: auto;
+}
 html[data-static='true'] .beat,
 html[data-static='true'] .beat-acc {
   position: static !important;

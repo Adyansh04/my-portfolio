@@ -25,14 +25,21 @@ from PIL import Image, ImageFilter
 
 SRC, DST = (sys.argv[1:3] + ["/tmp/tex", "public/textures"])[:2]
 
-# how much relief each material should claim, and how far the AO reaches
+# How much relief each material should claim, how far the AO reaches, and the output sizes.
+#
+# `nsize` is separate because normal maps dominate the download: at 1024 they were 2.98 MB of a
+# 3.9 MB texture payload, four times the albedo they accompany. Rather than shrink them all, the
+# size follows how close the camera actually gets. The floor fills most of every frame from 1.5 m
+# and the wall panels are read from two or three metres, so both keep their full resolution. The
+# ceiling deck is only ever seen at a grazing angle, and the racking, crates and wheels are small
+# objects several metres out, so those halve with nothing visible to lose.
 SETTINGS = {
-    "concrete": dict(normal=1.4, ao=3.0, size=1024),
-    "panel": dict(normal=1.0, ao=2.5, size=1024),
-    "deck": dict(normal=2.6, ao=5.0, size=1024),
-    "steel": dict(normal=1.1, ao=2.5, size=1024),
-    "crate": dict(normal=2.2, ao=4.0, size=512),
-    "rubber": dict(normal=1.6, ao=3.0, size=512),
+    "concrete": dict(normal=1.4, ao=3.0, size=1024, nsize=1024),
+    "panel": dict(normal=1.0, ao=2.5, size=1024, nsize=1024),
+    "deck": dict(normal=2.6, ao=5.0, size=1024, nsize=512),
+    "steel": dict(normal=1.1, ao=2.5, size=1024, nsize=512),
+    "crate": dict(normal=2.2, ao=4.0, size=512, nsize=256),
+    "rubber": dict(normal=1.6, ao=3.0, size=512, nsize=256),
 }
 
 
@@ -79,18 +86,17 @@ def main():
         ao = cavity(h, cfg["ao"])
         orm = np.dstack([ao, np.clip(r, 0.02, 1.0), np.full_like(ao, metal)])
 
-        size = cfg["size"]
         out = {
-            "albedo": alb,
-            "normal": Image.fromarray((nrm * 255).astype(np.uint8), "RGB"),
-            "orm": Image.fromarray((orm * 255).astype(np.uint8), "RGB"),
+            "albedo": (alb, cfg["size"]),
+            "normal": (Image.fromarray((nrm * 255).astype(np.uint8), "RGB"), cfg["nsize"]),
+            "orm": (Image.fromarray((orm * 255).astype(np.uint8), "RGB"), cfg["size"]),
         }
-        for k, im in out.items():
+        for k, (im, size) in out.items():
             if im.size[0] != size:
                 im = im.resize((size, size), Image.LANCZOS)
             # normals suffer badly from chroma subsampling; keep their quality high
             im.save(f"{DST}/{name}_{k}.webp", quality=95 if k == "normal" else 86, method=6)
-        print(f"{name:9} normal x{cfg['normal']}  ao r{cfg['ao']}  metal {metal}  {size}px")
+        print(f"{name:9} normal x{cfg['normal']} @{cfg['nsize']}px  ao r{cfg['ao']}  metal {metal}  base {cfg['size']}px")
 
 
 if __name__ == "__main__":
