@@ -1,4 +1,5 @@
-// GENERATED 2026-09-03 from the pre-redesign components on branch main (verbatim). Edit by hand from here on.
+// Content restructured 2026-09-11: a one-line gist and two or three scannable points carry each
+// role. The original paragraph is kept in `description`, so nothing was dropped.
 import type { Experience } from './types';
 
 export const experiences: Experience[] = [
@@ -25,7 +26,13 @@ export const experiences: Experience[] = [
       "Teleoperation",
       "Speech Recognition"
     ],
-    "description": "Developing an automated cable insertion pipeline using a robotic arm and RGB cameras for precise, vision-guided manipulation. Integrated teleoperation and speech-recognition on a Unitree R1 humanoid to enable real-time human-robot interaction for live demonstrations."
+    "description": "Developing an automated cable insertion pipeline using a robotic arm and RGB cameras for precise, vision-guided manipulation. Integrated teleoperation and speech-recognition on a Unitree R1 humanoid to enable real-time human-robot interaction for live demonstrations.",
+    "gist": "Vision-guided cable insertion, and a humanoid you can talk to.",
+    "points": [
+      "Automated cable insertion with a robotic arm and RGB cameras",
+      "Teleoperation and speech recognition on a Unitree R1 humanoid",
+      "Real-time human-robot interaction for live demonstrations"
+    ]
   },
   {
     "id": 1,
@@ -50,7 +57,13 @@ export const experiences: Experience[] = [
       "AVX-512 SIMD",
       "LIO"
     ],
-    "description": "Engineered a new C++ implementation of the WhyCode/Whycon fiducial marker system utilizing HPC techniques. Worked on camera drivers using shared memory and assisted in integrating Lidar-Inertial Odometry (LIO) for improved robot positioning."
+    "description": "Engineered a new C++ implementation of the WhyCode/Whycon fiducial marker system utilizing HPC techniques. Worked on camera drivers using shared memory and assisted in integrating Lidar-Inertial Odometry (LIO) for improved robot positioning.",
+    "gist": "Rewrote the fiducial stack in C++ until it stopped starving the robot.",
+    "points": [
+      "New C++ WhyCode/Whycon implementation using HPC techniques",
+      "Camera drivers over shared memory",
+      "Helped integrate Lidar-Inertial Odometry (LIO) for positioning"
+    ]
   },
   {
     "id": 2,
@@ -75,7 +88,13 @@ export const experiences: Experience[] = [
       "Computer Vision",
       "Nav2"
     ],
-    "description": "Collaborated on development of autonomous industrial AMRs with advanced navigation systems. Implemented computer vision using AI technologies and worked extensively with NVIDIA Jetson hardware and Isaac ROS."
+    "description": "Collaborated on development of autonomous industrial AMRs with advanced navigation systems. Implemented computer vision using AI technologies and worked extensively with NVIDIA Jetson hardware and Isaac ROS.",
+    "gist": "Industrial AMRs: navigation, vision, and Jetson hardware.",
+    "points": [
+      "Autonomous industrial AMRs with advanced navigation systems",
+      "Computer vision built with AI technologies",
+      "Worked extensively with NVIDIA Jetson and Isaac ROS"
+    ]
   },
   {
     "id": 3,
@@ -100,7 +119,13 @@ export const experiences: Experience[] = [
       "ArUco",
       "Indoor Nav"
     ],
-    "description": "Developed drone systems for Indoor Navigation, Object Tracking, and ArUco-based Inventory Management using ROS2. Achieved a perfect score of 20/20, distinguishing myself among all students."
+    "description": "Developed drone systems for Indoor Navigation, Object Tracking, and ArUco-based Inventory Management using ROS2. Achieved a perfect score of 20/20, distinguishing myself among all students.",
+    "gist": "Indoor drone navigation and ArUco inventory, scored 20/20.",
+    "points": [
+      "Indoor navigation and object tracking in ROS2",
+      "ArUco-based inventory management",
+      "Perfect score of 20/20, distinguishing myself among all students"
+    ]
   },
   {
     "id": 4,
@@ -125,7 +150,12 @@ export const experiences: Experience[] = [
       "Simulation",
       "CAE"
     ],
-    "description": "Led the conversion of a Pelton Wheel Turbine into a precise 3D digital twin and performed simulations for optimal performance."
+    "description": "Led the conversion of a Pelton Wheel Turbine into a precise 3D digital twin and performed simulations for optimal performance.",
+    "gist": "Turned a Pelton wheel turbine into a simulated digital twin.",
+    "points": [
+      "Led the conversion into a precise 3D digital twin",
+      "Ran simulations for optimal performance"
+    ]
   },
   {
     "id": 5,
@@ -150,6 +180,12 @@ export const experiences: Experience[] = [
       "Prototyping",
       "Team Management"
     ],
-    "description": "Led a team of talented robotics enthusiasts, fostering collaboration and ensuring efficient project execution. Utilized mechatronics engineering skills to design, prototype, and test robotics components."
+    "description": "Led a team of talented robotics enthusiasts, fostering collaboration and ensuring efficient project execution. Utilized mechatronics engineering skills to design, prototype, and test robotics components.",
+    "gist": "Ran the robotics club, and the things it built.",
+    "points": [
+      "Led a team of talented robotics enthusiasts",
+      "Designed, prototyped and tested robotics components",
+      "Fostered collaboration and efficient project execution"
+    ]
   }
 ];

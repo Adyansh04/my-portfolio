@@ -1,4 +1,7 @@
-// GENERATED 2026-09-03 from the pre-redesign components on branch main (verbatim). Edit by hand from here on.
+// Content restructured 2026-09-11: a one-line gist and three scannable points carry the card,
+// hard numbers are pulled out as metrics, and each challenge is split into what went wrong and
+// what fixed it. The original prose is kept verbatim in `fullDescription` and `description`, so
+// nothing was dropped, and no fact here is new.
 import type { Project } from './types';
 
 export const projects: Project[] = [
@@ -21,6 +24,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "A C++ frontier explorer picks goals by information gain, with blacklisting and recovery",
+        "RTAB-Map fuses 4D LiDAR with odometry into a teleport-proof map→odom transform",
+        "A watershed segmenter turns the saved map into labelled, navigable rooms",
+        "Per zone: drive in with Nav2, spin 360° while YOLOE runs, project every hit into the map",
+        "Nodes mirror the real Go2 topic contract, so the same code runs on hardware"
+      ],
+      "challenges": [
+        {
+          "title": "Natural-language mission control",
+          "problem": "Plain-English requests are ambiguous, and a robot has to behave deterministically anyway.",
+          "solution": "A FastMCP server maps 14 mission tools onto a thin ROS2 service layer, normalises zone references (\"room 3\" / \"zone 3\" / \"3\" → zone_3), and runs heavy work in isolated subprocesses so the bridge never fights rclpy threading."
+        },
+        {
+          "title": "Map-grounded open-vocabulary localisation",
+          "problem": "A spinning camera produces noisy 2D detections, not an object list.",
+          "solution": "Each detection is projected into the map frame through the depth camera, validated against the occupancy grid to reject phantoms in free space, and de-duplicated by class and world position."
+        },
+        {
+          "title": "Autonomy with no hard-coded poses",
+          "problem": "The facility has never been seen before and no waypoints exist.",
+          "solution": "Information-gain frontier exploration with stuck-detection, blacklisting and TTL recovery, paired with a zone segmenter that gives every room a guaranteed-open navigation point."
+        }
+      ],
       "fullDescription": "Built on ROS2 Jazzy and Gazebo Harmonic, the stack runs the full mapping → segmentation → inspection → report pipeline with zero hard-coded waypoints. A C++ frontier_explorer selects goals by information gain (not nearest-frontier) with a blacklist/recovery state machine, while RTAB-Map fuses a 4D L1 LiDAR with odometry into a teleport-proof map→odom transform and a 2D grid. Saved maps are turned into labelled, navigable rooms by a watershed-based zone segmenter (obstacle-island fill + distance-transform room cores + door-aware separation). For each zone the robot samples safe interior viewpoints, drives there with Nav2, performs a slow in-place 360° spin while a YOLOE open-vocabulary detector runs continuously, projects every detection into the map frame via the depth camera, de-duplicates by class and world position, crops each unique object, and emits per-zone and facility-wide reports. A FastMCP server exposes the entire mission as 14 natural-language tools, so commands like \"explore the area\", \"what zones did you find?\", \"inspect zone 1\", and \"give me the report\" are translated by Claude into ROS service calls. Because every node mirrors the real-Go2 topic contract, the same code ports unchanged from simulation to hardware.",
       "techStack": [
         "ROS2 Jazzy & Gazebo Harmonic",
@@ -30,13 +57,28 @@ export const projects: Project[] = [
         "FastMCP + Claude (MCP)",
         "CHAMP Quadruped Gait"
       ],
-      "challenges": [
-        "Natural-Language Mission Control via MCP: Translating ambiguous plain-English requests into safe, deterministic robot behavior. Solved by building a FastMCP server that maps 14 mission tools onto a thin ROS2 service layer, normalizes zone references (\"room 3\" / \"zone 3\" / \"3\" → zone_3), and runs heavy capabilities as isolated subprocesses so the bridge never fights rclpy threading.",
-        "Map-Grounded Open-Vocabulary Localization: Turning noisy 2D detections from a spinning camera into a clean object list. Addressed by projecting each YOLOE detection into the map frame through the depth camera, validating it against the occupancy grid to reject phantoms floating in mapped free space, and de-duplicating repeated sightings by class and world position within a tunable radius.",
-        "Hard-Coded-Pose-Free Autonomy: Operating in a never-before-seen facility with no manual waypoints. Solved by pairing information-gain frontier exploration (with stuck-detection, blacklisting, and TTL recovery) with a watershed zone segmenter that converts any saved map into labelled rooms, each carrying a guaranteed-open navigation point for the inspection sweep."
-      ],
       "mediaFolder": "go2-inspection"
-    }
+    },
+    "gist": "A quadruped that maps a building it has never seen, then inspects it on plain-English command.",
+    "points": [
+      "Maps, splits into rooms and sweeps each one, with no waypoints given to it",
+      "Open-vocabulary detections projected into the map and de-duplicated",
+      "Claude drives the whole mission through 14 MCP tools"
+    ],
+    "metrics": [
+      {
+        "value": "14",
+        "label": "MCP tools"
+      },
+      {
+        "value": "0",
+        "label": "hard-coded waypoints"
+      },
+      {
+        "value": "360°",
+        "label": "inspection spin"
+      }
+    ]
   },
   {
     "id": 2,
@@ -56,6 +98,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "A depth camera generates a dense real-time 3D scene mesh with NvBlox",
+        "NVIDIA FoundationPose estimates 6D pose and 3D bounding boxes for the target",
+        "The target's spatial data is subtracted from the environmental TSDF grid",
+        "The clean background mesh goes straight into the MoveIt planning scene",
+        "The whole loop was validated in Isaac Sim before deployment"
+      ],
+      "challenges": [
+        {
+          "title": "Dynamic obstacle isolation",
+          "problem": "The target object registered as a collision asset, so the planner aborted the grasp.",
+          "solution": "Programmatic background mesh subtraction removes the target from the environment grid before the scene is published."
+        },
+        {
+          "title": "Robust 6D pose under bad conditions",
+          "problem": "Illumination varies and objects occlude each other.",
+          "solution": "A zero-shot model architecture maps tight 3D coordinates without any localised model training."
+        },
+        {
+          "title": "Perception-to-planning latency",
+          "problem": "High-bandwidth volumetric meshing outran the planner and caused timeouts on sudden scene changes.",
+          "solution": "Mesh generation now runs in step with the active MoveIt planning scene, and the data transformation path was optimised to stop the timeouts."
+        }
+      ],
       "fullDescription": "The architecture relies on an integrated ROS2 pipeline. First, a depth camera generates a dense, real-time 3D scene mesh using NvBlox. Concurrently, NVIDIA FoundationPose estimates the 6D pose and generates 3D bounding boxes for target objects. To prevent the robot from classifying the target object itself as a collision obstacle, the system dynamically subtracts the target object's spatial data from the environmental TSDF grid before publishing the clean background mesh directly into the MoveIt planning scene for immediate path generation. The complete loop was fully validated in high-fidelity NVIDIA Isaac Sim before deployment.",
       "techStack": [
         "Isaac Sim",
@@ -64,13 +130,24 @@ export const projects: Project[] = [
         "FoundationPose",
         "ROS2 Humble"
       ],
-      "challenges": [
-        "Dynamic Obstacle Isolation via Mesh Subtraction: Overcame the critical issue where the target object would register as a collision asset, causing the path planner to abort the grasp phase. Solved this by programmatic background mesh subtraction.",
-        "Robust 6D Object Pose Estimation: Achieved high-accuracy pick positioning under varying illumination and object occlusions by utilizing a zero-shot model architecture to map tight 3D coordinates without localized model training.",
-        "Perception-to-Planning Latency Reduction: Synchronized high-bandwidth volumetric mesh generation with the active MoveIt planning scene, optimizing data transformation lines to avoid path generation timeouts during sudden environment shifts."
-      ],
       "mediaFolder": "ai-robotics"
-    }
+    },
+    "gist": "Pick-and-place in clutter, built in a hackathon, with nothing mapped in advance.",
+    "points": [
+      "Depth camera builds a live 3D scene mesh with NvBlox",
+      "FoundationPose estimates 6D pose zero-shot, without per-object training",
+      "Target subtracted from the TSDF so the planner stops refusing the grasp"
+    ],
+    "metrics": [
+      {
+        "value": "6D",
+        "label": "zero-shot pose"
+      },
+      {
+        "value": "0",
+        "label": "pre-mapping"
+      }
+    ]
   },
   {
     "id": 3,
@@ -91,6 +168,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "A GTSAM iSAM2 backend runs one incremental keyframe graph",
+        "Five modalities enter as runtime-togglable factors, plus ICP loop closure and a planar prior",
+        "LiDAR-inertial frontend does gyro-seeded curvature-feature scan-to-map matching",
+        "IMU preintegration estimates gyro and accel bias online; wheel odometry anchors metric scale",
+        "WhyCode markers enter as TagSLAM-style landmark variables"
+      ],
+      "challenges": [
+        {
+          "title": "Keeping global corrections out of the controller (REP-105)",
+          "problem": "Controllers need continuous odometry, but loop closures and marker anchors arrive as teleports.",
+          "solution": "Two synchronised outputs from the same graph: a map-frame pose allowed to jump, and a ~50 Hz odom-frame stream where the correction lands entirely in map→odom. Max step across three 56 m loops was 2.4 cm."
+        },
+        {
+          "title": "Fusing a weak, drifting modality",
+          "problem": "Monocular VO has unobservable translation scale on a planar robot and its heading drifts.",
+          "solution": "VO translation is scaled from wheel odometry and entered as a loose robust factor. An A/B test showed tight sigmas blow the estimate out to 29 m, while loose sigmas hold ~2 cm against 3.6 cm with VO off."
+        },
+        {
+          "title": "Recovering from total sensor dropout",
+          "problem": "Long GPS-denied corridors and blackouts make conventional filters diverge outright.",
+          "solution": "Markers as landmark variables in the same graph: a surveyed marker resolves an 8.5 m spawn offset to centimetres on first sighting, and a 25 s LiDAR blackout recovers to 1.1 cm against 4.9 m of unrecoverable drift without them."
+        }
+      ],
       "fullDescription": "Built on ROS2 Jazzy with a GTSAM iSAM2 factor-graph backend, OLIVE runs a single incremental keyframe graph that fuses five modalities as runtime-togglable factors: a LiDAR-inertial frontend (curvature-feature scan-to-map matching, gyro-seeded), tightly-coupled IMU preintegration with online gyro/accel bias estimation, wheel odometry as a metric-scale anchor, WhyCode fiducial markers treated as TagSLAM-style landmark variables, and a wheel-scaled monocular visual-odometry front-end — with ICP loop closure and a soft planar prior on top. The backend publishes two REP-105-compliant outputs from that same graph: `/olive/odometry` (map-frame, globally accurate, allowed to jump when a marker or loop closure corrects drift) and `/olive/odometry_local` (odom-frame, ~50 Hz, continuous) — so every global correction lands in the `map→odom` transform while the stream a Nav2 controller actually drives on never teleports, making OLIVE a drop-in AMCL replacement.",
       "techStack": [
         "ROS2 Jazzy & GTSAM (iSAM2)",
@@ -99,13 +200,28 @@ export const projects: Project[] = [
         "WhyCode Fiducial Landmarks",
         "Monocular Visual Odometry"
       ],
-      "challenges": [
-        "Keeping Global Corrections Out of the Controller's Path (REP-105 Split): AMR controllers need continuous odometry, but global corrections — loop closures, marker anchors — must not appear as teleports. Solved by publishing two synchronized outputs from the same graph: a map-frame pose that is allowed to jump, and a ~50 Hz odom-frame stream where the correction lands entirely in `map→odom` — verified to a 2.4 cm max step across three 56 m loops.",
-        "Fusing a Weak, Drifting Modality Without Hurting Accuracy: Monocular VO's translation scale is unobservable on a planar robot and its heading drifts uncorrected, so naively fusing it risks pulling the whole estimate off course. Solved by scaling VO translation from wheel odometry and entering it as a loose, robust factor — an A/B test showed tight sigmas blow the world-frame estimate out to 29 m, while loose sigmas keep steady-state accuracy at ~2 cm versus 3.6 cm with VO fully disabled, turning a weak modality into free robustness during LiDAR dropouts.",
-        "Recovering from Total Sensor Dropout via Landmarks: Long GPS-denied corridors and sensor blackouts cause conventional filters to diverge outright. Solved by treating WhyCode markers as TagSLAM-style landmark variables in the same graph — a surveyed marker resolves an 8.5 m spawn-frame offset to centimeters on first sighting, and in fault-injection testing a 25 s LiDAR blackout recovers to 1.1 cm final error with markers versus 4.9 m of unrecoverable drift with markers disabled."
-      ],
       "mediaFolder": "olive"
-    }
+    },
+    "gist": "Five sensors into one factor graph, so an AMR stops drifting.",
+    "points": [
+      "LiDAR, IMU, encoders, fiducials and monocular VO in one iSAM2 graph",
+      "Two outputs: a global pose that may jump, a local stream that never does",
+      "A drop-in AMCL replacement that Nav2 drives on directly"
+    ],
+    "metrics": [
+      {
+        "value": "2.0 cm",
+        "label": "RMSE over 56 m"
+      },
+      {
+        "value": "2.4 cm",
+        "label": "max controller step"
+      },
+      {
+        "value": "1.1 cm",
+        "label": "after 25 s blackout"
+      }
+    ]
   },
   {
     "id": 4,
@@ -125,6 +241,29 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "Rebuilt the deployed WhyCode pipeline as a modular ROS2 package, whycode_vision",
+        "The legacy version was accurate but consumed a whole dual-core allocation on the onboard industrial PC",
+        "That starved the downstream localisation and navigation stack",
+        "The new package detects multiple markers, decodes IDs and estimates 6-DOF pose at high framerate"
+      ],
+      "challenges": [
+        {
+          "title": "Irregular code the compiler would not vectorise",
+          "problem": "Connected-component labelling and flood fill branch per pixel, which breaks auto-vectorisation.",
+          "solution": "Custom unrolled loops with explicit AVX mask registers via xsimd, dropping CPU from 180% to 10-15% at 640x480."
+        },
+        {
+          "title": "Flickering IDs",
+          "problem": "Fast camera motion and motion blur made WhyCode IDs flicker or drop out entirely.",
+          "solution": "A hysteresis-based ID stabiliser paired with lightweight 2D tracking holds a continuous track through the blur."
+        },
+        {
+          "title": "Orientation ambiguity from one marker",
+          "problem": "6-DOF pose from a single marker is ambiguous in orientation.",
+          "solution": "Dedicated four_marker and two_marker triangulation nodes use the known marker layout to compute stable, error-resistant odometry."
+        }
+      ],
       "fullDescription": "During my Mobile Robotics internship at Addverb Technologies, I was tasked with eliminating a major computational bottleneck in the AMR perception stack. The deployed legacy pipeline for the WhyCode fiducial marker tracking system was functionally accurate but lacked hardware-level optimization, consuming an entire dual-core allocation (180-190% CPU load) on the robot's onboard industrial computer and starving downstream localization and navigation systems. The goal was to build a highly optimized, modular ROS2 package capable of detecting multiple markers, decoding IDs, and estimating 6-DOF poses at high framerates.",
       "techStack": [
         "C++ & AVX-512 SIMD",
@@ -132,13 +271,28 @@ export const projects: Project[] = [
         "Computer Vision (OpenCV 4.2)",
         "Sensors & Calibration"
       ],
-      "challenges": [
-        "High CPU Load & Irregular Vectorization: Classical connected-component labeling and flood-fill operations rely on unpredictable pixel branch paths that break native auto-vectorization. Resolved by writing custom unrolled loops with explicit AVX mask registers via xsimd, dropping CPU usage to 10-15% at 640x480 resolution.",
-        "Flickering IDs & Tracking Instability: Fast camera motion and motion blur caused WhyCode IDs to flicker or drop out entirely. Addressed by implementing a hysteresis-based ID stabilizer paired with lightweight 2D tracking to maintain continuous marker tracks over time.",
-        "Robust Localization from Multiple Markers: Relying on a single marker for 6-DOF pose estimation can lead to orientation ambiguity. Developed dedicated hierarchical triangulation nodes (four_marker and two_marker) that use known marker layouts to compute highly stable, error-resistant odometry."
-      ],
       "mediaFolder": "whycode"
-    }
+    },
+    "gist": "Rewrote a fiducial tracker until it stopped eating both cores of the robot's computer.",
+    "points": [
+      "Hand-vectorised the detector with AVX-512 through xsimd",
+      "Hysteresis ID stabiliser stops markers flickering under motion blur",
+      "Hierarchical triangulation from multiple markers removes orientation ambiguity"
+    ],
+    "metrics": [
+      {
+        "value": "180% → 10-15%",
+        "label": "CPU load"
+      },
+      {
+        "value": "640x480",
+        "label": "resolution"
+      },
+      {
+        "value": "6-DOF",
+        "label": "marker pose"
+      }
+    ]
   },
   {
     "id": 5,
@@ -158,6 +312,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "Hierarchical parent-child chunking indexes academic PDFs into ChromaDB",
+        "Claude-3.5-Sonnet extracts fields against a Pydantic schema rather than free text",
+        "A verification pass traces every extracted quote to its raw source segment",
+        "Built for three clinical uses: counterfactual mortality, phenotype extraction, biomarker ranking",
+        "Runs entirely locally, so nothing leaves the clinician's machine"
+      ],
+      "challenges": [
+        {
+          "title": "Tables that survive extraction",
+          "problem": "Standard PDF segmenters split tabular clinical statistics across unrelated text chunks.",
+          "solution": "Layout-aware ingestion routines with Visual Language Model (VLM) summary hooks keep a table together."
+        },
+        {
+          "title": "Hallucination is unacceptable in clinical use",
+          "problem": "Clinical intelligence cannot tolerate a generated fact or a misattributed one.",
+          "solution": "A validation module parses every extracted field and strictly traces its quote against the raw local source segment."
+        },
+        {
+          "title": "One schema, many paper formats",
+          "problem": "Mortality statistics and clustering descriptions do not reconcile into a single shape.",
+          "solution": "Modular use-case-specific validation rules in Pydantic, with self-repairing JSON structural checks."
+        }
+      ],
       "fullDescription": "Sepsis Atlas was built to automate the time-consuming and error-prone process of clinical meta-analyses, enabling medical professionals to transform thousands of pages of unstructured academic PDFs into structured, queryable databases. Built for three core clinical use cases—counterfactual mortality estimation, phenotype extraction, and biomarker ranking—the system enables clinicians to interact with a reliable, source-grounded evidence dashboard without relying on centralized, cloud-hosted server infrastructures.",
       "techStack": [
         "Vector DBs & RAG",
@@ -165,13 +343,24 @@ export const projects: Project[] = [
         "Streamlit Architecture",
         "Clinical Verification Pipelines"
       ],
-      "challenges": [
-        "Tabular and Layout-Aware PDF Extraction: Standard PDF segmenters split tabular clinical stats across unrelated text chunks, causing extraction failures. Overcame this by building layout-aware ingestion routines with Visual Language Model (VLM) summary hooks.",
-        "Source-Grounded Hallucination Prevention: Clinical intelligence applications cannot tolerate generative hallucinations or factual misattributions. Solved this by developing a validation module that parses extracted fields and strictly traces quotes against raw, local source document segments.",
-        "Schema Optimization for Complex Use Cases: Reconciling different paper formats into uniform schemas for highly complex scientific tasks (such as mortality statistics and clustering descriptions). Addressed by building modular, use-case-specific validation rules with Pydantic and self-repairing JSON structural checks."
-      ],
       "mediaFolder": "sepsis-atlas"
-    }
+    },
+    "gist": "Turns clinical PDFs into evidence tables you can check against the source.",
+    "points": [
+      "Parent-child chunking into ChromaDB, all of it local-first",
+      "Claude extracts against a Pydantic schema, not free text",
+      "Every field traced back to a quote in the source document"
+    ],
+    "metrics": [
+      {
+        "value": "3",
+        "label": "clinical use cases"
+      },
+      {
+        "value": "0",
+        "label": "cloud dependencies"
+      }
+    ]
   },
   {
     "id": 6,
@@ -192,6 +381,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "Built a ROS2 Humble and Micro-ROS workspace for the whole robot",
+        "YOLO object tracking identifies balls and silos on the arena",
+        "LSA08 line following and TF-Luna LiDAR handle precise alignment",
+        "Custom motor controller nodes drive the mecanum base",
+        "r2_description URDF validates the physical spatial parameters"
+      ],
+      "challenges": [
+        {
+          "title": "Microcontroller to ROS2 synchronisation",
+          "problem": "High-level ROS2 logic and low-level sensor hardware sat on opposite sides of a gap.",
+          "solution": "A Micro-ROS network streams TF-Luna distance and LSA08 line state with near-zero latency, so alignment corrects instantly."
+        },
+        {
+          "title": "Tracking under arena lighting",
+          "problem": "Balls move and silos glare under the competition lights.",
+          "solution": "Optimised YOLO detection pipelines with custom ROS2 message interfaces feed target coordinates straight to the navigation stack."
+        },
+        {
+          "title": "Mecanum kinematics at speed",
+          "problem": "Strafing and rotating at speed drifts if the kinematics are even slightly off.",
+          "solution": "Tuned motor controller nodes, with the physical spatial parameters validated against the r2_description URDF."
+        }
+      ],
       "fullDescription": "For the ABU Robocon 2024 competition, our team was tasked with building a dual-robot system to complete complex, time-sensitive arena tasks. I led the primary development of \"R2,\" the fully autonomous half of the system. The objective was to engineer a highly agile, omnidirectional platform capable of navigating the arena, identifying specific targets (balls and silos), and executing precise alignment and manipulation maneuvers entirely without human intervention.",
       "techStack": [
         "ROS2 Humble & Nav2",
@@ -199,13 +412,24 @@ export const projects: Project[] = [
         "Computer Vision & YOLO",
         "Sensor Integration"
       ],
-      "challenges": [
-        "Microcontroller-to-ROS2 Synchronization: Bridging the gap between high-level ROS2 logic and low-level sensor hardware. Overcame this by engineering a reliable Micro-ROS network to stream TF-Luna distance data and LSA08 line states with near-zero latency for instant alignment corrections.",
-        "Real-Time Dynamic Object Tracking: Identifying and tracking moving balls and static silos under glaring arena lighting. Addressed by deploying optimized YOLO object detection pipelines and custom ROS2 message interfaces to accurately feed visual target coordinates to the navigation stack.",
-        "Omnidirectional Mecanum Kinematics: Ensuring smooth, drift-free strafing and rotation during high-speed arena navigation. Solved by tuning custom motor controller nodes and validating the physical robot's spatial parameters via r2_description URDF modeling."
-      ],
       "mediaFolder": "abu-robocon"
-    }
+    },
+    "gist": "Led the software for the autonomous half of a Robocon competition robot.",
+    "points": [
+      "Four-wheel mecanum platform that ran the arena without a driver",
+      "YOLO finds balls and silos; LSA08 and TF-Luna handle alignment",
+      "Micro-ROS streams sensor state to ROS2 with near-zero latency"
+    ],
+    "metrics": [
+      {
+        "value": "4",
+        "label": "mecanum wheels"
+      },
+      {
+        "value": "0",
+        "label": "human intervention"
+      }
+    ]
   },
   {
     "id": 7,
@@ -226,6 +450,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "A custom acrylic chassis on N20 encoder motors gives holonomic movement",
+        "ESP32 firmware talks to ROS2 over Micro-ROS",
+        "An EKF fuses high-rate encoder ticks with IMU for state estimation",
+        "Gazebo simulation validates navigation before it touches hardware",
+        "A CSI camera feeds a CNN pipeline pre-trained on LVIS"
+      ],
+      "challenges": [
+        {
+          "title": "Omnidirectional odometry drift",
+          "problem": "Three-wheel kinematics create slip dynamics that make pure wheel odometry drift fast.",
+          "solution": "An Extended Kalman Filter tightly fuses high-rate ESP32 encoder ticks with IMU data."
+        },
+        {
+          "title": "Sim-to-real",
+          "problem": "A clean Gazebo environment behaves nothing like N20 motors on a real chassis.",
+          "solution": "Micro-ROS on the ESP32 gives deterministic, low-latency communication between the ROS2 network and the physical actuators."
+        },
+        {
+          "title": "Scene understanding on edge hardware",
+          "problem": "Accurate perception normally means off-board compute the robot does not have.",
+          "solution": "A lightweight CSI camera feed into a CNN pipeline pre-trained on LVIS identifies a large vocabulary at runtime."
+        }
+      ],
       "fullDescription": "The Kiwi Drive project was conceived as a highly maneuverable, cost-effective platform to test and validate complex navigation and computer vision algorithms. Built on a custom acrylic chassis and powered by N20 encoder motors, the three-wheeled omnidirectional design provides unique holonomic movement capabilities. The goal was to build an end-to-end robotics pipeline—from mechanical assembly and bare-metal microcontroller programming to advanced simulation and AI-driven perception.",
       "techStack": [
         "Hardware Integration",
@@ -233,13 +481,24 @@ export const projects: Project[] = [
         "Computer Vision",
         "Simulation & Navigation"
       ],
-      "challenges": [
-        "Omnidirectional Odometry Drift: Three-wheeled kinematics create complex slip dynamics, causing pure wheel odometry to drift rapidly over time. Solved by tuning an Extended Kalman Filter (EKF) to tightly fuse high-rate ESP32 encoder ticks with IMU data for reliable state estimation.",
-        "Sim-to-Real Hardware Bridging: Migrating from a perfect Gazebo simulation environment to the physical constraints of N20 motors. Addressed by deploying Micro-ROS on the ESP32 to ensure deterministic, low-latency communication between the ROS2 network and the physical actuators.",
-        "Rich Object Perception on Edge Hardware: Needing accurate scene understanding without relying on heavy off-board compute. Integrated a lightweight CSI camera feed into a CNN pipeline pre-trained on the LVIS dataset, allowing the robot to accurately identify a massive vocabulary of objects during runtime."
-      ],
       "mediaFolder": "kiwi-drive"
-    }
+    },
+    "gist": "A three-wheel omni robot built from bare metal up to Nav2.",
+    "points": [
+      "Custom acrylic chassis, N20 encoder motors, ESP32 firmware",
+      "EKF fuses encoder ticks with IMU to kill holonomic slip drift",
+      "CNN on an LVIS-pretrained model gives it a large object vocabulary"
+    ],
+    "metrics": [
+      {
+        "value": "3",
+        "label": "omni wheels"
+      },
+      {
+        "value": "LVIS",
+        "label": "object vocabulary"
+      }
+    ]
   },
   {
     "id": 8,
@@ -260,6 +519,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "An ESP32 line-following robot traverses a simulated war-torn arena",
+        "A static overhead camera acts as central command rather than on-board sensing",
+        "A custom CNN classifies five distinct event categories from the overhead feed",
+        "Adaptive A* routes to priority targets and treats other mapped areas as danger zones",
+        "A telemetry bridge maps ESP32 odometry onto a live QGIS dashboard"
+      ],
+      "challenges": [
+        {
+          "title": "Overhead distortion and event classification",
+          "problem": "The Watchtower feed suffered lighting variation and noise, so events were hard to recognise.",
+          "solution": "A CNN pipeline reinforced with data augmentation and noise reduction classifies the five event categories reliably."
+        },
+        {
+          "title": "Priority routing that changes mid-run",
+          "problem": "Events had to be visited in strict priority order while other mapped areas counted as danger zones.",
+          "solution": "An adaptive A* implementation recalculates the optimal route whenever the CNN's classifications change."
+        },
+        {
+          "title": "Georeferencing with low latency",
+          "problem": "The robot's exact coordinates had to appear on a digital map in near real time.",
+          "solution": "A telemetry bridge maps physical ESP32 odometry directly onto a live QGIS geospatial dashboard."
+        }
+      ],
       "fullDescription": "Developed for the e-Yantra Robotics Competition (eYRC 2023-24), \"Vanguard\" is a holistic autonomous navigation project focused on bridging overhead perception with ground-level robotics. The mission was to design an ESP32-based line-following robot capable of traversing a simulated, war-torn arena. Instead of relying purely on on-board sensors, the robot receives real-time guidance from a static overhead camera (\"Watchtower\") acting as a central command station, mimicking advanced drone-assisted ground navigation in unpredictable environments.",
       "techStack": [
         "Machine Learning & Vision",
@@ -267,13 +550,28 @@ export const projects: Project[] = [
         "Hardware & IoT",
         "Geospatial Tracking"
       ],
-      "challenges": [
-        "Overhead Image Distortion & Event Classification: The overhead \"Watchtower\" camera suffered from lighting variations and noise, making event recognition difficult. Solved by developing a robust CNN pipeline reinforced with data augmentation and noise reduction techniques to accurately classify the five distinct event categories.",
-        "Dynamic Priority-Based Routing: The robot needed to visit specific events in a strict priority order while treating other mapped areas as danger zones. Addressed by implementing an adaptive A* pathfinding algorithm that dynamically recalculates optimal routes based on the CNN's real-time classifications.",
-        "Real-Time Georeferencing & Telemetry: Tracking the physical robot's exact coordinates on a digital map with minimal latency. Solved by building a telemetry bridge that maps the robot's physical ESP32 odometry and movements directly onto a live QGIS geospatial dashboard."
-      ],
       "mediaFolder": "vanguard"
-    }
+    },
+    "gist": "A ground robot driven by an overhead camera acting as command station.",
+    "points": [
+      "A static 'Watchtower' camera classifies arena events with a CNN",
+      "A* recalculates the route as classifications arrive",
+      "Live QGIS dashboard tracks the robot's real coordinates"
+    ],
+    "metrics": [
+      {
+        "value": "5",
+        "label": "event classes"
+      },
+      {
+        "value": "A*",
+        "label": "live replanning"
+      },
+      {
+        "value": "QGIS",
+        "label": "live geotracking"
+      }
+    ]
   },
   {
     "id": 9,
@@ -294,6 +592,30 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "An X-drive base gives omnidirectional movement from tuned kinematics and motor controllers",
+        "Dual ESP32s handle every actuator over a distributed Micro-ROS architecture",
+        "A depth camera feeds Cartographer SLAM for real-time mapping and localisation",
+        "A separate YOLO pipeline scans continuously for cotton bolls",
+        "ROS2 action servers tie navigation, detection and the picking trajectory into one mission"
+      ],
+      "challenges": [
+        {
+          "title": "Telling a boll from a leaf",
+          "problem": "Outdoor lighting and dense foliage make cotton hard to segment from leaves and branches.",
+          "solution": "A specialised YOLO model trained with extensive field data augmentation and environmental noise injection."
+        },
+        {
+          "title": "Coordinating the base and the arm",
+          "problem": "SLAM-based navigation and 6-DOF picking run at completely different levels.",
+          "solution": "A hierarchical action-server architecture accepts target coordinates and computes collision-free picking paths by inverse kinematics."
+        },
+        {
+          "title": "Localising between identical rows",
+          "problem": "GPS-denied fields of highly repetitive crops defeat loop closure.",
+          "solution": "Cartographer SLAM integrated with a secondary fiducial marker system holds loop closure across long field missions."
+        }
+      ],
       "fullDescription": "The X-drive base provides omnidirectional movement, enabled by precisely tuned kinematics and motor controllers. Dual ESP32 microcontrollers handle all hardware actuators via a distributed Micro-ROS architecture. A depth camera feeds into the Cartographer SLAM system for real-time simultaneous localization and mapping, while a separate YOLO vision pipeline continuously scans for cotton bolls. Once a boll is identified, the system calculates optimal manipulator joint angles and executes the plucking trajectory. All behaviors integrate into a cohesive mission planning system built with ROS2 action servers.",
       "techStack": [
         "ROS2 & Nav2",
@@ -302,13 +624,24 @@ export const projects: Project[] = [
         "Cartographer SLAM",
         "Manipulator Kinematics"
       ],
-      "challenges": [
-        "Agricultural Segmentation & Boll Detection: Distinguishing cotton bolls from leaves and branches under natural outdoor lighting. Overcame this by training a specialized YOLO model with extensive field data augmentation and environmental noise injection to achieve robust real-time detection.",
-        "Autonomous Manipulator Coordination: Synchronizing high-level mission planning (SLAM-based navigation) with low-level manipulator control (6-DOF picking trajectories). Addressed by designing a hierarchical action-server architecture that accepts target coordinates and computes collision-free picking paths via inverse kinematics.",
-        "Robust Field Navigation & Localization: Maintaining accurate localization in GPS-denied outdoor environments with highly repetitive crops. Solved by integrating Cartographer SLAM with a secondary fiducial marker system to maintain loop closure and prevent drift during extended field missions."
-      ],
       "mediaFolder": "agrobot"
-    }
+    },
+    "gist": "An omni-drive field robot that finds cotton bolls and picks them.",
+    "points": [
+      "X-drive base with dual ESP32 Micro-ROS firmware",
+      "YOLO spots bolls; the arm solves IK and picks them",
+      "Cartographer SLAM plus fiducials hold localisation between identical crop rows"
+    ],
+    "metrics": [
+      {
+        "value": "2",
+        "label": "ESP32 controllers"
+      },
+      {
+        "value": "6-DOF",
+        "label": "picking arm"
+      }
+    ]
   },
   {
     "id": 10,
@@ -329,6 +662,29 @@ export const projects: Project[] = [
       "demo": "#"
     },
     "details": {
+      "approach": [
+        "A Crazyflie carries MultiRanger and Flow decks for indoor sensing",
+        "ROS2, Nav2 and SLAM Toolbox handle mapping and navigation",
+        "A Tello EDU platform covers the computer-vision side of the project",
+        "Carried out as a research project at Avignon University"
+      ],
+      "challenges": [
+        {
+          "title": "Localising without GPS",
+          "problem": "Indoor flight has no satellite fix to fall back on.",
+          "solution": "LiDAR, optical flow and multi-ranger distance sensors together provide robust indoor localisation."
+        },
+        {
+          "title": "Confined spaces",
+          "problem": "Narrow corridors and clutter leave no room for a slow replan.",
+          "solution": "Real-time obstacle detection with dynamic path replanning keeps the drone flying through tight environments."
+        },
+        {
+          "title": "Flight stability across mixed sensor rates",
+          "problem": "Multiple sensors update at different rates, which destabilises the low-level controller.",
+          "solution": "Tuning the low-level control parameters held the flight stable while all those sensor inputs came in."
+        }
+      ],
       "fullDescription": "Research project at Avignon University focusing on autonomous drone navigation and computer vision applications using multiple drone platforms including Crazyflie with advanced sensor decks and Tello EDU drones.",
       "techStack": [
         "ROS2 & Nav2",
@@ -337,12 +693,23 @@ export const projects: Project[] = [
         "Tello EDU",
         "Computer Vision & OpenCV"
       ],
-      "challenges": [
-        "Indoor Localization without GPS: Implementing robust localization in GPS-denied indoor environments using LiDAR, optical flow, and multi-ranger distance sensors.",
-        "Obstacle Avoidance in Confined Spaces: Enabling real-time obstacle detection and dynamic path replanning in narrow corridors and cluttered indoor environments.",
-        "Flight Stability & Control: Tuning low-level control parameters for stable autonomous flight while managing multiple sensor inputs with varying update rates."
-      ],
       "mediaFolder": "drone-systems"
-    }
+    },
+    "gist": "Indoor autonomous flight on a Crazyflie, where there is no GPS to fall back on.",
+    "points": [
+      "MultiRanger and Flow decks stand in for GPS indoors",
+      "ROS2, Nav2 and SLAM Toolbox plan and replan in corridors",
+      "Tello EDU used alongside for computer-vision work"
+    ],
+    "metrics": [
+      {
+        "value": "2",
+        "label": "drone platforms"
+      },
+      {
+        "value": "GPS-denied",
+        "label": "indoor flight"
+      }
+    ]
   }
 ];

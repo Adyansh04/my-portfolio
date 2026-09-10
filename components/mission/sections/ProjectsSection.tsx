@@ -63,8 +63,28 @@ export function ProjectsSection() {
                   </div>
                 )}
                 <h3 className="mt-3 text-xl font-semibold leading-snug text-text">{p.title}</h3>
-                <p className="mt-2.5 text-[0.875rem] leading-relaxed text-muted">{p.description}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
+                {/* the card is read in a second or two while the camera holds; a gist and three
+                    claims do that, where the paragraph that used to live here did not */}
+                <p className="mt-2 text-[0.9375rem] leading-snug text-text">{p.gist}</p>
+                <ul className="mt-3 space-y-1.5">
+                  {p.points.map((pt) => (
+                    <li key={pt} className="grid grid-cols-[0.75rem_1fr] gap-2 text-[0.8125rem] leading-snug text-muted">
+                      <span className="mt-[0.45em] h-1 w-1 rounded-full bg-accent" />
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+                {p.metrics.length > 0 && (
+                  <dl className="mt-3.5 flex flex-wrap gap-x-5 gap-y-2 border-t border-grid pt-3">
+                    {p.metrics.map((m) => (
+                      <div key={m.label}>
+                        <dt className="font-mono text-[0.8125rem] leading-tight text-accent">{m.value}</dt>
+                        <dd className="mt-0.5 font-mono text-[0.625rem] uppercase leading-tight tracking-[0.08em] text-muted">{m.label}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+                <div className="mt-3.5 flex flex-wrap gap-1.5">
                   {p.tags.map((t) => (
                     <Chip key={t} active={activeTag === t} dim={dim}>
                       {t}

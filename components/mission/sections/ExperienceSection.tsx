@@ -44,7 +44,15 @@ export function ExperienceSection() {
                 </div>
               </div>
             </div>
-            <p className="mt-5 max-w-[62ch] leading-relaxed text-muted">{e.description}</p>
+            <p className="mt-5 max-w-[54ch] text-[1.0625rem] leading-snug text-text">{e.gist}</p>
+            <ul className="mt-3 space-y-1.5">
+              {e.points.map((pt) => (
+                <li key={pt} className="grid max-w-[58ch] grid-cols-[0.75rem_1fr] gap-2 text-[0.875rem] leading-snug text-muted">
+                  <span className="mt-[0.45em] h-1 w-1 rounded-full bg-accent" />
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
             <dl className="mt-6 grid grid-cols-2 gap-4">
               {e.highlights.map((h) => (
                 <div key={h.label} className="border-t border-grid pt-3">
