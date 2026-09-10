@@ -70,21 +70,53 @@ The carousel now loops videos and plays them inline, because the seven clips tha
 looped forever and would otherwise stop after one pass. Thumbnails show a still first frame rather
 than animating, which is less decode work for the same information.
 
+## Recompression, and where it stopped
+
+`scripts/recompress-media.mjs` re-encodes at the same resolution and frame rate and measures every
+output against its source with SSIM, refusing any result that drops below 0.97 or comes out larger.
+Run against the eight files over 25 MB, exactly one was worth replacing:
+
+| file | before | after | SSIM |
+| --- | --- | --- | --- |
+| `3-wheel-omni.mp4` 1080p30 | 67.2 MB | **10.1 MB** | 0.9942 |
+| `demo_1.mp4` 4K60 | 43.0 MB | 73.8 MB, kept original | 0.9893 |
+| `demo_2.mp4` 4K60 | 45.8 MB | 78.5 MB, kept original | 0.9902 |
+| `demo_3.mp4` 4K60 | 66.3 MB | 118.1 MB, kept original | 0.9891 |
+| `Aruco Warehouse.mp4` 4K120 | 41.0 MB | 58.7 MB, kept original | 0.9968 |
+| `Tello object detect flip.mp4` 4K120 | 89.7 MB | 109.3 MB, kept original | 0.9938 |
+| `uc1.mp4` | 30.2 MB | 32.8 MB, kept original | 0.9987 |
+| `uc3.mp4` | 31.0 MB | 33.5 MB, kept original | 0.9987 |
+
+The pattern is clear: `3-wheel-omni` was 1080p30 at 18 Mb/s, about six times what that resolution
+needs, and everything else is already encoded at or below what CRF 20 targets. A visually lossless
+pass over those is an upgrade, not a saving.
+
+**Shrinking the rest is a quality decision, and none was taken.** The options, in order of how
+little anyone would notice:
+
+1. **Drop 4K120 to 4K60.** No display shows 120 fps here and no browser benefits. Roughly halves
+   the temporal data with every still frame untouched.
+2. **Downscale to 1440p.** The carousel caps playback at 65vh, so on a 1440x900 screen a
+   2560-tall source is already displayed at about 585 px, a quarter of its height.
+3. **Raise the CRF to 24 to 26.** The first visible option, and the one to reach for last.
+
 ## Still in the way
 
-1. **The published site is 553 MB against GitHub Pages' 1 GB limit.** Better than 782 MB, but the
-   remaining weight is real video that was never going to compress for free.
+1. **The published site is 494 MB against GitHub Pages' 1 GB limit**, down from 782 MB.
 2. **`Tello object detect flip.mp4` is 89.7 MB**, still close to GitHub's 100 MB per-file hard
-   limit. It is a 4096x2560 capture at 120 fps. Re-encoding it at CRF 18 would very likely halve
-   it with no visible change, and dropping it to 60 fps or 1440p would take far more, but both are
-   quality decisions rather than free wins, so neither was done.
-3. **Four more videos are 43 to 67 MB** (`3-wheel-omni`, `demo_1` to `demo_3`), several at 4K 60.
-   Same trade as above.
-4. **`/lab/tall` ships to production.** It is the hologram design tool. Harmless, but it is an
+   limit. Option 1 or 2 above fixes it.
+3. **`/lab/tall` ships to production.** It is the hologram design tool. Harmless, but it is an
    internal page at a public URL.
-5. `.git` is still 765 MB because the history holds every old copy. `out/` is now gitignored so it
+4. `.git` is still 765 MB because the history holds every old copy. `out/` is now gitignored so it
    stops growing, but shrinking it needs a history rewrite, which is not worth doing on a repo
    with a live remote unless the clone size becomes a real problem.
+
+## First load
+
+Measured on the built export, world mode, cold cache: **5.3 MB across 104 requests**, down from
+7.6 MB. Textures are 2.7 MB of it, models and the Draco decoder 1.3 MB, JavaScript the rest.
+Project media is 0 bytes on first load and only fetched when a sheet opens. Static mode, which is
+what every phone gets, loads no three.js, no textures and no models at all.
 
 ## To deploy
 
