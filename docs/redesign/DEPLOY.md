@@ -48,34 +48,45 @@ Neither branch has any custom `posthog.capture` call, so no event was lost in th
 means there is still no zone-level analytics on a site whose whole content *is* the scroll. Worth
 adding, but it would be new behaviour rather than parity, so it has not been.
 
-## In the way
+## Media, re-encoded 2026-09-11
 
-Everything below is inherited from `main`, not introduced by the redesign. It is listed because it
-is what will bite on the next deploy.
+`scripts/reencode-media.mjs` did this, and it verifies every output against its source before
+deleting the original. Quality, resolution and frame rate were held fixed by request.
 
-1. **The published site is ~782 MB against GitHub Pages' 1 GB limit.** `public/projects` alone is
-   769 MB, effectively identical to `main`'s 768 MB. Every deploy uploads that as an artifact.
-2. **Two files sit just under GitHub's 100 MB per-file hard limit:** `whycode/demo2.gif` at 91 MB
-   and `drone-systems/Tello object detect flip.mkv` at 94 MB. They are already committed so they
-   passed, but there is no headroom left.
-3. **Two `.mkv` files are in the media manifest and no browser can play Matroska** —
-   `Aruco Warehouse.mkv` (43 MB) and `Tello object detect flip.mkv` (94 MB). They download and
-   fail.
-4. **`abu-robocon/Robocon 1.mp4` is zero bytes.** The carousel lists it and it cannot play.
-5. **Nine GIFs are used where video belongs**, including 91 MB, 84 MB and 62 MB files. A GIF that
-   size is minutes of loading for a visitor on anything but a desk connection.
-6. **`out/` is committed on both branches**, so the 768 MB of media is stored twice and `.git` is
-   765 MB. The workflow rebuilds and uploads its own `out/`, so the committed copy is never used.
-   Adding `out/` to `.gitignore` costs nothing and roughly halves what a clone pulls.
-7. **`/lab/tall` ships to production.** It is the hologram design tool. Harmless, but it is an
+- **Seven GIFs became MP4.** GIF has 256 colours and no motion compensation, which is how a
+  17-second screen capture reached 91 MB. H.264 at CRF 18 is visually lossless and, on a
+  palettised source, is closer to the recording than the GIF was. **258.8 MB became 29.7 MB.**
+  Frame counts and durations came out identical in every case; timestamps are passed through
+  rather than resampled. The only geometric change is that 4:2:0 chroma needs even dimensions, so
+  `demo1` lost one row (1751 to 1750) and `demo2` lost one (901 to 900). That is a crop, so every
+  remaining pixel is untouched.
+- **Two `.mkv` files became MP4** by container swap. Both were already H.264 High plus AAC LC, so
+  `-c copy` moved the streams across bit-identically. No browser plays Matroska, which was the
+  actual bug.
+- **The zero-byte `Robocon 1.mp4` is gone** and no longer appears in the manifest.
+- `public/projects` went from 769 MB to 540 MB; the published site from 782 MB to 553 MB.
+
+The carousel now loops videos and plays them inline, because the seven clips that used to be GIFs
+looped forever and would otherwise stop after one pass. Thumbnails show a still first frame rather
+than animating, which is less decode work for the same information.
+
+## Still in the way
+
+1. **The published site is 553 MB against GitHub Pages' 1 GB limit.** Better than 782 MB, but the
+   remaining weight is real video that was never going to compress for free.
+2. **`Tello object detect flip.mp4` is 89.7 MB**, still close to GitHub's 100 MB per-file hard
+   limit. It is a 4096x2560 capture at 120 fps. Re-encoding it at CRF 18 would very likely halve
+   it with no visible change, and dropping it to 60 fps or 1440p would take far more, but both are
+   quality decisions rather than free wins, so neither was done.
+3. **Four more videos are 43 to 67 MB** (`3-wheel-omni`, `demo_1` to `demo_3`), several at 4K 60.
+   Same trade as above.
+4. **`/lab/tall` ships to production.** It is the hologram design tool. Harmless, but it is an
    internal page at a public URL.
-
-Items 1 to 5 are the media re-encode that has been deferred since 2026-09-03. It is now the only
-thing standing between this and a deploy that is comfortable rather than lucky.
+5. `.git` is still 765 MB because the history holds every old copy. `out/` is now gitignored so it
+   stops growing, but shrinking it needs a history rewrite, which is not worth doing on a repo
+   with a live remote unless the clone size becomes a real problem.
 
 ## To deploy
 
-1. Decide on the media (at minimum: re-encode the two `.mkv` files to MP4, replace the large GIFs
-   with MP4, and remove or replace the zero-byte `Robocon 1.mp4`).
-2. Merge `redesign-3d` into `main`.
-3. The workflow does the rest. Watch the Actions run; the artifact upload is the slow part.
+1. Merge `redesign-3d` into `main`.
+2. The workflow does the rest. Watch the Actions run; the artifact upload is the slow part.

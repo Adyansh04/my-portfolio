@@ -1,16 +1,8 @@
 {
   "abu-robocon": {
     "project": "abu-robocon",
-    "total": 3,
+    "total": 2,
     "media": [
-      {
-        "type": "video",
-        "src": "/my-portfolio/projects/abu-robocon/Robocon 1.mp4",
-        "alt": "Robocon 1",
-        "title": "Robocon 1",
-        "filename": "Robocon 1.mp4",
-        "size": 0
-      },
       {
         "type": "video",
         "src": "/my-portfolio/projects/abu-robocon/Robocon 2.mp4",
@@ -135,19 +127,19 @@
     "media": [
       {
         "type": "video",
-        "src": "/my-portfolio/projects/drone-systems/Aruco Warehouse.mkv",
+        "src": "/my-portfolio/projects/drone-systems/Aruco Warehouse.mp4",
         "alt": "Aruco Warehouse",
         "title": "Aruco Warehouse",
-        "filename": "Aruco Warehouse.mkv",
-        "size": 42860705
+        "filename": "Aruco Warehouse.mp4",
+        "size": 42953277
       },
       {
         "type": "video",
-        "src": "/my-portfolio/projects/drone-systems/Tello object detect flip.mkv",
+        "src": "/my-portfolio/projects/drone-systems/Tello object detect flip.mp4",
         "alt": "Tello Object Detect Flip",
         "title": "Tello Object Detect Flip",
-        "filename": "Tello object detect flip.mkv",
-        "size": 93981277
+        "filename": "Tello object detect flip.mp4",
+        "size": 94082628
       },
       {
         "type": "image",
@@ -188,36 +180,36 @@
         "size": 2384530
       },
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/go2-inspection/01-frontier-exploration.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/go2-inspection/01-frontier-exploration.mp4",
         "alt": "Frontier Exploration",
         "title": "Frontier Exploration",
-        "filename": "01-frontier-exploration.gif",
-        "size": 14292900
+        "filename": "01-frontier-exploration.mp4",
+        "size": 1900705
       },
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/go2-inspection/02-zone-segmentation.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/go2-inspection/02-zone-segmentation.mp4",
         "alt": "Zone Segmentation",
         "title": "Zone Segmentation",
-        "filename": "02-zone-segmentation.gif",
-        "size": 816763
+        "filename": "02-zone-segmentation.mp4",
+        "size": 269759
       },
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/go2-inspection/03-zone-inspection.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/go2-inspection/03-zone-inspection.mp4",
         "alt": "Zone Inspection",
         "title": "Zone Inspection",
-        "filename": "03-zone-inspection.gif",
-        "size": 4255954
+        "filename": "03-zone-inspection.mp4",
+        "size": 656196
       },
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/go2-inspection/04-zone-report.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/go2-inspection/04-zone-report.mp4",
         "alt": "Zone Report",
         "title": "Zone Report",
-        "filename": "04-zone-report.gif",
-        "size": 3725419
+        "filename": "04-zone-report.mp4",
+        "size": 617706
       }
     ]
   },
@@ -240,12 +232,12 @@
     "total": 8,
     "media": [
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/olive/00-maze-loop-demo.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/olive/00-maze-loop-demo.mp4",
         "alt": "Maze Loop Demo",
         "title": "Maze Loop Demo",
-        "filename": "00-maze-loop-demo.gif",
-        "size": 64961819
+        "filename": "00-maze-loop-demo.mp4",
+        "size": 9240395
       },
       {
         "type": "image",
@@ -378,20 +370,20 @@
         "size": 298835
       },
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/whycode/demo1.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/whycode/demo1.mp4",
         "alt": "Demo1",
         "title": "Demo1",
-        "filename": "demo1.gif",
-        "size": 87709370
+        "filename": "demo1.mp4",
+        "size": 7840643
       },
       {
-        "type": "image",
-        "src": "/my-portfolio/projects/whycode/demo2.gif",
+        "type": "video",
+        "src": "/my-portfolio/projects/whycode/demo2.mp4",
         "alt": "Demo2",
         "title": "Demo2",
-        "filename": "demo2.gif",
-        "size": 95482537
+        "filename": "demo2.mp4",
+        "size": 10633020
       }
     ]
   }

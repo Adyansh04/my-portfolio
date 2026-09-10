@@ -114,6 +114,8 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                   controls
                   muted={isMuted}
                   autoPlay
+                  loop
+                  playsInline
                   controlsList="nodownload"
                 />
               )}
@@ -203,10 +205,14 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                 />
               ) : (
                 <>
+                  {/* a still first frame for the strip; the GIFs that used to animate here are
+                      videos now, and a thumbnail that plays is just wasted decode */}
                   <video
                     src={item.src}
                     className="w-full h-full object-cover"
                     muted
+                    playsInline
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                     <div className="w-3 h-3 rounded-full bg-white/60" />
