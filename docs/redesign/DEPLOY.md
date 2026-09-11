@@ -84,6 +84,7 @@ Run against the eight files over 25 MB, exactly one was worth replacing:
 | `demo_3.mp4` 4K60 | 66.3 MB | 118.1 MB, kept original | 0.9891 |
 | `Aruco Warehouse.mp4` 4K120 | 41.0 MB | 58.7 MB, kept original | 0.9968 |
 | `Tello object detect flip.mp4` 4K120 | 89.7 MB | 109.3 MB, kept original | 0.9938 |
+| ↳ then at 60 fps, CRF 24 (Adyansh's call) | 89.7 MB | **71.1 MB** (74.6 MB decimal) | 0.9955 vs source at 60 fps |
 | `uc1.mp4` | 30.2 MB | 32.8 MB, kept original | 0.9987 |
 | `uc3.mp4` | 31.0 MB | 33.5 MB, kept original | 0.9987 |
 
@@ -95,21 +96,32 @@ pass over those is an upgrade, not a saving.
 little anyone would notice:
 
 1. **Drop 4K120 to 4K60.** No display shows 120 fps here and no browser benefits. Roughly halves
-   the temporal data with every still frame untouched.
+   the temporal data with every still frame untouched. **Done for the Tello clip** (above);
+   `Aruco Warehouse.mp4` is the other 4K120 file if it's ever wanted.
 2. **Downscale to 1440p.** The carousel caps playback at 65vh, so on a 1440x900 screen a
    2560-tall source is already displayed at about 585 px, a quarter of its height.
 3. **Raise the CRF to 24 to 26.** The first visible option, and the one to reach for last.
 
 ## Still in the way
 
-1. **The published site is 494 MB against GitHub Pages' 1 GB limit**, down from 782 MB.
-2. **`Tello object detect flip.mp4` is 89.7 MB**, still close to GitHub's 100 MB per-file hard
-   limit. Option 1 or 2 above fixes it.
-3. **`/lab/tall` ships to production.** It is the hologram design tool. Harmless, but it is an
-   internal page at a public URL.
-4. `.git` is still 765 MB because the history holds every old copy. `out/` is now gitignored so it
-   stops growing, but shrinking it needs a history rewrite, which is not worth doing on a repo
-   with a live remote unless the clone size becomes a real problem.
+1. **The published site is 474 MB against GitHub Pages' 1 GB limit**, down from 782 MB. The
+   largest single file is now 71 MB, under GitHub's 100 MB per-file limit.
+2. `.git` is still large because the history holds every old copy of the media. `out/` is
+   gitignored so it stops growing, but shrinking it needs a history rewrite, which is not worth
+   doing on a repo with a live remote unless the clone size becomes a real problem.
+3. `/_vercel/insights/script.js` 404s on every load. `@vercel/analytics` only works on Vercel's
+   hosting; `main` has the same request. Harmless, and one line in `app/layout.tsx` to remove.
+
+Fixed since the first version of this list: `/lab/tall` no longer ships (it's `page.dev.tsx`,
+and `pageExtensions` only includes that outside production), and the favicons now resolve under
+`/my-portfolio` (they 404'd on `main` too).
+
+## Rendering
+
+The first scroll after a load used to freeze for up to 2 s at a time as shaders recompiled (see
+HANDOFF, sessions 3j-3k). The production bundle now holds 60 fps through a cold scroll of the whole
+page on the RTX 4080, with a worst frame of 114 ms. GTAO is gone, point lights go through a pool
+of four, every shader compiles during load, and pixel density drops to 1x on a GPU that can't keep up.
 
 ## First load
 
