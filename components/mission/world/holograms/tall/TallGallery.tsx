@@ -10,7 +10,8 @@ import { ContactShadow } from '../../ContactShadow'
 import { DebugHook } from '../../DebugHook'
 import { makeLabelTexture } from '../../labels'
 import { ProjectConsole } from './ProjectConsole'
-import { SLAB_DESIGNS } from '../data/projects'
+import { DEFAULT_DESIGN, SLAB_DESIGNS } from '../data/projects'
+import { projects } from '@/content/projects'
 import { STAGE_FOR } from './stages'
 
 /**
@@ -34,18 +35,8 @@ function offsets() {
   return { cam: v('cam', CAM_OFFSET), look: v('look', LOOK_OFFSET) }
 }
 const SPACING = 5.2
-const PROJECTS = [
-  { key: 'go2-inspection', name: 'Go2 Inspection' },
-  { key: 'ai-robotics', name: 'AI+Robotics' },
-  { key: 'olive', name: 'OLIVE' },
-  { key: 'whycode', name: 'WhyCode' },
-  { key: 'sepsis-atlas', name: 'Sepsis Atlas' },
-  { key: 'abu-robocon', name: 'ABU Robocon' },
-  { key: 'kiwi-drive', name: 'Kiwi Drive' },
-  { key: 'vanguard', name: 'Vanguard' },
-  { key: 'agrobot', name: 'AgroBot' },
-  { key: 'drone-systems', name: 'Drone Systems' },
-] as const
+// every project, in content order, so a new one shows up here without touching the lab
+const PROJECTS = projects.map((p) => ({ key: p.details.mediaFolder, name: p.title.split(/[(:]/)[0].trim() }))
 const CELLS = PROJECTS.map((p, i) => ({ ...p, i }))
 
 function Pedestal({ label }: { label: string }) {
@@ -153,7 +144,7 @@ export function TallGallery() {
           <group key={c.key} position={[c.i * SPACING, 0, 0]}>
             <Pedestal label={c.name} />
             <group position={[0, 0.905, 0]} scale={1.2}>
-              <ProjectConsole design={SLAB_DESIGNS[c.key]} projectKey={c.key} />
+              <ProjectConsole design={SLAB_DESIGNS[c.key] ?? DEFAULT_DESIGN} projectKey={c.key} />
             </group>
           </group>
         ))}
