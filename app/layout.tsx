@@ -4,6 +4,7 @@ import Script from 'next/script'
 import { CSPostHogProvider } from './providers'
 import { site } from '@/content/site'
 import { asset } from '@/lib/base-path'
+import { STATIC_MODE_SCRIPT } from '@/lib/mission/static-mode-script'
 import './globals.css'
 
 const display = Big_Shoulders({ subsets: ['latin'], axes: ['opsz'], variable: '--font-display', display: 'swap' })
@@ -26,7 +27,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`dark ${display.variable} ${sans.variable} ${mono.variable}`}>
+    // suppressHydrationWarning: the head script below stamps data-static on <html> before React hydrates
+    <html lang="en" className={`dark ${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: STATIC_MODE_SCRIPT }} />
+      </head>
       <body className="font-sans antialiased">
         <CSPostHogProvider>{children}</CSPostHogProvider>
         <Script defer src="https://cloud.umami.is/script.js" data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID} />
