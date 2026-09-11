@@ -6,6 +6,9 @@
 import type { RobotPose } from './store'
 import { PEDESTALS } from './facility'
 
+/** the hall's first beat, as a fraction of the zone: its entry shot is timed against it, not against a fixed 10 */
+const FIRST_PROJECT = 1 / PEDESTALS.length
+
 export type Vec3 = [number, number, number]
 
 export interface Keyframe {
@@ -45,8 +48,8 @@ export const SHOTS: Keyframe[][] = [
   // aisle and frame robot + active pedestal together (the DOM card sits on the right, so subjects stay left of centre)
   [
     { zt: 0, pos: { follow: [0, 2.3, -3.3] }, look: { robot: AHEAD_Z } },
-    { zt: 0.045, pos: { follow: [0, 2.4, -2.2] }, look: { robot: [0, 0.4, 0.8] } },
-    { zt: 0.1, pos: 'hall', look: 'hall' },
+    { zt: 0.45 * FIRST_PROJECT, pos: { follow: [0, 2.4, -2.2] }, look: { robot: [0, 0.4, 0.8] } },
+    { zt: FIRST_PROJECT, pos: 'hall', look: 'hall' },
     { zt: 1, pos: 'hall', look: 'hall' },
   ],
   // 4 alcove (x -8..0, z 34..42): through the door with the robot, then a slow orbit behind it facing the podiums
