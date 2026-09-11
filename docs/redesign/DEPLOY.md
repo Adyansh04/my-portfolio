@@ -129,6 +129,26 @@ Measured on the built export, world mode, cold cache: **5.3 MB across 104 reques
 Project media is 0 bytes on first load and only fetched when a sheet opens. Static mode, which is
 what every phone gets, loads no three.js, no textures and no models at all.
 
+## Phones
+
+Audited 2026-09-11 on the production export with Chrome device emulation: 360x800, 375x667 and
+390x844 portrait, 844x390 and 915x412 sideways, iPad 820x1180 both ways.
+
+| | before | after |
+| --- | --- | --- |
+| experience entries visible | 2 of 6 (the project list covered the rest) | 6 of 6 |
+| text under 12px | 24% | 0% |
+| touch targets under 44px | 35 of 36 | 0 (phones, sideways phones, iPads) |
+| sideways overflow | project sheet +28px, contact column +24px at 360px | none |
+| layout shift on load | 0.284 | 0 |
+| first paint, Slow 4G + 4x CPU | 4.3-4.8 s | 2.5 s |
+| first-load transfer as served | ~1.0 MB | ~0.85 MB (3 posters instead of 7) |
+
+Phones in either orientation get the static page (touch + short side under 600px). Tablets keep
+the world at the desktop type scale, where about a quarter of the text is 11px mono. The timings
+come from a local server that doesn't gzip; GitHub Pages does, so real phones will be faster than
+the table.
+
 ## To deploy
 
 1. Merge `redesign-3d` into `main`.
