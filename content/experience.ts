@@ -7,6 +7,34 @@ import type { Experience } from './types';
 // The corridor, the robot's route and the scroll length all size themselves from this list.
 export const experiences: Experience[] = [
   {
+    "id": 7,
+    "title": "Studentische Hilfskraft",
+    "company": "WZL der RWTH Aachen",
+    "location": "Aachen, Germany",
+    "period": "Sept 2026 - Present",
+    "icon": "Bot",
+    "highlights": [
+      {
+        "metric": "ROS",
+        "label": "Robotics Stack"
+      },
+      {
+        "metric": "Work Study",
+        "label": "Role Type"
+      }
+    ],
+    "badges": [
+      "Robotics",
+      "ROS"
+    ],
+    "description": "Studentische Hilfskraft (student assistant) in a work-study position at the Werkzeugmaschinenlabor WZL der RWTH Aachen, the Laboratory for Machine Tools and Production Engineering. On-site role in robotics and the Robot Operating System (ROS).",
+    "gist": "Student assistant at RWTH Aachen's machine tool laboratory, working in robotics and ROS.",
+    "points": [
+      "Work-study role at the Werkzeugmaschinenlabor WZL, on site in Aachen",
+      "Robotics and the Robot Operating System (ROS)"
+    ]
+  },
+  {
     "id": 6,
     "title": "Robotics Software Developer",
     "company": "Robotics Collective",
