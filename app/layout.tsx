@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
 import { CSPostHogProvider } from './providers'
 import { site } from '@/content/site'
+import { asset } from '@/lib/base-path'
 import './globals.css'
 
 const display = Big_Shoulders({ subsets: ['latin'], axes: ['opsz'], variable: '--font-display', display: 'swap' })
@@ -13,13 +14,14 @@ const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variabl
 export const metadata: Metadata = {
   title: site.metaTitle,
   description: site.metaDescription,
+  // metadata URLs don't get basePath either; without asset() these pointed at the domain root and 404'd on Pages
   icons: {
     icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: asset('/icon-light-32x32.png'), media: '(prefers-color-scheme: light)' },
+      { url: asset('/icon-dark-32x32.png'), media: '(prefers-color-scheme: dark)' },
+      { url: asset('/icon.svg'), type: 'image/svg+xml' },
     ],
-    apple: '/apple-icon.png',
+    apple: asset('/apple-icon.png'),
   },
 }
 
