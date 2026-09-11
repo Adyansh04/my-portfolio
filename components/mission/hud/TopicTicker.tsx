@@ -24,7 +24,7 @@ export function TopicTicker() {
     [],
   )
   return (
-    <div className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-sm border border-grid/70 bg-ground/88 px-3 py-1 font-mono text-[0.6563rem] tracking-[0.12em] text-muted backdrop-blur-sm lg:block" aria-hidden>
+    <div className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-sm border border-grid/70 bg-ground/93 px-3 py-1 font-mono text-[0.6563rem] tracking-[0.12em] text-muted lg:block" aria-hidden>
       <span ref={ref}>/scan 10 Hz · /tf 100 Hz · /odom 50 Hz</span>
     </div>
   )

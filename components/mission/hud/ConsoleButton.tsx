@@ -13,7 +13,7 @@ export function ConsoleButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="pointer-events-auto absolute right-8 top-7 hidden items-center gap-2 rounded-sm border border-grid bg-ground/88 px-3 py-1.5 font-mono text-[0.6875rem] tracking-[0.12em] text-muted backdrop-blur-sm transition hover:border-accent hover:text-text sm:inline-flex"
+        className="pointer-events-auto absolute right-8 top-7 hidden items-center gap-2 rounded-sm border border-grid bg-ground/93 px-3 py-1.5 font-mono text-[0.6875rem] tracking-[0.12em] text-muted transition hover:border-accent hover:text-text sm:inline-flex"
       >
         <Bot className="h-3.5 w-3.5 text-accent" /> CONSOLE
       </button>

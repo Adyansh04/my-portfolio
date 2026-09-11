@@ -14,7 +14,7 @@ export function ProfileSection() {
           <h2 className="font-display mt-3 text-5xl font-bold uppercase tracking-wide text-text sm:text-6xl">{site.sections.profile.title}</h2>
         </div>
 
-        <blockquote className="beat-acc max-w-[44ch] rounded-md border-l-2 border-accent bg-ground/88 py-4 pl-5 pr-5 text-xl font-medium leading-snug text-text backdrop-blur-md sm:text-2xl" style={{ '--i': 0 } as React.CSSProperties}>
+        <blockquote className="beat-acc max-w-[44ch] rounded-md border-l-2 border-accent bg-ground/94 py-4 pl-5 pr-5 text-xl font-medium leading-snug text-text sm:text-2xl" style={{ '--i': 0 } as React.CSSProperties}>
           {site.mission}
         </blockquote>
 

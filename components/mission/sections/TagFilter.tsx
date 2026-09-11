@@ -26,7 +26,7 @@ export function TagFilter({ compact = false }: { compact?: boolean }) {
             onMouseEnter={() => setActiveTag(tag)}
             onMouseLeave={() => !on && setActiveTag(null)}
             className={`shrink-0 rounded-sm border px-2 py-0.5 font-mono text-[0.6875rem] leading-5 tracking-wide transition-colors ${
-              on ? 'border-accent bg-accent/15 text-accent' : 'border-grid bg-ground/85 text-muted backdrop-blur-sm hover:border-muted hover:text-text'
+              on ? 'border-accent bg-accent/15 text-accent' : 'border-grid bg-ground/92 text-muted hover:border-muted hover:text-text'
             }`}
           >
             {tag}

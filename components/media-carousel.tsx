@@ -165,14 +165,14 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
           )}
 
           {/* Media Counter */}
-          <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10">
+          <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 border border-white/10">
             <span className="text-white/60 text-sm font-mono">
               {currentIndex + 1} / {media.length}
             </span>
           </div>
 
           {/* Media Type Badge */}
-          <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10">
+          <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-white/10">
             <span className="text-white/60 text-xs font-mono uppercase tracking-wider">
               {currentItem.type}
             </span>

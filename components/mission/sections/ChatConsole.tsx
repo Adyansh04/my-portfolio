@@ -63,7 +63,7 @@ export function ChatConsole({ className = '' }: { className?: string }) {
   )
 
   return (
-    <div className={`overflow-hidden rounded-lg border border-grid bg-ground/92 backdrop-blur-xl ${className}`}>
+    <div className={`overflow-hidden rounded-lg border border-grid bg-ground/96 ${className}`}>
       <div className="flex items-center gap-2 border-b border-grid px-4 py-2.5 font-mono text-[0.6875rem] tracking-[0.12em] text-muted">
         <span className="h-2 w-2 rounded-full bg-accent" />
         {site.chat.path}
