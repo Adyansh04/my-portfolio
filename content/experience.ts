@@ -13,6 +13,7 @@ export const experiences: Experience[] = [
     "location": "Aachen, Germany",
     "period": "Sept 2026 - Present",
     "icon": "Bot",
+    "logo": "wzl.svg",
     "highlights": [
       {
         "metric": "ROS",
