@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Raw meshes (STL/OBJ) -> one GLB per link in public/models/<robot>/  (trimesh, no Blender).
 
-usage: convert.py trakr|go2|ur5e|crazyflie|r1|all
+usage: convert.py trakr|go2|ur5e|crazyflie|r1|g1|all
 Merges multi-part links, drops materials (the web restyles everything), fixes mm-unit STLs.
 Run scripts/models/optimize.sh afterwards for Draco + simplification.
 """
@@ -14,6 +14,7 @@ ROBOTS = {
     # per-link parts; None = one GLB per file in meshes/ (name = lowercase basename)
     'trakr': None,
     'r1': None,
+    'g1': None,  # meshes copied from grove-g1's build (unitree_mujoco, BSD-3), fingers left out
     'go2': {'base': ['base_0','base_1','base_2','base_3','base_4'], 'hip': ['hip_0','hip_1'], 'thigh': ['thigh_0','thigh_1'],
             'thigh_mirror': ['thigh_mirror_0','thigh_mirror_1'], 'calf': ['calf_0','calf_1'], 'calf_mirror': ['calf_mirror_0','calf_mirror_1'], 'foot': ['foot']},
     'ur5e': {'base': ['base_0','base_1'], 'shoulder': ['shoulder_0','shoulder_1','shoulder_2'], 'upperarm': ['upperarm_0','upperarm_1','upperarm_2','upperarm_3'],

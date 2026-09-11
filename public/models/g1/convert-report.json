@@ -1,0 +1,387 @@
+[
+ {
+  "link": "head_link",
+  "faces": 6750,
+  "bytes": 122852,
+  "extents": [
+   0.14,
+   0.156,
+   0.206
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_pitch_link",
+  "faces": 1422,
+  "bytes": 27036,
+  "extents": [
+   0.036,
+   0.013,
+   0.037
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_roll_link",
+  "faces": 13066,
+  "bytes": 236712,
+  "extents": [
+   0.208,
+   0.076,
+   0.059
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_elbow_link",
+  "faces": 1774,
+  "bytes": 33468,
+  "extents": [
+   0.13,
+   0.066,
+   0.075
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hand_palm_link",
+  "faces": 11120,
+  "bytes": 201128,
+  "extents": [
+   0.11,
+   0.049,
+   0.086
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hip_pitch_link",
+  "faces": 3632,
+  "bytes": 66712,
+  "extents": [
+   0.083,
+   0.099,
+   0.117
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hip_roll_link",
+  "faces": 3842,
+  "bytes": 70600,
+  "extents": [
+   0.106,
+   0.098,
+   0.171
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hip_yaw_link",
+  "faces": 5924,
+  "bytes": 108236,
+  "extents": [
+   0.18,
+   0.089,
+   0.226
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_knee_link",
+  "faces": 17096,
+  "bytes": 309228,
+  "extents": [
+   0.104,
+   0.072,
+   0.355
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_shoulder_pitch_link",
+  "faces": 3534,
+  "bytes": 65068,
+  "extents": [
+   0.062,
+   0.074,
+   0.09
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_shoulder_roll_link",
+  "faces": 8004,
+  "bytes": 145508,
+  "extents": [
+   0.081,
+   0.073,
+   0.137
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_shoulder_yaw_link",
+  "faces": 4982,
+  "bytes": 91100,
+  "extents": [
+   0.081,
+   0.075,
+   0.145
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_wrist_pitch_link",
+  "faces": 1718,
+  "bytes": 31900,
+  "extents": [
+   0.103,
+   0.057,
+   0.057
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_wrist_roll_link",
+  "faces": 7122,
+  "bytes": 129172,
+  "extents": [
+   0.056,
+   0.06,
+   0.06
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_wrist_yaw_link",
+  "faces": 6372,
+  "bytes": 115664,
+  "extents": [
+   0.059,
+   0.054,
+   0.06
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "logo_link",
+  "faces": 4866,
+  "bytes": 88900,
+  "extents": [
+   0.149,
+   0.149,
+   0.029
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "pelvis",
+  "faces": 21216,
+  "bytes": 382912,
+  "extents": [
+   0.098,
+   0.129,
+   0.15
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "pelvis_contour_link",
+  "faces": 36102,
+  "bytes": 650816,
+  "extents": [
+   0.12,
+   0.136,
+   0.124
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_pitch_link",
+  "faces": 1422,
+  "bytes": 27040,
+  "extents": [
+   0.036,
+   0.013,
+   0.037
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_roll_link",
+  "faces": 13074,
+  "bytes": 236860,
+  "extents": [
+   0.208,
+   0.076,
+   0.059
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_elbow_link",
+  "faces": 1774,
+  "bytes": 33340,
+  "extents": [
+   0.13,
+   0.066,
+   0.075
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hand_palm_link",
+  "faces": 11120,
+  "bytes": 201136,
+  "extents": [
+   0.11,
+   0.049,
+   0.086
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hip_pitch_link",
+  "faces": 3624,
+  "bytes": 66576,
+  "extents": [
+   0.083,
+   0.099,
+   0.117
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hip_roll_link",
+  "faces": 3852,
+  "bytes": 70784,
+  "extents": [
+   0.106,
+   0.098,
+   0.171
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hip_yaw_link",
+  "faces": 5924,
+  "bytes": 108240,
+  "extents": [
+   0.18,
+   0.089,
+   0.226
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_knee_link",
+  "faces": 17044,
+  "bytes": 308296,
+  "extents": [
+   0.104,
+   0.072,
+   0.355
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_shoulder_pitch_link",
+  "faces": 3534,
+  "bytes": 65072,
+  "extents": [
+   0.062,
+   0.074,
+   0.09
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_shoulder_roll_link",
+  "faces": 8036,
+  "bytes": 146088,
+  "extents": [
+   0.081,
+   0.073,
+   0.137
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_shoulder_yaw_link",
+  "faces": 4998,
+  "bytes": 91392,
+  "extents": [
+   0.081,
+   0.075,
+   0.145
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_wrist_pitch_link",
+  "faces": 1590,
+  "bytes": 29600,
+  "extents": [
+   0.103,
+   0.057,
+   0.057
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_wrist_roll_link",
+  "faces": 7120,
+  "bytes": 129140,
+  "extents": [
+   0.056,
+   0.06,
+   0.06
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_wrist_yaw_link",
+  "faces": 6828,
+  "bytes": 123984,
+  "extents": [
+   0.059,
+   0.054,
+   0.06
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "torso_link_rev_1_0",
+  "faces": 44658,
+  "bytes": 804848,
+  "extents": [
+   0.15,
+   0.215,
+   0.31
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "waist_roll_link_rev_1_0",
+  "faces": 482,
+  "bytes": 10036,
+  "extents": [
+   0.02,
+   0.022,
+   0.039
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "waist_yaw_link_rev_1_0",
+  "faces": 6724,
+  "bytes": 122012,
+  "extents": [
+   0.085,
+   0.085,
+   0.046
+  ],
+  "scale": 1.0
+ }
+]

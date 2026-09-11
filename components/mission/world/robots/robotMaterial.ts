@@ -70,6 +70,12 @@ export const go2MaterialFor = (link: RobotLink): THREE.Material => (link.name ==
  */
 const R1_SHELL = /^(head_yaw_link|waist_yaw_link|(left|right)_(hip_yaw|knee|shoulder_yaw|elbow|wrist_roll)_link)$/
 export const r1MaterialFor = (link: RobotLink): THREE.Material => (R1_SHELL.test(link.name) ? R1_WHITE() : R1_FRAME())
+/** Unitree G1: light shells on the torso, thighs and upper arms over the dark joint modules, so the
+ *  silhouette still reads when the robot is 40 cm tall on a hologram deck. */
+const G1_SHELL = /^(torso_link.*|head_link|(left|right)_(hip_yaw|knee|shoulder_roll|elbow)_link)$/
+// a notch darker and rougher than the Go2's grey: the torso sits right under its stage lamp and bloomed to white
+const G1_GREY = () => mat('#98a0aa', { metalness: 0.18, roughness: 0.62 })
+export const g1MaterialFor = (link: RobotLink): THREE.Material => (G1_SHELL.test(link.name) ? G1_GREY() : UNITREE_DARK())
 /** UR5e: light grey links, UR blue joint caps. */
 export const ur5eMaterialFor = (link: RobotLink): THREE.Material => (/shoulder|wrist_1|wrist_2/.test(link.name) ? UR_BLUE() : UR_GREY())
 export const crazyflieMaterial = () => mat('#23272d', { metalness: 0.35, roughness: 0.5 })
