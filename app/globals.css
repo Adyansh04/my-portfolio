@@ -2,6 +2,13 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+/* a phone in either orientation: narrow, or a touch screen whose short side is under 600px.
+   Mirrors STATIC_MODE_SCRIPT in lib/mission/static-mode-script.ts, minus the reduced-motion case. */
+@custom-variant phone {
+  @media (max-width: 767px), (pointer: coarse) and (max-height: 599px) {
+    @slot;
+  }
+}
 
 /* ---------- Mission Log tokens (dark-only world) ---------- */
 :root {
@@ -311,6 +318,25 @@ html[data-static='true'] .pz-abs {
   --tw-translate-y: 0 !important;
   width: auto !important;
   margin-bottom: 1.25rem;
+}
+
+/* ---------- phones ---------- */
+/* The HUD type is sized for a desktop screen: 9-11px mono labels and 13px body copy. On a phone
+   that is squint-small (a quarter of all the text was under 12px), so on a phone (same condition
+   as the `phone` variant above) nothing goes under 12px and the 13px reading size moves up to
+   14px. The classes are matched by name so the desktop scale stays exactly as designed. */
+@media (max-width: 767px), (pointer: coarse) and (max-height: 599px) {
+  .text-\[0\.5625rem\],
+  .text-\[0\.625rem\],
+  .text-\[0\.6563rem\],
+  .text-\[0\.6875rem\] {
+    font-size: 0.75rem;
+  }
+  .text-\[0\.8rem\],
+  .text-\[0\.8125rem\],
+  .text-\[0\.8438rem\] {
+    font-size: 0.875rem;
+  }
 }
 html[data-static='true'] .pz {
   padding: 1.5rem;

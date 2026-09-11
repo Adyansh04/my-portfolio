@@ -92,16 +92,16 @@ export function ProjectsSection() {
                   ))}
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-2.5">
-                  <button type="button" onClick={() => setOpenId(p.id)} className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-[#141414] transition hover:brightness-110">
+                  <button type="button" onClick={() => setOpenId(p.id)} className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-[#141414] transition hover:brightness-110 pointer-coarse:py-3">
                     Open sheet
                   </button>
                   {p.links.github !== '#' && (
-                    <a href={p.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-grid px-3.5 py-2 text-sm text-text transition hover:border-muted">
+                    <a href={p.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-grid px-3.5 py-2 text-sm text-text transition hover:border-muted pointer-coarse:py-3">
                       <Github className="h-4 w-4" /> Source
                     </a>
                   )}
                   {p.links.demo !== '#' && (
-                    <a href={p.links.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-grid px-3.5 py-2 text-sm text-text transition hover:border-muted">
+                    <a href={p.links.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-grid px-3.5 py-2 text-sm text-text transition hover:border-muted pointer-coarse:py-3">
                       <ExternalLink className="h-4 w-4" /> Demo
                     </a>
                   )}

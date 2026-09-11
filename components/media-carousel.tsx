@@ -129,7 +129,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                 whileHover={{ scale: 1.1, x: -4 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={goToPrevious}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-coarse:p-3 pointer-coarse:opacity-100"
                 title="Previous media"
               >
                 <ChevronLeft className="w-5 h-5 text-white" />
@@ -139,7 +139,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                 whileHover={{ scale: 1.1, x: 4 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={goToNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-coarse:p-3 pointer-coarse:opacity-100"
                 title="Next media"
               >
                 <ChevronRight className="w-5 h-5 text-white" />
@@ -153,7 +153,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsMuted(!isMuted)}
-              className="absolute bottom-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
+              className="absolute bottom-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 pointer-coarse:p-3.5"
               title={isMuted ? 'Unmute' : 'Mute'}
             >
               {isMuted ? (

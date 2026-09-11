@@ -6,7 +6,7 @@ import { ZONES } from '@/lib/mission/zones'
 export function ZoneNav() {
   const active = useMission((s) => s.zone)
   return (
-    <nav aria-label="Zones" className="pointer-events-auto absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col gap-3 md:flex">
+    <nav aria-label="Zones" className="pointer-events-auto absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col gap-3 md:flex pointer-coarse:gap-0 phone:hidden">
       {ZONES.map((z) => {
         const isActive = z.index === active
         return (
@@ -16,7 +16,7 @@ export function ZoneNav() {
             aria-current={isActive ? 'true' : undefined}
             aria-label={`${z.label} ${z.title}`}
             onClick={() => document.getElementById(z.id)?.scrollIntoView({ behavior: 'smooth' })}
-            className="group flex items-center justify-end gap-3 py-1"
+            className="group flex items-center justify-end gap-3 py-1 pointer-coarse:min-h-11 pointer-coarse:min-w-11"
           >
             <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[0.625rem] tracking-[0.14em] text-muted opacity-0 transition-all duration-300 group-hover:max-w-40 group-hover:opacity-100 group-focus-visible:max-w-40 group-focus-visible:opacity-100">
               {z.label} · {z.title.toUpperCase()}

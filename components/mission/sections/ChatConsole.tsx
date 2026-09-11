@@ -79,7 +79,7 @@ export function ChatConsole({ className = '' }: { className?: string }) {
                 <Bot className="h-3 w-3" />
               </span>
             )}
-            <div className={`max-w-[82%] rounded-md px-3 py-2 font-mono text-xs leading-relaxed ${m.role === 'user' ? 'bg-accent/15 text-accent' : 'bg-panel text-text'}`}>{m.content}</div>
+            <div className={`max-w-[82%] rounded-md px-3 py-2 font-mono text-xs leading-relaxed phone:text-sm ${m.role === 'user' ? 'bg-accent/15 text-accent' : 'bg-panel text-text'}`}>{m.content}</div>
             {m.role === 'user' && (
               <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-panel-2 text-muted">
                 <User className="h-3 w-3" />
@@ -105,9 +105,10 @@ export function ChatConsole({ className = '' }: { className?: string }) {
           placeholder={loading ? site.chat.waiting : site.chat.placeholder}
           disabled={loading}
           aria-label="Message the assistant"
-          className="flex-1 rounded-md border border-grid bg-panel px-3 py-2 font-mono text-xs text-text placeholder:text-muted/70 focus:border-accent focus:outline-none disabled:opacity-50"
+          // 16px on touch screens: iOS Safari zooms the whole page when a field under 16px takes focus
+          className="min-w-0 flex-1 rounded-md border border-grid bg-panel px-3 py-2 font-mono text-xs text-text placeholder:text-muted/70 focus:border-accent focus:outline-none disabled:opacity-50 pointer-coarse:py-2.5 pointer-coarse:text-base"
         />
-        <button type="submit" disabled={!input.trim() || loading} aria-label="Send" className="grid h-9 w-10 place-items-center rounded-md bg-accent text-[#141414] disabled:cursor-not-allowed disabled:opacity-40">
+        <button type="submit" disabled={!input.trim() || loading} aria-label="Send" className="grid h-9 w-10 shrink-0 place-items-center rounded-md bg-accent text-[#141414] disabled:cursor-not-allowed disabled:opacity-40 pointer-coarse:size-11">
           <Send className="h-4 w-4" />
         </button>
       </form>

@@ -27,12 +27,14 @@ export function CredentialsSection() {
       <div className="beat-stack">
         {credentialGroups.map((g, i) => (
           <Panel key={g.id} className="beat" style={{ '--i': i } as React.CSSProperties}>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
               <div className="flex items-center gap-2">
                 <IconByName name={g.icon} className="h-4 w-4 text-accent" />
                 <h3 className="text-lg font-semibold text-text">{g.title}</h3>
               </div>
-              <span className="font-mono text-[0.6875rem] tracking-[0.12em] text-muted">{g.id.toUpperCase()}_REGISTRY · {g.items.length} ITEMS</span>
+              <span className="font-mono text-[0.6875rem] tracking-[0.12em] text-muted">
+                {g.id.toUpperCase()}_REGISTRY · {g.items.length} {g.items.length === 1 ? 'ITEM' : 'ITEMS'}
+              </span>
             </div>
             <ul className="divide-y divide-grid/70">
               {g.items.map((item) => (
@@ -49,7 +51,7 @@ export function CredentialsSection() {
                     {item.highlights.map((h) => (
                       <Chip key={h}>{h}</Chip>
                     ))}
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex items-center gap-1 font-mono text-[0.6875rem] tracking-[0.1em] text-accent hover:underline">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="-my-3.5 -mr-2 ml-auto inline-flex items-center gap-1 py-3.5 pl-3 pr-2 font-mono text-[0.6875rem] tracking-[0.1em] text-accent hover:underline">
                       OPEN <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>

@@ -50,7 +50,9 @@ function TitleBlock({ p }: { p: Project }) {
 export function ProjectSheet({ project, onClose }: { project: Project | null; onClose: () => void }) {
   return (
     <Dialog open={project !== null} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[92vh] w-[min(68.75rem,96vw)] max-w-[min(68.75rem,96vw)] overflow-y-auto border-grid bg-ground p-0 text-text sm:max-w-[min(68.75rem,96vw)] sm:rounded-lg">
+      {/* minmax(0,1fr): DialogContent is a grid, and an auto track won't shrink below its widest
+          unbreakable label, which pushed the sheet 28px past a phone's edge */}
+      <DialogContent className="max-h-[92vh] w-[min(68.75rem,96vw)] max-w-[min(68.75rem,96vw)] grid-cols-[minmax(0,1fr)] overflow-y-auto border-grid bg-ground p-0 text-text sm:max-w-[min(68.75rem,96vw)] sm:rounded-lg">
         {project && (
           <div className="p-6 sm:p-10">
             <DialogTitle className="sr-only">{project.title}</DialogTitle>
@@ -156,12 +158,12 @@ export function ProjectSheet({ project, onClose }: { project: Project | null; on
 
             <div className="mt-8 flex flex-wrap gap-3 border-t border-grid pt-6">
               {project.links.github !== '#' && (
-                <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-grid px-4 py-2 text-sm text-text transition hover:border-muted">
+                <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-grid px-4 py-2 text-sm text-text transition hover:border-muted pointer-coarse:py-3">
                   <Github className="h-4 w-4" /> View Source Code
                 </a>
               )}
               {project.links.demo !== '#' && (
-                <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-[#141414]">
+                <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-[#141414] pointer-coarse:py-3">
                   <ExternalLink className="h-4 w-4" /> Live Demo
                 </a>
               )}

@@ -38,15 +38,16 @@ export function HeroSection() {
       <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-muted sm:text-lg">{site.tagline}</p>
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#projects" className="group inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-[#141414] transition hover:brightness-110">
+        <a href="#projects" className="group inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-[#141414] transition hover:brightness-110 pointer-coarse:py-3">
           {site.ctas.projects}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </a>
-        <a href="#contact" className="inline-flex items-center gap-2 rounded-md border border-grid px-5 py-2.5 text-sm font-medium text-text transition hover:border-muted">
+        <a href="#contact" className="inline-flex items-center gap-2 rounded-md border border-grid px-5 py-2.5 text-sm font-medium text-text transition hover:border-muted pointer-coarse:py-3">
           {site.ctas.contact}
           <Mail className="h-4 w-4" />
         </a>
-        <div className="ml-2 flex items-center gap-4">
+        {/* 44px touch boxes on touch screens; on a phone the row wraps, and -ml-3 puts the first glyph back under the buttons' edge */}
+        <div className="ml-2 flex items-center gap-4 pointer-coarse:gap-0 max-md:-ml-3">
           {site.socials.map((s) => (
             <a
               key={s.label}
@@ -54,7 +55,7 @@ export function HeroSection() {
               target={s.href.startsWith('http') ? '_blank' : undefined}
               rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
               aria-label={s.label}
-              className="text-muted transition-colors hover:text-accent"
+              className="text-muted transition-colors hover:text-accent pointer-coarse:grid pointer-coarse:size-11 pointer-coarse:place-items-center"
             >
               <IconByName name={s.icon} className="h-5 w-5" />
             </a>

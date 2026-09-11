@@ -9,7 +9,7 @@ import { ChatConsole } from './ChatConsole'
 
 export function DockSection() {
   return (
-    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-20 sm:px-10 lg:grid-cols-2 lg:pb-[var(--hud-bottom)]">
+    <div className="mx-auto grid h-full max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-8 px-6 py-20 sm:px-10 lg:grid-cols-2 lg:pb-[var(--hud-bottom)]">
       <div className="space-y-6">
         <div className="beat-acc" style={{ '--i': 0 } as React.CSSProperties}>
           <Eyebrow>ZONE 06 · {site.sections.contact.eyebrow}</Eyebrow>
@@ -17,7 +17,7 @@ export function DockSection() {
           <div className="mt-4 font-mono text-[0.6875rem] tracking-[0.14em] text-accent">LOOP CLOSED · MISSION COMPLETE · 100% MAPPED</div>
         </div>
 
-        <Panel className="beat-acc font-mono text-[0.8125rem] leading-6" style={{ '--i': 1 } as React.CSSProperties}>
+        <Panel className="beat-acc font-mono text-[0.8125rem] leading-6 wrap-anywhere" style={{ '--i': 1 } as React.CSSProperties}>
           <div className="mb-3 text-muted">{site.sections.contact.welcome}</div>
           <ol className="space-y-3">
             {contactCommands.map((c) => (
@@ -25,7 +25,7 @@ export function DockSection() {
                 <div className="text-muted">
                   <span className="text-accent">adyansh@portfolio</span>:<span className="text-accent">~</span>$ <span className="text-text">{c.command}</span>
                 </div>
-                <a href={c.link} target="_blank" rel="noopener noreferrer" className="ml-4 inline-flex items-center gap-2 text-accent hover:underline">
+                <a href={c.link} target="_blank" rel="noopener noreferrer" className="-my-2.5 ml-4 inline-flex items-center gap-2 py-2.5 text-accent hover:underline">
                   <ChevronRight className="h-3 w-3" />
                   <IconByName name={c.icon} className="h-3.5 w-3.5" />
                   {c.output}
