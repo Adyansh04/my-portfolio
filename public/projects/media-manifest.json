@@ -213,6 +213,44 @@
       }
     ]
   },
+  "grove-g1": {
+    "project": "grove-g1",
+    "total": 4,
+    "media": [
+      {
+        "type": "video",
+        "src": "/my-portfolio/projects/grove-g1/00-pick-and-place-mission.mp4",
+        "alt": "Pick And Place Mission",
+        "title": "Pick And Place Mission",
+        "filename": "00-pick-and-place-mission.mp4",
+        "size": 12246214
+      },
+      {
+        "type": "video",
+        "src": "/my-portfolio/projects/grove-g1/01-nav2-navigation.mp4",
+        "alt": "Nav2 Navigation",
+        "title": "Nav2 Navigation",
+        "filename": "01-nav2-navigation.mp4",
+        "size": 5919443
+      },
+      {
+        "type": "video",
+        "src": "/my-portfolio/projects/grove-g1/02-moveit-dual-arm-planning.mp4",
+        "alt": "Moveit Dual Arm Planning",
+        "title": "Moveit Dual Arm Planning",
+        "filename": "02-moveit-dual-arm-planning.mp4",
+        "size": 3052269
+      },
+      {
+        "type": "image",
+        "src": "/my-portfolio/projects/grove-g1/03-architecture.svg",
+        "alt": "Architecture",
+        "title": "Architecture",
+        "filename": "03-architecture.svg",
+        "size": 21098
+      }
+    ]
+  },
   "kiwi-drive": {
     "project": "kiwi-drive",
     "total": 1,

@@ -6,6 +6,84 @@ import type { Project } from './types';
 
 export const projects: Project[] = [
   {
+    "id": 11,
+    "title": "Grove-G1: Humanoid Autonomy Stack (Unitree G1)",
+    "description": "An autonomy stack for the Unitree G1 humanoid, built on ROS 2 Jazzy and developed simulation-first against unitree_mujoco. The robot maps a facility with SLAM Toolbox, localizes against the saved map, and drives itself to a goal under Nav2, while its own learned locomotion policy keeps it balanced by commanding all 29 body motors, with no onboard controller underneath. MoveIt plans for either arm or both against a live LiDAR octomap, and a BehaviorTree.CPP mission picks a cube up at one workbench, carries it across the building and puts it down on another.",
+    "venue": "Personal Project",
+    "year": "2026",
+    "award": null,
+    "tags": [
+      "ROS2 Jazzy",
+      "Nav2",
+      "MoveIt2",
+      "SLAM Toolbox",
+      "BehaviorTree.CPP",
+      "GR00T N1.7"
+    ],
+    "links": {
+      "github": "https://github.com/Adyansh04/grove-g1",
+      "demo": "#"
+    },
+    "details": {
+      "approach": [
+        "Simulation-first in unitree_mujoco, which speaks the real robot's DDS channels, so hardware is a domain-ID change",
+        "A ros2_control hardware interface is the only writer on rt/lowcmd: all 29 body motors at 200 Hz",
+        "A learned locomotion policy at 50 Hz claims the legs and waist, and takes Nav2's /cmd_vel directly",
+        "The 14 arm joints stay on a JointTrajectoryController, so MoveIt executes while the policy balances",
+        "SLAM Toolbox maps, AMCL localizes, and FAST-LIO2 on the Mid360 provides odometry for hardware",
+        "A BehaviorTree.CPP mission sequences navigate, approach, pick, carry and place"
+      ],
+      "challenges": [
+        {
+          "title": "Nav2 stops short of the arm's reach",
+          "problem": "Nav2 parks within 0.5 m of a goal, but the arm's usable window is only about 0.2 m wide.",
+          "solution": "A base-approach skill walks the last half metre under closed-loop control against the measured object rather than the map, and the mission tree runs it after navigation, never alongside it."
+        },
+        {
+          "title": "No controller underneath to catch a fall",
+          "problem": "Commanding rt/lowcmd means owning balance, and any joint no controller claims is left unpowered.",
+          "solution": "Exactly one writer on the channel, with control-mode ownership made explicit through ros2_control: the policy claims the 12 leg joints and the waist, and the arms stay free for MoveIt."
+        },
+        {
+          "title": "A learned policy behind a safety gate",
+          "problem": "A vision-language-action policy proposes joint targets with no idea what is in the way.",
+          "solution": "Every action chunk is checked against MoveIt's live planning scene and refused before the arm moves. The pipeline runs end to end with a 3B model; the base checkpoint still needs fine-tuning on demonstrations from this robot to grasp."
+        }
+      ],
+      "fullDescription": "Grove-G1 is an autonomy stack for the Unitree G1 humanoid on ROS 2 Jazzy, developed simulation-first against unitree_mujoco. Because the simulator speaks the same DDS channels as the real robot, the hardware interface, the navigation stack and the control-authority logic carry over without code changes: moving to the physical G1 is a domain-ID and interface change, not a rewrite. Balance is the stack's own job. MotionSwitcherClient releases the onboard mode, a ros2_control hardware interface becomes the only writer on rt/lowcmd for all 29 body motors at 200 Hz, and a learned locomotion policy running at 50 Hz inside a ros2_control controller claims the 12 leg joints plus waist roll and pitch. The 14 arm joints stay on an ordinary JointTrajectoryController, so MoveIt executes while the policy keeps the robot up. MoveIt plans for either arm or both together, collision-checked against a live octomap built from the LiDAR, and each Dex3-1 hand is its own planning group with open and closed postures. SLAM Toolbox maps the facility, AMCL localizes against the saved map, and Nav2 drives to goals, its /cmd_vel consumed directly by the policy. For hardware, FAST-LIO2 on the Mid360 provides odometry; in simulation it tracks ground truth to about 10 cm over a 21 m walk. Pick and place are served as actions, and a BehaviorTree.CPP tree, editable in Groot2, sequences them with navigation into a mission that drives to a workbench, walks the last half metre under closed-loop control, picks a cube up, carries it across the building and puts it down on a bench. On top of that, a vision-language-action policy proposes joint targets and every chunk is checked against the planning scene before it runs. The pipeline works end to end; the pretrained policy reaches toward the cube but does not grasp it reliably, which needs fine-tuning on demonstrations from this robot.",
+      "techStack": [
+        "ROS 2 Jazzy, C++20 & ros2_control",
+        "unitree_mujoco & unitree_sdk2 (DDS)",
+        "Nav2, SLAM Toolbox & AMCL",
+        "MoveIt 2 with a LiDAR octomap",
+        "BehaviorTree.CPP & Groot2",
+        "FAST-LIO2 on the Livox Mid360",
+        "GR00T N1.7 behind a planning-scene gate"
+      ],
+      "mediaFolder": "grove-g1"
+    },
+    "gist": "A Unitree G1 humanoid that keeps its own balance while it maps, navigates, and carries things across a building.",
+    "points": [
+      "A learned 50 Hz walking policy owns all 29 motors, with no onboard controller underneath",
+      "Nav2 drives it between rooms; MoveIt plans both arms against a live LiDAR octomap",
+      "A behaviour tree runs pick, carry and place end to end in simulation"
+    ],
+    "metrics": [
+      {
+        "value": "29",
+        "label": "motors under its own policy"
+      },
+      {
+        "value": "50 Hz",
+        "label": "learned balance"
+      },
+      {
+        "value": "~10 cm",
+        "label": "LIO drift over 21 m"
+      }
+    ]
+  },
+  {
     "id": 1,
     "title": "Go2 Autonomous Inspection (Unitree Go2)",
     "description": "A simulation-first ROS2 stack that lets a Unitree Go2 quadruped autonomously inspect an unknown facility — driven end-to-end by plain-English commands. The robot maps the area on its own, splits it into rooms (\"zones\"), then walks each zone and reports what it sees using an open-vocabulary camera detector, all triggered through an MCP server bridged to Claude.",
