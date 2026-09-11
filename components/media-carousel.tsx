@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
 
@@ -16,9 +16,11 @@ interface MediaItem {
 interface MediaCarouselProps {
   project: string;
   primaryColor?: string;
+  /** shown above the gallery, and only when there is media to show */
+  title?: ReactNode;
 }
 
-export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarouselProps) {
+export function MediaCarousel({ project, primaryColor = '#00ffff', title }: MediaCarouselProps) {
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,9 +34,8 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
         const response = await fetch(`/my-portfolio/projects/media-manifest.json`);
         if (!response.ok) throw new Error('Failed to fetch media');
         const manifest = await response.json();
-        const data = manifest[project];
-        if (!data) throw new Error('Project not found in manifest');
-        setMedia(data.media);
+        // a project with no media folder yet is simply not in the manifest: nothing to show, not an error
+        setMedia(manifest[project]?.media ?? []);
         setError(null);
       } catch (err) {
         console.error('[v0] Error fetching media:', err);
@@ -61,10 +62,12 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
     );
   }
 
-  if (error || media.length === 0) {
+  if (!error && media.length === 0) return null;
+
+  if (error) {
     return (
       <div className="aspect-video rounded-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 flex items-center justify-center">
-        <span className="text-white/40 text-sm">{error || 'No media files found'}</span>
+        <span className="text-white/40 text-sm">{error}</span>
       </div>
     );
   }
@@ -86,6 +89,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
 
   return (
     <div className="space-y-4">
+      {title}
       {/* Media Display Container */}
       <div className="relative group">
         <div className="flex items-center justify-center rounded-xl overflow-hidden bg-gradient-to-br from-black/50 to-black/30 border border-white/10">
@@ -114,6 +118,8 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                   controls
                   muted={isMuted}
                   autoPlay
+                  loop
+                  playsInline
                   controlsList="nodownload"
                 />
               )}
@@ -127,7 +133,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                 whileHover={{ scale: 1.1, x: -4 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={goToPrevious}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-coarse:p-3 pointer-coarse:opacity-100"
                 title="Previous media"
               >
                 <ChevronLeft className="w-5 h-5 text-white" />
@@ -137,7 +143,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                 whileHover={{ scale: 1.1, x: 4 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={goToNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-coarse:p-3 pointer-coarse:opacity-100"
                 title="Next media"
               >
                 <ChevronRight className="w-5 h-5 text-white" />
@@ -151,7 +157,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsMuted(!isMuted)}
-              className="absolute bottom-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
+              className="absolute bottom-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10 pointer-coarse:p-3.5"
               title={isMuted ? 'Unmute' : 'Mute'}
             >
               {isMuted ? (
@@ -163,14 +169,14 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
           )}
 
           {/* Media Counter */}
-          <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10">
+          <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 border border-white/10">
             <span className="text-white/60 text-sm font-mono">
               {currentIndex + 1} / {media.length}
             </span>
           </div>
 
           {/* Media Type Badge */}
-          <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/10">
+          <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-white/10">
             <span className="text-white/60 text-xs font-mono uppercase tracking-wider">
               {currentItem.type}
             </span>
@@ -203,10 +209,14 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
                 />
               ) : (
                 <>
+                  {/* a still first frame for the strip; the GIFs that used to animate here are
+                      videos now, and a thumbnail that plays is just wasted decode */}
                   <video
                     src={item.src}
                     className="w-full h-full object-cover"
                     muted
+                    playsInline
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                     <div className="w-3 h-3 rounded-full bg-white/60" />

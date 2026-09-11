@@ -13,3 +13,12 @@ __v0_jsx-dev-runtime.ts
 node_modules
 .next/
 .DS_Store
+# raw robot meshes downloaded by scripts/models/fetch.mjs (converted GLBs live in public/models)
+assets-src/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# static export: the deploy workflow rebuilds it and uploads its own copy, so a committed one is
+# never used and stores every video in public/projects a second time
+out/

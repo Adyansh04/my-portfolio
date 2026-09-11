@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import { motion, useReducedMotion } from "framer-motion"
-import { useColorTheme } from "@/components/color-theme-provider"
+import { GLYPH_COLORS } from "./colors"
 import { cn } from "@/lib/utils"
 
 /**
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
  * dark). Recolors with theme.
  */
 export function KiwiDriveSvg({ className }: { className?: string }) {
-  const { colors } = useColorTheme()
+  const colors = GLYPH_COLORS
   const reduce = useReducedMotion()
   const accent = colors.primary
   const rgb = colors.primaryRgb

@@ -1,0 +1,464 @@
+[
+ {
+  "link": "head_pitch_link",
+  "faces": 5580,
+  "bytes": 101736,
+  "extents": [
+   0.112,
+   0.08,
+   0.158
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "head_yaw_link",
+  "faces": 68969,
+  "bytes": 1363980,
+  "extents": [
+   0.154,
+   0.126,
+   0.167
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "imu_in_pelvis_link",
+  "faces": 2108,
+  "bytes": 39676,
+  "extents": [
+   0.007,
+   0.041,
+   0.038
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_a_link",
+  "faces": 626,
+  "bytes": 12680,
+  "extents": [
+   0.017,
+   0.044,
+   0.044
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_a_rod_link",
+  "faces": 2218,
+  "bytes": 41332,
+  "extents": [
+   0.006,
+   0.01,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_b_link",
+  "faces": 626,
+  "bytes": 12680,
+  "extents": [
+   0.017,
+   0.044,
+   0.044
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_b_rod_link",
+  "faces": 2218,
+  "bytes": 41336,
+  "extents": [
+   0.006,
+   0.01,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_constraint_a_link",
+  "faces": 2218,
+  "bytes": 41360,
+  "extents": [
+   0.01,
+   0.006,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_constraint_b_link",
+  "faces": 2218,
+  "bytes": 41360,
+  "extents": [
+   0.01,
+   0.006,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_pitch_link",
+  "faces": 600,
+  "bytes": 12200,
+  "extents": [
+   0.039,
+   0.012,
+   0.034
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_ankle_roll_link",
+  "faces": 17520,
+  "bytes": 316812,
+  "extents": [
+   0.189,
+   0.072,
+   0.049
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_elbow_link",
+  "faces": 7466,
+  "bytes": 136152,
+  "extents": [
+   0.15,
+   0.08,
+   0.085
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hip_pitch_link",
+  "faces": 10760,
+  "bytes": 195152,
+  "extents": [
+   0.07,
+   0.089,
+   0.125
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hip_roll_link",
+  "faces": 9930,
+  "bytes": 180064,
+  "extents": [
+   0.087,
+   0.091,
+   0.103
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_hip_yaw_link",
+  "faces": 17460,
+  "bytes": 316500,
+  "extents": [
+   0.11,
+   0.097,
+   0.199
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_knee_collision",
+  "faces": 1264,
+  "bytes": 23776,
+  "extents": [
+   0.102,
+   0.077,
+   0.265
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_knee_link",
+  "faces": 17972,
+  "bytes": 325044,
+  "extents": [
+   0.111,
+   0.077,
+   0.36
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_shoulder_pitch_link",
+  "faces": 8400,
+  "bytes": 152584,
+  "extents": [
+   0.073,
+   0.087,
+   0.106
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_shoulder_roll_link",
+  "faces": 10856,
+  "bytes": 196764,
+  "extents": [
+   0.096,
+   0.078,
+   0.147
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_shoulder_yaw_link",
+  "faces": 12990,
+  "bytes": 235316,
+  "extents": [
+   0.09,
+   0.078,
+   0.125
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "left_wrist_roll_link",
+  "faces": 17618,
+  "bytes": 318732,
+  "extents": [
+   0.145,
+   0.076,
+   0.071
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "pelvis_link",
+  "faces": 38231,
+  "bytes": 685664,
+  "extents": [
+   0.118,
+   0.168,
+   0.164
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_a_link",
+  "faces": 626,
+  "bytes": 12684,
+  "extents": [
+   0.017,
+   0.044,
+   0.044
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_a_rod_link",
+  "faces": 2218,
+  "bytes": 41340,
+  "extents": [
+   0.006,
+   0.01,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_b_link",
+  "faces": 626,
+  "bytes": 12684,
+  "extents": [
+   0.017,
+   0.044,
+   0.044
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_b_rod_link",
+  "faces": 2218,
+  "bytes": 41340,
+  "extents": [
+   0.006,
+   0.01,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_constraint_a_link",
+  "faces": 2218,
+  "bytes": 41368,
+  "extents": [
+   0.01,
+   0.006,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_constraint_b_link",
+  "faces": 2218,
+  "bytes": 41364,
+  "extents": [
+   0.01,
+   0.006,
+   0.01
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_pitch_link",
+  "faces": 600,
+  "bytes": 12204,
+  "extents": [
+   0.039,
+   0.012,
+   0.034
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_ankle_roll_link",
+  "faces": 17490,
+  "bytes": 316276,
+  "extents": [
+   0.189,
+   0.072,
+   0.049
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_elbow_link",
+  "faces": 7216,
+  "bytes": 131776,
+  "extents": [
+   0.15,
+   0.08,
+   0.085
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hip_pitch_link",
+  "faces": 10790,
+  "bytes": 195720,
+  "extents": [
+   0.07,
+   0.089,
+   0.125
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hip_roll_link",
+  "faces": 9976,
+  "bytes": 180908,
+  "extents": [
+   0.087,
+   0.091,
+   0.103
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_hip_yaw_link",
+  "faces": 17286,
+  "bytes": 313048,
+  "extents": [
+   0.11,
+   0.097,
+   0.199
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_knee_collision",
+  "faces": 1272,
+  "bytes": 23924,
+  "extents": [
+   0.102,
+   0.077,
+   0.265
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_knee_link",
+  "faces": 17998,
+  "bytes": 325516,
+  "extents": [
+   0.11,
+   0.077,
+   0.36
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_shoulder_pitch_link",
+  "faces": 8390,
+  "bytes": 152412,
+  "extents": [
+   0.073,
+   0.087,
+   0.106
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_shoulder_roll_link",
+  "faces": 10699,
+  "bytes": 194236,
+  "extents": [
+   0.096,
+   0.078,
+   0.147
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_shoulder_yaw_link",
+  "faces": 12954,
+  "bytes": 235524,
+  "extents": [
+   0.09,
+   0.078,
+   0.125
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "right_wrist_roll_link",
+  "faces": 17634,
+  "bytes": 319000,
+  "extents": [
+   0.145,
+   0.076,
+   0.071
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "waist_roll_link",
+  "faces": 7330,
+  "bytes": 133420,
+  "extents": [
+   0.066,
+   0.084,
+   0.091
+  ],
+  "scale": 1.0
+ },
+ {
+  "link": "waist_yaw_link",
+  "faces": 41656,
+  "bytes": 762260,
+  "extents": [
+   0.169,
+   0.201,
+   0.294
+  ],
+  "scale": 1.0
+ }
+]

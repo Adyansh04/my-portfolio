@@ -1,60 +1,40 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import { CSPostHogProvider } from './providers'
+import { Big_Shoulders, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import Script from 'next/script'
+import { CSPostHogProvider } from './providers'
+import { site } from '@/content/site'
+import { asset } from '@/lib/base-path'
+import { STATIC_MODE_SCRIPT } from '@/lib/mission/static-mode-script'
 import './globals.css'
 
-const spaceGrotesk = Space_Grotesk({ 
-  subsets: ["latin"],
-  variable: '--font-sans'
-});
-
-const jetbrainsMono = JetBrains_Mono({ 
-  subsets: ["latin"],
-  variable: '--font-mono'
-});
+const display = Big_Shoulders({ subsets: ['latin'], axes: ['opsz'], variable: '--font-display', display: 'swap' })
+const sans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-sans', display: 'swap' })
+const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' })
 
 export const metadata: Metadata = {
-  title: 'Adyansh Gupta | Robotics Engineer',
-  description: 'Robotics Engineer specializing in Perception, Navigation & Sensor Fusion for Autonomous Mobile Robots',
-  generator: 'v0.app',
+  title: site.metaTitle,
+  description: site.metaDescription,
+  // metadata URLs don't get basePath either; without asset() these pointed at the domain root and 404'd on Pages
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      { url: asset('/icon-light-32x32.png'), media: '(prefers-color-scheme: light)' },
+      { url: asset('/icon-dark-32x32.png'), media: '(prefers-color-scheme: dark)' },
+      { url: asset('/icon.svg'), type: 'image/svg+xml' },
     ],
-    apple: '/apple-icon.png',
+    apple: asset('/apple-icon.png'),
   },
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="bg-[#09090B]">
-      <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <CSPostHogProvider>
-          {children}
-        </CSPostHogProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
-        <Script 
-          defer 
-          src="https://cloud.umami.is/script.js" 
-          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-        />
+    // suppressHydrationWarning: the head script below stamps data-static on <html> before React hydrates
+    <html lang="en" className={`dark ${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: STATIC_MODE_SCRIPT }} />
+      </head>
+      <body className="font-sans antialiased">
+        <CSPostHogProvider>{children}</CSPostHogProvider>
+        <Script defer src="https://cloud.umami.is/script.js" data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID} />
       </body>
     </html>
   )

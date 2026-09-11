@@ -12,11 +12,13 @@ import { KiwiDriveSvg } from "./kiwi-drive"
 import { VanguardSvg } from "./vanguard"
 import { AgroBotSvg } from "./agrobot"
 import { DroneSystemsSvg } from "./drone-systems"
+import { GroveG1Svg } from "./grove-g1"
 
 type GlyphComponent = ComponentType<{ className?: string }>
 
 /** Maps a project's mediaFolder to its animated SVG line-art glyph. */
-const GLYPHS: Record<string, GlyphComponent> = {
+export const GLYPHS: Record<string, GlyphComponent> = {
+  "grove-g1": GroveG1Svg,
   "go2-inspection": Go2Svg,
   whycode: WhyCodeSvg,
   "ai-robotics": AiRoboticsSvg,

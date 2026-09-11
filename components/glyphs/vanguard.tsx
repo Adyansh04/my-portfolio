@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import { motion, useReducedMotion } from "framer-motion"
-import { useColorTheme } from "@/components/color-theme-provider"
+import { GLYPH_COLORS } from "./colors"
 import { cn } from "@/lib/utils"
 
 /**
@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
  * Drawn ONLY in the live accent color (plus transparent / dark). Recolors with theme.
  */
 export function VanguardSvg({ className }: { className?: string }) {
-  const { colors } = useColorTheme()
+  const colors = GLYPH_COLORS
   const reduce = useReducedMotion()
   const accent = colors.primary
   const rgb = colors.primaryRgb
@@ -258,7 +258,7 @@ export function VanguardSvg({ className }: { className?: string }) {
 
         {/* === WATCHTOWER CAMERA FOV CONE (sweeps back and forth) === */}
         {reduce ? (
-          <g style={{ originX: `${cam.x}px`, originY: `${cam.y}px` }}>
+          <g style={{ transformOrigin: `${cam.x}px ${cam.y}px` }}>
             <path
               d={`M${cam.x},${cam.y} L${cam.x - fovHalf - fovLen * 0.35},${cam.y + fovLen} L${cam.x - fovLen * 0.35 + fovHalf},${cam.y + fovLen} Z`}
               fill="url(#vgd-fov)"

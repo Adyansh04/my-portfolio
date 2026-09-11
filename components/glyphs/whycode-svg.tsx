@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useState } from "react"
 import { useReducedMotion } from "framer-motion"
-import { useColorTheme } from "@/components/color-theme-provider"
+import { GLYPH_COLORS } from "./colors"
 
 type Marker = {
   id: string
@@ -26,7 +26,7 @@ const VH = 300
 const CYCLE = MARKERS.length // logical units, one per marker
 
 export function WhyCodeSvg({ className }: { className?: string }) {
-  const { colors } = useColorTheme()
+  const colors = GLYPH_COLORS
   const reduced = useReducedMotion()
   const uid = useId().replace(/[:]/g, "")
 
