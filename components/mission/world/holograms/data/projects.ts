@@ -57,6 +57,10 @@ function ring(rx: number, rz: number, n = 24, cx = 0, cz = 0): XZ[] {
   })
 }
 
+/** For a project added without a design of its own: the orbiting-data stage (it needs nothing but
+ *  colours) under a title card. Add an entry to SLAB_DESIGNS and STAGE_FOR to give it hardware. */
+export const DEFAULT_DESIGN: SlabDesign = { accent: SKY, data: CYAN, runs: [], path: [], pins: [] }
+
 export const SLAB_DESIGNS: Record<string, SlabDesign> = {
   // an unknown facility, mapped and swept room by room
   // Two bays off a corridor. Fewer, larger rooms than the poster's seven: the robot has to be big

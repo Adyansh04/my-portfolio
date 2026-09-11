@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
 
@@ -16,9 +16,11 @@ interface MediaItem {
 interface MediaCarouselProps {
   project: string;
   primaryColor?: string;
+  /** shown above the gallery, and only when there is media to show */
+  title?: ReactNode;
 }
 
-export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarouselProps) {
+export function MediaCarousel({ project, primaryColor = '#00ffff', title }: MediaCarouselProps) {
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,9 +34,8 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
         const response = await fetch(`/my-portfolio/projects/media-manifest.json`);
         if (!response.ok) throw new Error('Failed to fetch media');
         const manifest = await response.json();
-        const data = manifest[project];
-        if (!data) throw new Error('Project not found in manifest');
-        setMedia(data.media);
+        // a project with no media folder yet is simply not in the manifest: nothing to show, not an error
+        setMedia(manifest[project]?.media ?? []);
         setError(null);
       } catch (err) {
         console.error('[v0] Error fetching media:', err);
@@ -61,10 +62,12 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
     );
   }
 
-  if (error || media.length === 0) {
+  if (!error && media.length === 0) return null;
+
+  if (error) {
     return (
       <div className="aspect-video rounded-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 flex items-center justify-center">
-        <span className="text-white/40 text-sm">{error || 'No media files found'}</span>
+        <span className="text-white/40 text-sm">{error}</span>
       </div>
     );
   }
@@ -86,6 +89,7 @@ export function MediaCarousel({ project, primaryColor = '#00ffff' }: MediaCarous
 
   return (
     <div className="space-y-4">
+      {title}
       {/* Media Display Container */}
       <div className="relative group">
         <div className="flex items-center justify-center rounded-xl overflow-hidden bg-gradient-to-br from-black/50 to-black/30 border border-white/10">

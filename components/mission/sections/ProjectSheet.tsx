@@ -3,7 +3,7 @@
 import { ExternalLink, Github } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { MediaCarousel } from '@/components/media-carousel'
-import { ProjectGlyph } from '@/components/glyphs'
+import { GLYPHS, ProjectGlyph } from '@/components/glyphs'
 import { projects } from '@/content/projects'
 import type { Project } from '@/content/types'
 import { Chip } from '../ui/Chip'
@@ -67,10 +67,12 @@ export function ProjectSheet({ project, onClose }: { project: Project | null; on
                   ))}
                 </div>
               </div>
-              {/* the project's line-art glyph, kept from the previous site */}
-              <div className="relative aspect-[4/3] overflow-hidden rounded-md border border-grid bg-panel">
-                <ProjectGlyph folder={project.details.mediaFolder} />
-              </div>
+              {/* the project's line-art glyph, kept from the previous site; a new project may not have one yet */}
+              {GLYPHS[project.details.mediaFolder] && (
+                <div className="relative aspect-[4/3] overflow-hidden rounded-md border border-grid bg-panel">
+                  <ProjectGlyph folder={project.details.mediaFolder} />
+                </div>
+              )}
             </div>
 
             {/* The numbers first: someone who opens a sheet wants to know what it achieved before
@@ -139,8 +141,7 @@ export function ProjectSheet({ project, onClose }: { project: Project | null; on
             </section>
 
             <section className="mt-8">
-              <h3 className="eyebrow mb-3">Media gallery</h3>
-              <MediaCarousel project={project.details.mediaFolder} primaryColor={ACCENT} />
+              <MediaCarousel project={project.details.mediaFolder} primaryColor={ACCENT} title={<h3 className="eyebrow mb-3">Media gallery</h3>} />
             </section>
 
             {/* Nothing was thrown away — the original write-up is here for anyone who wants it. */}

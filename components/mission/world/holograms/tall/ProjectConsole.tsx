@@ -38,7 +38,8 @@ export function ProjectConsole({ design, projectKey }: { design: SlabDesign; pro
   const near = useNear()
   const root = useRef<THREE.Group>(null)
   const texture = useGlyphTexture(projectKey, root, CANVAS_W, CANVAS_H)
-  const Stage = STAGES[STAGE_FOR[projectKey] ?? 'patrol']
+  // orbit, not patrol: patrol and rows need per-project TRAFFIC clearances that a new project lacks
+  const Stage = STAGES[STAGE_FOR[projectKey] ?? 'orbit']
 
   /* ---------------- the gantry that holds the panel ---------------- */
   const gantry = useMemo(() => {

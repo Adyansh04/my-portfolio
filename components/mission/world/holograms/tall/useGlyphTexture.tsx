@@ -5,6 +5,8 @@ import { createRoot } from 'react-dom/client'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { GLYPHS } from '@/components/glyphs'
+import { projects } from '@/content/projects'
+import type { Project } from '@/content/types'
 
 /**
  * Puts a project's own animated SVG poster on the console panel.
@@ -98,6 +100,15 @@ export function useGlyphTexture(folder: string, anchor: RefObject<THREE.Object3D
   // whose reconciler has no idea what to do with a <div>. `content-visibility` keeps the browser
   // from laying out and painting a tree that only exists to be read.
   const Glyph = GLYPHS[folder]
+  useEffect(() => {
+    if (Glyph) return
+    const p = projects.find((x) => x.details.mediaFolder === folder)
+    if (!p) return
+    void document.fonts.ready.then(() => {
+      titleCard(ctx, p, W, H)
+      texture.needsUpdate = true
+    })
+  }, [Glyph, folder, ctx, texture, W, H])
   const mountedAt = useRef(0)
   const clock = useRef(0)
   useEffect(() => {
@@ -133,7 +144,8 @@ export function useGlyphTexture(folder: string, anchor: RefObject<THREE.Object3D
       a.getWorldPosition(pos)
       entry.dist = pos.distanceTo(camera.position)
     }
-    entry.want = entry.dist < LIVE_RANGE
+    // a title card is static: it never needs a live host, and must not sit in the priming queue
+    entry.want = !!Glyph && entry.dist < LIVE_RANGE
 
     // arbitration is cheap but pointless every frame, and flapping would remount glyph trees
     if (clock.current - lastGrant.current > 0.3) {
@@ -221,4 +233,36 @@ function paint(ctx: CanvasRenderingContext2D, img: HTMLImageElement, W: number, 
 
   ctx.globalCompositeOperation = 'source-over'
   ctx.globalAlpha = 1
+}
+
+/** A project added without line-art yet: its code, title and tags on the same panel ground, so a
+ *  new entry never puts a blank screen in the hall. */
+function titleCard(ctx: CanvasRenderingContext2D, p: Project, W: number, H: number) {
+  const bg = ctx.createLinearGradient(0, 0, 0, H)
+  bg.addColorStop(0, '#0a1119')
+  bg.addColorStop(1, '#05080e')
+  ctx.fillStyle = bg
+  ctx.fillRect(0, 0, W, H)
+  const x = W * 0.08
+  ctx.textBaseline = 'top'
+  ctx.fillStyle = GLOW
+  ctx.font = `500 ${Math.round(H * 0.05)}px "IBM Plex Mono", ui-monospace, monospace`
+  ctx.fillText(`PRJ-${String(p.id).padStart(3, '0')} · ${p.year}`, x, H * 0.12)
+  ctx.fillStyle = '#e9eef3'
+  const size = Math.round(H * 0.11)
+  ctx.font = `700 ${size}px "Big Shoulders", Impact, sans-serif`
+  let y = H * 0.24
+  let line = ''
+  for (const w of p.title.toUpperCase().split(' ')) {
+    const next = line ? `${line} ${w}` : w
+    if (ctx.measureText(next).width > W - 2 * x && line) {
+      ctx.fillText(line, x, y)
+      y += size * 1.05
+      line = w
+    } else line = next
+  }
+  ctx.fillText(line, x, y)
+  ctx.fillStyle = '#8a94a6'
+  ctx.font = `400 ${Math.round(H * 0.042)}px "IBM Plex Mono", ui-monospace, monospace`
+  ctx.fillText(p.tags.slice(0, 4).join(' · '), x, H * 0.82)
 }
