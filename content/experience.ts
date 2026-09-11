@@ -2,6 +2,9 @@
 // role. The original paragraph is kept in `description`, so nothing was dropped.
 import type { Experience } from './types';
 
+// Newest first: array order is display order, placard order in the corridor, and beat order.
+// To add a role, copy an entry, give it the next free id, and put it where it belongs in time.
+// The corridor, the robot's route and the scroll length all size themselves from this list.
 export const experiences: Experience[] = [
   {
     "id": 6,
@@ -10,6 +13,8 @@ export const experiences: Experience[] = [
     "location": "Aachen, Germany",
     "period": "May 2026 - Present",
     "icon": "Bot",
+    "logo": "robotics-collective.svg",
+    "logoOnDark": true,
     "highlights": [
       {
         "metric": "Unitree R1",
@@ -41,6 +46,7 @@ export const experiences: Experience[] = [
     "location": "Noida, India",
     "period": "April 2025 - August 2025",
     "icon": "Rocket",
+    "logo": "addverb.png",
     "highlights": [
       {
         "metric": "180% → 15%",
@@ -72,6 +78,7 @@ export const experiences: Experience[] = [
     "location": "Pune, India",
     "period": "August 2024 - April 2025",
     "icon": "Cpu",
+    "logo": "sakar-robotics.png",
     "highlights": [
       {
         "metric": "AMR",
@@ -103,6 +110,7 @@ export const experiences: Experience[] = [
     "location": "Avignon, France",
     "period": "June 2024 - July 2024",
     "icon": "Rocket",
+    "logo": "avignon-university.svg",
     "highlights": [
       {
         "metric": "20/20",
@@ -134,6 +142,7 @@ export const experiences: Experience[] = [
     "location": "Pune, India",
     "period": "Sept 2023 - Jan 2024",
     "icon": "Code",
+    "logo": "dassault-systemes.svg",
     "highlights": [
       {
         "metric": "3D",
@@ -164,6 +173,7 @@ export const experiences: Experience[] = [
     "location": "Pune, India",
     "period": "Aug 2022 - July 2024",
     "icon": "GraduationCap",
+    "logo": "viit.png",
     "highlights": [
       {
         "metric": "Team",

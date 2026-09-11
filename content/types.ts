@@ -54,6 +54,10 @@ export interface Experience {
   location: string;
   period: string;
   icon: IconName;
+  /** file in public/logos for the corridor placard; without one the placard shows the company's initials */
+  logo?: string;
+  /** set for a white-on-transparent mark, which needs a dark plate instead of the default light one */
+  logoOnDark?: boolean;
   highlights: { metric: string; label: string }[];
   badges: string[];
   description: string;

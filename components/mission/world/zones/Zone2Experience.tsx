@@ -8,24 +8,17 @@ import { experiences } from '@/content/experience'
 import { mission } from '@/lib/mission/store'
 import { asset } from '@/lib/base-path'
 
-/** company → logo file in public/logos. The extension is part of the entry: probing png-then-svg
- *  worked, but filled the console with 404s that hid real errors. */
-const LOGO_SLUG: Record<string, string> = {
-  'Robotics Collective': 'robotics-collective.svg',
-  'Addverb Technologies': 'addverb.png',
-  'Sakar Robotics': 'sakar-robotics.png',
-  'Avignon University': 'avignon-university.svg',
-  'Dassault Systems': 'dassault-systemes.svg',
-  'VIIT Robotics (College Club)': 'viit.png',
-}
-/** marks drawn white-on-transparent get a dark plate instead of the default light one */
-const DARK_PLATE = new Set(['robotics-collective.svg'])
+// Each entry in content/experience.ts names its own logo file (public/logos) and whether it needs a
+// dark plate. The extension is part of the name: probing png-then-svg worked, but filled the console
+// with 404s that hid real errors.
 const W = 1024
 const H = 512
+/** with no logo: the first all-caps word (WZL, VIIT), else the first two letters */
+const initials = (company: string) => company.match(/\b[A-Z]{2,}\b/)?.[0] ?? company.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase()
 
 function drawPlacard(ctx: CanvasRenderingContext2D, i: number, logo: HTMLImageElement | null) {
   const e = experiences[i]
-  const darkPlate = DARK_PLATE.has(LOGO_SLUG[e.company] ?? '')
+  const darkPlate = e.logoOnDark === true
   ctx.clearRect(0, 0, W, H)
   ctx.fillStyle = '#0d1117'
   ctx.fillRect(0, 0, W, H)
@@ -48,7 +41,7 @@ function drawPlacard(ctx: CanvasRenderingContext2D, i: number, logo: HTMLImageEl
     ctx.fillStyle = '#0d1117'
     ctx.font = `700 96px "Big Shoulders", Impact, sans-serif`
     ctx.textAlign = 'center'
-    ctx.fillText(e.company.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase(), 190, 150)
+    ctx.fillText(initials(e.company), 190, 150)
     ctx.textAlign = 'left'
   }
   ctx.fillStyle = '#ff7a1a'
@@ -121,7 +114,7 @@ function Placard({ index }: { index: number }) {
     if (!ctx) return
     drawPlacard(ctx, index, null)
     texture.needsUpdate = true
-    const slug = LOGO_SLUG[e.company]
+    const slug = e.logo
     if (!slug) return
     const img = new Image()
     img.onload = () => {
@@ -129,7 +122,7 @@ function Placard({ index }: { index: number }) {
       texture.needsUpdate = true
     }
     img.src = asset(`/logos/${slug}`)
-  }, [canvas, texture, index, e.company])
+  }, [canvas, texture, index, e.logo])
 
   useFrame((_, dt) => {
     const on = mission.zone === 2 && mission.beat === index ? 1.3 : 0.18
@@ -159,7 +152,7 @@ function Placard({ index }: { index: number }) {
   )
 }
 
-/** The experience corridor: six angled placards with company logos, one per role. */
+/** The experience corridor: one angled placard per role, with the company logo, in content order. */
 export function Zone2Experience() {
   return (
     <group>
