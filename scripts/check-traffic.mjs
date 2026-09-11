@@ -3,7 +3,7 @@
  * clear of walls, pedestals, podiums and racks, and drones must stay inside the bounds.
  * Run: npm run check:traffic
  */
-import { BOUNDS, PEDESTALS, PODIUMS, RACKS, ROOMS, roomAt, wallPieces } from '../lib/mission/facility.ts'
+import { BOUNDS, PEDESTALS, PLACARDS, PODIUMS, RACKS, ROOMS, roomAt, wallPieces } from '../lib/mission/facility.ts'
 import { AMR_ROUTES, DRONE_PATHS, HALL_RACKS, RACK_BAY, STATIONS, buildTimeline, samplePose, CATCH, fleet } from '../lib/mission/traffic.ts'
 import { ROUTE, routePose, ENTRY_T } from '../lib/mission/path.ts'
 import { PROPS, RADIUS as PROP_R } from '../lib/mission/props.ts'
@@ -123,11 +123,20 @@ for (let zone = 1; zone < ZONES.length; zone++) {
   if (!pad(shot.pos[0], shot.pos[2], zone, 4)) errors.push(`zone ${zone} copy appears at zoneT ${zt.toFixed(3)} but the camera is ${'far'} outside the room at ${shot.pos[0].toFixed(1)},${shot.pos[2].toFixed(1)}`)
 }
 
+// Placards and pedestals space themselves out as roles and projects are added. Past these gaps
+// neighbours start to overlap or crowd each other's shots, and the corridor or hall layout needs a
+// rethink (a second row, or a longer room) rather than tighter spacing.
+const gaps = (xs) => xs.slice(1).map((v, i) => Math.abs(v - xs[i]))
+const placardGap = Math.min(...gaps(PLACARDS.map((p) => p.z)), Infinity)
+const pedestalGap = Math.min(...gaps(PEDESTALS.map((p) => p.x)), Infinity)
+if (placardGap < 1.6) errors.push(`${PLACARDS.length} experience placards leave ${placardGap.toFixed(2)} m between neighbours (minimum 1.6): the corridor is full`)
+if (pedestalGap < 1.9) errors.push(`${PEDESTALS.length} project pedestals leave ${pedestalGap.toFixed(2)} m between neighbours (minimum 1.9): the hall is full`)
+
 const lanes = fleet().length
 if (errors.length) {
   console.error(errors.slice(0, 20).join('\n'))
   console.error(`\n${errors.length} traffic problems`)
   process.exit(1)
 }
-console.log(`traffic OK — ${lanes} AMR units on ${AMR_ROUTES.length} routes, ${DRONE_PATHS.length} drone loops, ${STATIONS.length} stations, all clear of walls and props`)
+console.log(`traffic OK — ${lanes} AMR units on ${AMR_ROUTES.length} routes, ${DRONE_PATHS.length} drone loops, ${STATIONS.length} stations, all clear of walls and props; ${PLACARDS.length} placards ${placardGap.toFixed(2)} m apart, ${PEDESTALS.length} pedestals ${pedestalGap.toFixed(2)} m apart`)
 console.log(`zone copy waits for arrival at zoneT ${ENTRY_T.map((v) => v.toFixed(3)).join(', ')}`)

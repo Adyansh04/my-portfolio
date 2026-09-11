@@ -52,7 +52,9 @@ export const PROPS: Placement[] = [
   { kind: 'cabletray', x: 19.55, z: 14.0, y: 2.35, yaw: 0 },
   { kind: 'cabletray', x: 19.55, z: 22.0, y: 2.35, yaw: 0 },
   { kind: 'cabletray', x: 19.55, z: 24.0, y: 2.35, yaw: 0 },
-  { kind: 'extinguisher', x: 16.3, z: 19.0, y: 1.05, yaw: -R },
+  // wall-mounted props stay outside z 10.5..27, where the placards go: their spacing follows the
+  // number of roles, so anything hung in that stretch would sooner or later sit behind one
+  { kind: 'extinguisher', x: 16.3, z: 29.1, y: 1.05, yaw: -R },
   { kind: 'bollard', x: 19.72, z: 9.2 },
   { kind: 'bollard', x: 19.72, z: 28.8 },
 

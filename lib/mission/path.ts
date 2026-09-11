@@ -4,7 +4,7 @@
  * so every beat has a still moment where the DOM content lands.
  */
 import { ZONES } from './zones'
-import type { XZ } from './facility'
+import { PEDESTALS, PLACARDS, type XZ } from './facility'
 
 export const MOVE = 0.55
 
@@ -22,10 +22,10 @@ export const ROUTE: Leg[][] = [
   // 1 profile: through the partition door, face the display wall, drift to the corridor door
   [{ to: [11, 4.2], via: [[8, 4]] }, { to: [14, 3.2] }, { to: [17.6, 6.6] }],
   // 2 experience corridor: one placard per beat, nudged toward the placard's wall
-  Array.from({ length: 6 }, (_, i) => ({ to: [i === 0 ? 17.9 : i % 2 === 0 ? 18.8 : 17.2, 10.5 + i * 3.3] as XZ, via: i === 0 ? ([[18, 8.6]] as XZ[]) : undefined })),
+  PLACARDS.map((p, i) => ({ to: [i === 0 ? 17.9 : p.side === 1 ? 18.8 : 17.2, p.z] as XZ, via: i === 0 ? ([[18, 8.6]] as XZ[]) : undefined })),
   // 3 projects hall: enter, then the zig-zag aisle (robot nudges toward each pedestal's side)
-  Array.from({ length: 10 }, (_, i) => ({
-    to: [30 - i * 3, i % 2 === 0 ? 36.8 : 39.2] as XZ,
+  PEDESTALS.map((p, i) => ({
+    to: [p.x, p.side === -1 ? 36.8 : 39.2] as XZ,
     via: i === 0 ? ([[18, 29.2], [18.5, 31.6], [24, 35.5]] as XZ[]) : undefined,
   })),
   // 4 hackathons alcove

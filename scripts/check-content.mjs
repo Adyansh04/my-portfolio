@@ -20,6 +20,8 @@ const OLD = {
   'components/bento-grid.tsx': 'const educationData =',
   'components/contact-terminal.tsx': 'const contactData =',
 };
+// Counts on `main` when the redesign began. Content may grow (new roles, projects, credentials) but
+// never shrink: a lower count means something was lost.
 const EXPECTED = { projects: 10, experiences: 6, hackathons: 3, credentials: [1, 2, 3], education: 2, techStack: 28, contact: 3 };
 
 function sliceArray(src, decl) {
@@ -97,6 +99,7 @@ const { education } = await import('../content/education.ts');
 const { techStack } = await import('../content/tech-stack.ts');
 const { contactCommands } = await import('../content/contact.ts');
 const counts = { projects: projects.length, experiences: experiences.length, hackathons: hackathons.length, credentials: credentialGroups.map((g) => g.items.length), education: education.length, techStack: techStack.length, contact: contactCommands.length };
-const countOk = JSON.stringify(counts) === JSON.stringify(EXPECTED);
-console.log(`checked ${checked} strings, ${missing} missing, ${rewritten} rewritten with facts kept | counts ${JSON.stringify(counts)} ${countOk ? 'OK' : 'MISMATCH (expected ' + JSON.stringify(EXPECTED) + ')'}`);
+const atLeast = (have, want) => (Array.isArray(want) ? want.every((w, i) => (have[i] ?? 0) >= w) : have >= want);
+const countOk = Object.keys(EXPECTED).every((k) => atLeast(counts[k], EXPECTED[k]));
+console.log(`checked ${checked} strings, ${missing} missing, ${rewritten} rewritten with facts kept | counts ${JSON.stringify(counts)} ${countOk ? 'OK' : 'SHRANK (expected at least ' + JSON.stringify(EXPECTED) + ')'}`);
 process.exit(missing || !countOk ? 1 : 0);

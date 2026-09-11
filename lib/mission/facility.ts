@@ -3,6 +3,10 @@
  * 3D walls, minimap outline, reveal ray-casting, zone bounds, set-dressing anchors.
  * Units: metres. World X → right, world Z → "down" on the minimap. Y is up (three.js).
  */
+// relative, not '@/': the check scripts import this file straight from Node
+import { experiences } from '../../content/experience'
+import { projects } from '../../content/projects'
+
 export type XZ = [number, number]
 
 export interface WallSegment {
@@ -96,16 +100,22 @@ export function wallPieces(): WallPiece[] {
 }
 
 /* ---------- set-dressing anchors ---------- */
-/** 10 pedestals in the hall, zig-zag along the aisle (z = 38). Index = project order. */
-export const PEDESTALS: { x: number; z: number; side: -1 | 1 }[] = Array.from({ length: 10 }, (_, i) => ({
-  x: 30 - i * 3,
+/** evenly from a to b in n steps; one item sits at a */
+const spread = (a: number, b: number, n: number, i: number) => a + ((b - a) * i) / Math.max(1, n - 1)
+
+/** One pedestal per project, zig-zag along the aisle (z = 38) over the same 27m whatever the count,
+ *  so adding a project needs no layout work. Index = project order. The hall holds 15 before they
+ *  crowd each other (check:traffic fails past that). */
+export const PEDESTALS: { x: number; z: number; side: -1 | 1 }[] = projects.map((_, i) => ({
+  x: spread(30, 3, projects.length, i),
   z: i % 2 === 0 ? 34.5 : 41.5,
   side: i % 2 === 0 ? -1 : 1, // -1 = north side of the aisle
 }))
-/** 6 placards in the corridor, alternating east / west walls. Index = experience order. */
-export const PLACARDS: { x: number; z: number; side: -1 | 1 }[] = Array.from({ length: 6 }, (_, i) => ({
+/** One placard per role, alternating east / west walls over the same stretch of corridor whatever
+ *  the count. Index = experience order. The corridor holds 11 (check:traffic fails past that). */
+export const PLACARDS: { x: number; z: number; side: -1 | 1 }[] = experiences.map((_, i) => ({
   x: i % 2 === 0 ? 19.85 : 16.15,
-  z: 10.5 + i * 3.3,
+  z: spread(10.5, 27, experiences.length, i),
   side: i % 2 === 0 ? 1 : -1, // 1 = east wall
 }))
 /** 3 podiums in the alcove: 1st, 2nd, best-technical */
