@@ -320,6 +320,15 @@ html[data-static='true'] .pz-abs {
   margin-bottom: 1.25rem;
 }
 
+/* The minimap owns the bottom-left corner of a desktop screen, which is where a vertically centred
+   experience rail ends up once it has more than a handful of roles. On screens up to 900px tall the
+   rail's column starts at the top instead; taller screens have room to centre it. */
+@media (min-width: 1024px) and (max-height: 900px) {
+  .exp-rail-col {
+    align-self: start;
+  }
+}
+
 /* ---------- phones ---------- */
 /* The HUD type is sized for a desktop screen: 9-11px mono labels and 13px body copy. On a phone
    that is squint-small (a quarter of all the text was under 12px), so on a phone (same condition

@@ -8,17 +8,19 @@ import { Panel } from '../ui/Panel'
 
 export function ExperienceSection() {
   return (
-    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-24 sm:px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-      <div>
+    <div className="mx-auto grid h-full max-w-7xl items-center gap-8 px-6 py-24 sm:px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:pb-[var(--hud-bottom)]">
+      <div className="exp-rail-col">
         <Eyebrow>ZONE 02 · {site.sections.experience.title}</Eyebrow>
         <h2 className="font-display mt-3 text-5xl font-bold uppercase tracking-wide text-text sm:text-6xl">Experience</h2>
-        {/* doorway rail: one node per role */}
+        {/* Doorway rail: one node per role, one line each. Two lines per role put the seventh into
+            the minimap at every desktop size. With one line, and the column top-aligned on screens
+            up to 900px tall (.exp-rail-col), it holds the eleven roles the corridor has room for. */}
         <ol className="mt-8 hidden border-l border-grid lg:block">
           {experiences.map((e, i) => (
-            <li key={e.id} className="rail-node relative pl-6 py-2.5" style={{ '--i': i } as React.CSSProperties}>
-              <span className="rail-dot absolute -left-[5px] top-4 h-2.5 w-2.5 rounded-full border border-grid bg-ground" />
-              <div className="font-mono text-[0.6875rem] tracking-[0.12em] text-muted">{e.period}</div>
-              <div className="rail-label text-sm text-muted">{e.company}</div>
+            <li key={e.id} className="rail-node relative flex items-baseline gap-3 py-1 pl-6" style={{ '--i': i } as React.CSSProperties}>
+              <span className="rail-dot absolute -left-[5px] top-[0.65rem] h-2.5 w-2.5 rounded-full border border-grid bg-ground" />
+              <span className="w-[13rem] shrink-0 font-mono text-[0.6875rem] tracking-[0.12em] text-muted">{e.period}</span>
+              <span className="rail-label text-sm text-muted">{e.company}</span>
             </li>
           ))}
         </ol>
