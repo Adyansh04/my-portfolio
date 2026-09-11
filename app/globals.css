@@ -299,10 +299,16 @@ html[data-static='true'] .rail-node .rail-dot {
   box-shadow: none;
 }
 
-/* projects zone: absolute layout flows normally in static mode */
+/* projects zone: absolute layout flows normally in static mode. Tailwind 4's -translate-y-1/2 is
+   the separate `translate` property, not `transform`, and left on it shifted the whole project list
+   up by half its height: it covered four of the six experience cards and left 2,600px of empty
+   poster below. The reset goes through Tailwind's own variables because the minifier folds a
+   `translate: none` sitting next to `transform: none` into one `transform` and drops it. */
 html[data-static='true'] .pz-abs {
   position: static !important;
   transform: none !important;
+  --tw-translate-x: 0 !important;
+  --tw-translate-y: 0 !important;
   width: auto !important;
   margin-bottom: 1.25rem;
 }
