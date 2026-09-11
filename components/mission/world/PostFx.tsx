@@ -53,8 +53,10 @@ export function PostFx({ strength = 0.58, radius = 0.5, threshold = 0.95 }) {
     c.addPass(gtao)
     c.addPass(new UnrealBloomPass(new THREE.Vector2(size.width, size.height), strength, radius, threshold))
     c.addPass(new OutputPass())
-    // after the tone map, so the vignette and grain land on display values rather than on HDR
-    c.addPass(new ShaderPass(GradeShader))
+    // after the tone map, so the vignette and grain land on display values rather than on HDR.
+    // Wrapped in a material because ShaderPass clones a plain shader's uniforms, and then the uTime
+    // written below never reaches it and the grain freezes into a dirty-lens pattern.
+    c.addPass(new ShaderPass(new THREE.ShaderMaterial(GradeShader)))
     return c
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, gl, scene, camera, strength, radius, threshold])
