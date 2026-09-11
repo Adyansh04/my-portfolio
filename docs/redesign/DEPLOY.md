@@ -36,8 +36,9 @@ Checked against a real production build (workflow env vars set) served from `out
   module does not attach itself to `window` the way the snippet loader does. Check
   `window._POSTHOG_REMOTE_CONFIG` instead.
 - **Umami** loads from `cloud.umami.is` with the right website id and defines `window.umami`.
-- **Vercel Analytics** is mounted in production, exactly as on `main`. It does nothing on GitHub
-  Pages — it needs Vercel hosting — but that was already true, so it is not a regression.
+- **Vercel Analytics is removed** (2026-09-11, Adyansh's call). It only works on Vercel's hosting,
+  so on GitHub Pages it did nothing but 404 on `/_vercel/insights/script.js` on every load, as it
+  does on `main`. PostHog and Umami are unaffected.
 - **The chat worker** is the same Cloudflare Worker (`portfolio-chat.gupta-adyansh.workers.dev`),
   the request shape is unchanged, and the endpoint answers (405 to a GET, so it is alive and
   POST-only).
@@ -109,12 +110,10 @@ little anyone would notice:
 2. `.git` is still large because the history holds every old copy of the media. `out/` is
    gitignored so it stops growing, but shrinking it needs a history rewrite, which is not worth
    doing on a repo with a live remote unless the clone size becomes a real problem.
-3. `/_vercel/insights/script.js` 404s on every load. `@vercel/analytics` only works on Vercel's
-   hosting; `main` has the same request. Harmless, and one line in `app/layout.tsx` to remove.
 
 Fixed since the first version of this list: `/lab/tall` no longer ships (it's `page.dev.tsx`,
-and `pageExtensions` only includes that outside production), and the favicons now resolve under
-`/my-portfolio` (they 404'd on `main` too).
+and `pageExtensions` only includes that outside production), the favicons now resolve under
+`/my-portfolio` (they 404'd on `main` too), and Vercel Analytics, which 404'd on every load, is gone.
 
 ## Rendering
 

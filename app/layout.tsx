@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Big_Shoulders, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
 import { CSPostHogProvider } from './providers'
 import { site } from '@/content/site'
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={`dark ${display.variable} ${sans.variable} ${mono.variable}`}>
       <body className="font-sans antialiased">
         <CSPostHogProvider>{children}</CSPostHogProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
         <Script defer src="https://cloud.umami.is/script.js" data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID} />
       </body>
     </html>
