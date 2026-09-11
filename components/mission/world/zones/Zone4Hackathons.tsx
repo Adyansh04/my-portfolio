@@ -10,6 +10,7 @@ import { hackathons } from '@/content/hackathons'
 import { mission } from '@/lib/mission/store'
 import { makeLabelTexture } from '../labels'
 import { TROPHIES } from './podiumTrophies'
+import { PooledLight } from '../LightPool'
 
 const ACCENT = '#ff7a1a'
 const HOLO_SCALE = 2.1
@@ -133,7 +134,7 @@ export function Zone4Hackathons() {
       {PODIUMS.map((_, i) => (
         <Podium key={i} index={i} />
       ))}
-      <pointLight position={[-4, 2.4, 38]} color="#ffd9c2" intensity={2.5} distance={7} decay={2} />
+      <PooledLight position={[-4, 2.4, 38]} color="#ffd9c2" intensity={2.5} distance={7} decay={2} />
     </group>
   )
 }

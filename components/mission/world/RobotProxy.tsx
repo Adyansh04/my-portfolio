@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { mission } from '@/lib/mission/store'
+import { PooledLight } from './LightPool'
 
 /** ponytail: primitive stand-in for Trakr until the GLB pipeline lands in P2. Forward = +X. */
 export function RobotProxy() {
@@ -37,7 +38,7 @@ export function RobotProxy() {
         <boxGeometry args={[0.03, 0.05, 0.16]} />
         <meshBasicMaterial color="#ff7a1a" />
       </mesh>
-      <pointLight position={[0, 0.9, 0]} intensity={3} distance={8} decay={2} color="#ff7a1a" />
+      <PooledLight position={[0, 0.9, 0]} intensity={3} distance={8} decay={2} color="#ff7a1a" />
       <mesh rotation-x={-Math.PI / 2} position={[0, 0.015, 0]}>
         <ringGeometry args={[0.55, 0.62, 48]} />
         <meshBasicMaterial color="#ff7a1a" transparent opacity={0.45} />

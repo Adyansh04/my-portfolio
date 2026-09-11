@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Ambience } from '../../Ambience'
+import { LightPool } from '../../LightPool'
 import { PostFx } from '../../PostFx'
 import { ContactShadow } from '../../ContactShadow'
 import { DebugHook } from '../../DebugHook'
@@ -141,6 +142,7 @@ export function TallGallery() {
         <fogExp2 attach="fog" args={['#101722', 0.0125]} />
         <DebugHook />
         <Ambience />
+        <LightPool />
         <PostFx />
         <hemisphereLight args={['#4a6488', '#131a24', 1.2]} />
         <ambientLight intensity={0.4} />

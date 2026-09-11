@@ -8,6 +8,7 @@ import type { Project } from '@/content/types'
 import { makeLabelTexture } from '../labels'
 import { ContactShadow } from '../ContactShadow'
 import { surface } from '../materials'
+import { PooledLight } from '../LightPool'
 
 interface HologramCtxValue {
   /** camera close enough for the content to animate */
@@ -81,7 +82,7 @@ export function HologramFrame({ x, z, index, project, children }: Props) {
       </mesh>
       {/* Above the content, not inside it. At 1.3 m this sat 13 cm off the stage deck, buried in
           the hardware, and blew a specular starburst through the bloom on whatever it touched. */}
-      <pointLight ref={light} position={[0, 2.05, 0]} color="#ffc9a0" intensity={1} distance={3.4} decay={1.8} />
+      <PooledLight ref={light} position={[0, 2.05, 0]} color="#ffc9a0" intensity={1} distance={3.4} decay={1.8} />
       {/* the pedestal sits on the floor (shadow) and spills a little accent onto it (pool) */}
       <ContactShadow radius={1.08} opacity={0.62} />
       <mesh position={[0, 0.02, 0]} rotation-x={-Math.PI / 2} material={glow}>

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { DOCK_PAD, SPAWN_PAD } from '@/lib/mission/facility'
 import { mission } from '@/lib/mission/store'
+import { PooledLight } from '../LightPool'
 
 /** Spawn pad and the docking station: pad ring, charging post with an LED bar that fills once the robot is docked. */
 export function Zone6Dock() {
@@ -48,7 +49,7 @@ export function Zone6Dock() {
             <meshStandardMaterial ref={ledMat} color="#ff7a1a" emissive="#ff7a1a" emissiveIntensity={0.6} />
           </mesh>
         </group>
-        <pointLight position={[0, 1.2, 0]} color="#ff7a1a" intensity={2} distance={6} decay={2} />
+        <PooledLight position={[0, 1.2, 0]} color="#ff7a1a" intensity={2} distance={6} decay={2} />
       </group>
     </group>
   )

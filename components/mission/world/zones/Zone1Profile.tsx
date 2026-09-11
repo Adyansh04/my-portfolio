@@ -8,6 +8,7 @@ import { site } from '@/content/site'
 import { education } from '@/content/education'
 import { techStack } from '@/content/tech-stack'
 import { mission } from '@/lib/mission/store'
+import { PooledLight } from '../LightPool'
 
 const W = 2048
 const H = 460
@@ -167,7 +168,7 @@ export function Zone1Profile() {
         <planeGeometry args={[w + 0.14, h + 0.14]} />
         <meshStandardMaterial color="#1b222c" roughness={0.6} emissive="#ff7a1a" emissiveIntensity={0.08} />
       </mesh>
-      <pointLight ref={glow} position={[cx, 1.7, z + 1.8]} color="#cfe3ff" intensity={2} distance={10} decay={2} />
+      <PooledLight ref={glow} position={[cx, 1.7, z + 1.8]} color="#cfe3ff" intensity={2} distance={10} decay={2} />
     </group>
   )
 }

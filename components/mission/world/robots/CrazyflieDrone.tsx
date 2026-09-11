@@ -7,6 +7,7 @@ import { useGLTF } from '@react-three/drei'
 import { asset } from '@/lib/base-path'
 import { crazyflieMaterial } from './robotMaterial'
 import { useHologram } from '../holograms/HologramFrame'
+import { PooledLight } from '../LightPool'
 
 const URL = asset('/models/crazyflie/body.glb')
 const DRACO = asset('/draco/')
@@ -39,7 +40,7 @@ export function CrazyflieDrone({ scale = 3, height = 0.9, position = [0, 0, 0] a
   return (
     <group ref={group}>
       <mesh geometry={geometry} material={material} scale={scale} rotation={[-Math.PI / 2, 0, 0]} />
-      <pointLight color="#ff7a1a" intensity={0.6} distance={2} />
+      <PooledLight color="#ff7a1a" intensity={0.6} distance={2} />
     </group>
   )
 }

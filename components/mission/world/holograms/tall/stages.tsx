@@ -13,6 +13,7 @@ import { CrazyflieDrone } from '../../robots/CrazyflieDrone'
 import { go2MaterialFor } from '../../robots/robotMaterial'
 import { emissive, lineMat, useClock, useNear } from './tallParts'
 import { TRAFFIC, wallRuns, type SlabDesign, type XZ } from '../data/projects'
+import { PooledLight } from '../../LightPool'
 
 /**
  * The lower half of each hologram: the project's own hardware doing the project's own job.
@@ -303,7 +304,7 @@ export function PatrolStage({ design, projectKey }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       {walls && <mesh geometry={walls} material={wallMat} />}
       <Route design={design} color={design.accent} />
       <primitive object={trail} />
@@ -428,7 +429,7 @@ export function ArmStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <group ref={rig} position={[0, DECK, 0]}>
         <Suspense fallback={null}>
           <UR5eArm scale={ARM_SCALE} onPhase={(p) => (phase.current = p)} />
@@ -524,7 +525,7 @@ export function FusionStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <Route design={design} color={design.accent} />
       <Posts pts={design.pins.slice(0, 6).map((p) => p.p)} color={design.data} height={0.07} />
       <primitive object={rays} />
@@ -617,7 +618,7 @@ export function GimbalStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       {posts && <mesh geometry={posts} material={steel} />}
       <mesh material={steel} position={[0, DECK + 0.18, 0]}>
         <cylinderGeometry args={[0.018, 0.026, 0.36, 12]} />
@@ -686,7 +687,7 @@ export function OrbitStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <mesh material={STEEL()} position={[0, DECK + 0.15, 0]}>
         <cylinderGeometry args={[0.016, 0.022, 0.3, 10]} />
       </mesh>
@@ -767,7 +768,7 @@ export function LaunchStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <Route design={design} color={design.accent} />
       <mesh material={steel} position={[HOOP.x, DECK + 0.22, HOOP.z - 0.06]}>
         <cylinderGeometry args={[0.012, 0.016, 0.44, 8]} />
@@ -807,7 +808,7 @@ export function SpinStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <primitive object={trail} />
       <Posts pts={design.pins.map((p) => p.p)} color={design.data} height={0.055} />
       <Rover pose={pose.current} color={design.data} t={t} wheels={3} drive="omni" size={0.15} />
@@ -858,7 +859,7 @@ export function WatchtowerStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <primitive object={grid} />
       <Route design={design} color={design.accent} />
       <Posts pts={tiles} color={design.data} active={classified} height={0.075} />
@@ -913,7 +914,7 @@ export function RowsStage({ design, projectKey }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       {rows && <mesh geometry={rows} material={cropMat} />}
       {pts.map((p, i) => (
         <mesh key={i} ref={(el) => { bolls.current[i] = el }} material={bollMat} position={[p[0] * S, DECK + 0.105, p[1] * S]}>
@@ -978,7 +979,7 @@ export function FlightStage({ design }: StageProps) {
   return (
     <group>
       <Plinth accent={design.accent} />
-      <pointLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
+      <PooledLight position={[0, DECK + 0.46, 0.24]} color="#ffd7b0" intensity={1.4} distance={2.0} decay={1.7} />
       <primitive object={walls} />
       <primitive object={pad} />
       <Route design={design} color={design.accent} y={0.3} />

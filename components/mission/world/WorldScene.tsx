@@ -9,6 +9,7 @@ import { Walls } from './Walls'
 import { Ceiling } from './Ceiling'
 import { Sky } from './Sky'
 import { CameraLight } from './CameraLight'
+import { LightPool } from './LightPool'
 import { Ambience } from './Ambience'
 import { PostFx } from './PostFx'
 import { MissionDriver } from './MissionDriver'
@@ -59,6 +60,7 @@ export function WorldScene() {
       <directionalLight position={[10, 18, 6]} intensity={0.85} color="#dbe7ff" />
       <directionalLight position={[-14, 10, 34]} intensity={0.3} color="#8fb4ff" />
       <CameraLight />
+      <LightPool />
       <MissionDriver />
       <CameraRig />
       <Floor />
