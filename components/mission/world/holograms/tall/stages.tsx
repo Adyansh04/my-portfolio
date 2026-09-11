@@ -10,7 +10,10 @@ import { asset } from '@/lib/base-path'
 import { QuadrupedRobot } from '../../robots/QuadrupedRobot'
 import { UR5eArm, type ArmPhase } from '../../robots/UR5eArm'
 import { CrazyflieDrone } from '../../robots/CrazyflieDrone'
-import { go2MaterialFor } from '../../robots/robotMaterial'
+import { g1MaterialFor, go2MaterialFor, makeRobotMaterial } from '../../robots/robotMaterial'
+import { ArticulatedRobot, type JointValues } from '../../robots/ArticulatedRobot'
+import type { RobotDef } from '@/lib/mission/robots'
+import g1Json from '@/public/models/g1/robot.json'
 import { emissive, lineMat, useClock, useNear } from './tallParts'
 import { TRAFFIC, wallRuns, type SlabDesign, type XZ } from '../data/projects'
 import { PooledLight } from '../../LightPool'
@@ -312,6 +315,198 @@ export function PatrolStage({ design, projectKey }: StageProps) {
       <Suspense fallback={null}>
         <group scale={GO2_SCALE} position={[0, DECK, 0]}>
           <QuadrupedRobot def={GO2_DEF} folder={asset('/models/go2')} legs={GO2_LEGS} gait={GO2_GAIT} headingOffset={0} scale={1} baseHeight={0.32} pose={pose.current} autoWalk materialFor={go2MaterialFor} flipAxis="z" />
+        </group>
+      </Suspense>
+    </group>
+  )
+}
+
+const G1_DEF = g1Json as RobotDef
+/** 1.32 m of G1 stands about 0.42 m tall on the deck */
+const G1_SCALE = 0.32
+/** pelvis above the soles in the default stance (hip -0.1, knee 0.3, ankle -0.2), in URDF metres */
+const G1_PELVIS = 0.785
+/** workbench top above the deck: level with the G1's reach at this scale */
+const BENCH_H = 0.25
+const CUBE = 0.05
+/** seconds walking one way, and standing at a bench to pick or place */
+const WALK = 7
+const HOLD = 2.4
+const smooth01 = (u: number) => {
+  const c = Math.min(1, Math.max(0, u))
+  return c * c * (3 - 2 * c)
+}
+/** arm poses (shoulder pitch, elbow), worked out from the URDF: `reach` puts the palms ~0.29 m ahead
+ *  of the shoulder at bench height; `carry` lifts them ~5 cm above it; `rest` hangs them */
+const ARM = { rest: [0.05, 1.25], reach: [-0.6, 0.9], carry: [-0.45, 0.4] } as const
+const mixArm = (a: readonly [number, number], b: readonly [number, number], k: number): [number, number] => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k]
+
+/**
+ * grove-g1 — the README's mission on repeat. The G1 lifts a cube off one bench, walks it through the
+ * doorway on its own learned balance, and sets it down on the other bench. On the walk back the
+ * delivered cube dissolves and a fresh one resolves on the first bench, so the loop never teleports
+ * anything in view. The cube rides between the palms, read from the wrist every frame, not from a
+ * guessed offset.
+ */
+export function HumanoidStage({ design, projectKey }: StageProps) {
+  const t = useClock()
+  const near = useNear()
+  const root = useRef<THREE.Group>(null)
+  const robot = useRef<THREE.Group>(null)
+  const wrist = useRef<THREE.Group | null>(null)
+  const cube = useRef<THREE.Mesh>(null)
+  const joints = useRef<JointValues>({})
+  const yaw = useRef(Math.PI / 2)
+  const tmp = useMemo(() => ({ v: new THREE.Vector3(), a: new THREE.Vector3(), b: new THREE.Vector3() }), [])
+  const walls = useMemo(
+    () => runGeometry(wallRuns(projectKey, design), 0.115, TRAFFIC[projectKey].runHalf * 2 * S, DECK),
+    [design, projectKey],
+  )
+  const wallMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#4b545f', metalness: 0.4, roughness: 0.68 }), [])
+  const benchMat = useMemo(DARK, [])
+  const benchTop = useMemo(() => emissive(design.accent, 0.8), [design.accent])
+  const cubeMat = useMemo(() => emissive(design.data, 1.1), [design.data])
+  const material = useMemo(() => makeRobotMaterial('#b9bec6'), [])
+  // arc-length table for the route, so walking speed is even along legs of different length
+  const route = useMemo(() => {
+    const p = design.path.map(([x, z]) => [x * S, z * S] as [number, number])
+    const acc = [0]
+    for (let i = 1; i < p.length; i++) acc.push(acc[i - 1] + Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]))
+    return { p, acc, len: acc[acc.length - 1] }
+  }, [design.path])
+  const at = (u: number): [number, number, number] => {
+    const d = Math.min(1, Math.max(0, u)) * route.len
+    let i = 1
+    while (i < route.acc.length - 1 && route.acc[i] < d) i++
+    const a = route.p[i - 1], b = route.p[i]
+    const k = (d - route.acc[i - 1]) / (route.acc[i] - route.acc[i - 1] || 1)
+    return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, Math.atan2(-(b[1] - a[1]), b[0] - a[0])]
+  }
+  const bench = design.pins.map(({ p }) => [p[0] * S, p[1] * S] as [number, number])
+
+  useFrame((_, dt) => {
+    if (!near() || !robot.current || !root.current || !cube.current) return
+    const d = Math.min(0.05, dt || 0.016)
+    const cycle = 2 * (WALK + HOLD)
+    const s = t.current % cycle
+    // phases: pick at A | walk A→B carrying | place at B | walk B→A empty
+    // grip: how far the palms close in toward the cube (reaching for it, holding it, letting go)
+    let u: number, walking = 0, arm: [number, number], attach = 0, grip = 0, heading: number | null = null
+    let cubeAt = 0 // which bench an unheld cube rests on
+    let cubeScale = 1
+    if (s < HOLD) {
+      const k = s / HOLD
+      u = 0
+      arm = k < 0.4 ? mixArm(ARM.rest, ARM.reach, smooth01(k / 0.4)) : mixArm(ARM.reach, ARM.carry, smooth01((k - 0.55) / 0.45))
+      attach = smooth01((k - 0.38) / 0.14)
+      grip = smooth01(k / 0.4)
+    } else if (s < HOLD + WALK) {
+      const k = (s - HOLD) / WALK
+      u = smooth01(k)
+      walking = Math.min(1, k * 6, (1 - k) * 6)
+      arm = [...ARM.carry]
+      attach = 1
+      grip = 1
+      heading = at(u)[2]
+    } else if (s < 2 * HOLD + WALK) {
+      const k = (s - HOLD - WALK) / HOLD
+      u = 1
+      arm = k < 0.5 ? mixArm(ARM.carry, ARM.reach, smooth01(k / 0.5)) : mixArm(ARM.reach, ARM.rest, smooth01((k - 0.62) / 0.38))
+      attach = 1 - smooth01((k - 0.48) / 0.14)
+      grip = 1 - smooth01((k - 0.62) / 0.38)
+      cubeAt = 1
+    } else {
+      const k = (s - 2 * HOLD - WALK) / WALK
+      u = 1 - smooth01(k)
+      walking = Math.min(1, k * 6, (1 - k) * 6)
+      arm = [...ARM.rest]
+      heading = at(u)[2] + Math.PI
+      // the delivered cube dissolves on the first half of the walk back; a fresh one resolves on the second
+      cubeAt = k < 0.5 ? 1 : 0
+      cubeScale = k < 0.5 ? 1 - smooth01(k / 0.4) : smooth01((k - 0.6) / 0.4)
+    }
+
+    // body: position on the route, heading toward travel or toward the bench while standing
+    const [x, z] = at(u)
+    const want = heading ?? Math.PI / 2
+    yaw.current += Math.atan2(Math.sin(want - yaw.current), Math.cos(want - yaw.current)) * (1 - Math.exp(-d * 5))
+    const phi = t.current * Math.PI * 2 * 1.6
+    const bob = walking * 0.012 * Math.abs(Math.sin(phi))
+    robot.current.position.set(x, DECK + (G1_PELVIS - bob) * G1_SCALE, z)
+    robot.current.rotation.y = yaw.current
+
+    // gait: hips swing opposite, the swinging knee lifts, ankles keep the soles flat
+    const v = joints.current
+    const sw = Math.sin(phi) * walking
+    const liftL = Math.max(0, Math.cos(phi)) * walking
+    const liftR = Math.max(0, -Math.cos(phi)) * walking
+    const hipL = -0.1 - 0.34 * sw
+    const hipR = -0.1 + 0.34 * sw
+    const kneeL = 0.3 + 0.55 * liftL
+    const kneeR = 0.3 + 0.55 * liftR
+    v.left_hip_pitch_joint = hipL
+    v.right_hip_pitch_joint = hipR
+    v.left_knee_joint = kneeL
+    v.right_knee_joint = kneeR
+    v.left_ankle_pitch_joint = -(hipL + kneeL)
+    v.right_ankle_pitch_joint = -(hipR + kneeR)
+    v.waist_yaw_joint = 0.08 * sw
+    // arms: the pose for this phase, with a counter-swing when walking empty-handed
+    const swing = attach > 0.5 ? 0 : 0.28 * sw
+    v.left_shoulder_pitch_joint = arm[0] + swing
+    v.right_shoulder_pitch_joint = arm[0] - swing
+    v.left_elbow_joint = arm[1]
+    v.right_elbow_joint = arm[1]
+    // palms in against the cube while holding it, relaxed outward otherwise
+    const inward = 0.25 * grip
+    v.left_shoulder_roll_joint = 0.12 - inward
+    v.right_shoulder_roll_joint = -0.12 + inward
+
+    // the cube: resting on a bench, or between the palms (the left wrist mirrored onto the centre plane)
+    const b = bench[cubeAt] ?? bench[0]
+    tmp.a.set(b[0], DECK + BENCH_H + CUBE / 2, b[1])
+    if (wrist.current && attach > 0) {
+      wrist.current.getWorldPosition(tmp.v)
+      robot.current.worldToLocal(tmp.v)
+      tmp.v.set(tmp.v.x + 0.07, tmp.v.y - 0.015, 0)
+      robot.current.localToWorld(tmp.v)
+      root.current.worldToLocal(tmp.v)
+      tmp.b.copy(tmp.v)
+      // before the grip closes (and after it opens) the cube is still on the bench
+      const benchNow = bench[s < HOLD ? 0 : 1] ?? bench[0]
+      tmp.a.set(benchNow[0], DECK + BENCH_H + CUBE / 2, benchNow[1])
+      cube.current.position.lerpVectors(tmp.a, tmp.b, attach)
+    } else cube.current.position.copy(tmp.a)
+    cube.current.scale.setScalar(Math.max(0.001, cubeScale))
+    cube.current.rotation.y = attach > 0 ? yaw.current : 0
+  })
+
+  return (
+    <group ref={root}>
+      <Plinth accent={design.accent} />
+      {/* higher and further forward than the other stages' lamp: this route passes right under it, and a
+          head-height lamp 11 cm from the robot blew its shell out to white */}
+      <PooledLight position={[0, DECK + 0.72, 0.42]} color="#ffd7b0" intensity={1.6} distance={2.2} decay={1.7} />
+      {walls && <mesh geometry={walls} material={wallMat} />}
+      <Route design={design} color={design.accent} />
+      {bench.map(([bx, bz], i) => (
+        <group key={i} position={[bx, DECK, bz]}>
+          <mesh material={benchMat} position={[0, BENCH_H / 2, 0]}>
+            <boxGeometry args={[0.13, BENCH_H, 0.07]} />
+          </mesh>
+          <mesh material={benchTop} position={[0, BENCH_H + 0.002, 0]}>
+            <boxGeometry args={[0.14, 0.006, 0.08]} />
+          </mesh>
+        </group>
+      ))}
+      <mesh ref={cube} material={cubeMat}>
+        <boxGeometry args={[CUBE, CUBE, CUBE]} />
+      </mesh>
+      <Suspense fallback={null}>
+        <group ref={robot} scale={G1_SCALE}>
+          <group rotation={[-Math.PI / 2, 0, 0]}>
+            <ArticulatedRobot def={G1_DEF} folder={asset('/models/g1')} joints={joints} material={material} materialFor={g1MaterialFor} probe={{ joint: 'left_wrist_yaw_joint', ref: wrist }} />
+          </group>
         </group>
       </Suspense>
     </group>
@@ -993,11 +1188,12 @@ export function FlightStage({ design }: StageProps) {
   )
 }
 
-export type StageKind = 'patrol' | 'arm' | 'fusion' | 'gimbal' | 'orbit' | 'launch' | 'spin' | 'watchtower' | 'rows' | 'flight'
+export type StageKind = 'patrol' | 'humanoid' | 'arm' | 'fusion' | 'gimbal' | 'orbit' | 'launch' | 'spin' | 'watchtower' | 'rows' | 'flight'
 
 /** Each project gets the stage that describes what it actually is. */
 export const STAGES: Record<StageKind, (p: StageProps) => React.ReactElement> = {
   patrol: PatrolStage,
+  humanoid: HumanoidStage,
   arm: ArmStage,
   fusion: FusionStage,
   gimbal: GimbalStage,
@@ -1010,6 +1206,7 @@ export const STAGES: Record<StageKind, (p: StageProps) => React.ReactElement> = 
 }
 
 export const STAGE_FOR: Record<string, StageKind> = {
+  'grove-g1': 'humanoid',
   'go2-inspection': 'patrol',
   'ai-robotics': 'arm',
   olive: 'fusion',

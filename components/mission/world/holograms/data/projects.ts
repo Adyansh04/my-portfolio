@@ -62,6 +62,16 @@ function ring(rx: number, rz: number, n = 24, cx = 0, cz = 0): XZ[] {
 export const DEFAULT_DESIGN: SlabDesign = { accent: SKY, data: CYAN, runs: [], path: [], pins: [] }
 
 export const SLAB_DESIGNS: Record<string, SlabDesign> = {
+  // the README's mission: pick a cube off one workbench, carry it through the building, set it
+  // down on another. Two rooms share a wall; the doorway is cut where the route crosses it.
+  // pins[0] and pins[1] are the two benches, each just behind an end of the route.
+  'grove-g1': {
+    accent: VIOLET, data: LIME,
+    runs: rooms([[-0.19, 0, 0.38, 0.42], [0.19, 0, 0.38, 0.42]]),
+    // the ends stop 0.06 in front of each bench: the G1's reach puts its palms ~0.33 m (0.06 here) ahead
+    path: [[-0.27, -0.095], [-0.13, 0.07], [0.13, 0.07], [0.27, -0.095]],
+    pins: [{ p: [-0.27, -0.155] }, { p: [0.27, -0.155] }],
+  },
   // an unknown facility, mapped and swept room by room
   // Two bays off a corridor. Fewer, larger rooms than the poster's seven: the robot has to be big
   // enough to recognise from the aisle, and it has to fit through its own doors.
@@ -175,6 +185,8 @@ export interface Traffic {
   doors: boolean
 }
 export const TRAFFIC: Record<string, Traffic> = {
+  // the G1 is about 0.45 m across the shoulders; at its 0.32 stage scale that is 0.04 design units a side
+  'grove-g1': { half: 0.045, runHalf: 0.006, doors: true },
   'go2-inspection': { half: 0.048, runHalf: 0.006, doors: true },
   agrobot: { half: 0.05, runHalf: 0.014, doors: false },
   'drone-systems': { half: 0.05, runHalf: 0.006, doors: false },
